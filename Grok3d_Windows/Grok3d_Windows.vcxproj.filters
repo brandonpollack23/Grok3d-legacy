@@ -57,6 +57,9 @@
     <ClInclude Include="inc\Templates\enable_if.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="inc\Component\ComponentHandle.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Component\ComponentManager.cpp">
