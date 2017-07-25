@@ -69,7 +69,9 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <IncludePath>$(ProjectDir)/inc;$(IncludePath)</IncludePath>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -82,6 +84,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>D:\OneDrive\Programming\Grok3d_Windows\Grok3d_Windows\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -111,6 +114,26 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="inc\Component\TransformComponent.h" />
+    <ClInclude Include="inc\grok3d_types.h" />
+    <ClInclude Include="inc\Component\ComponentManager.h" />
+    <ClInclude Include="inc\Entity\EntityHandle.h" />
+    <ClInclude Include="inc\Entity\EntityManager.h" />
+    <ClInclude Include="inc\grok3d.h" />
+    <ClInclude Include="inc\GrokUtils.h" />
+    <ClInclude Include="inc\Templates\enable_if.h" />
+    <ClInclude Include="inc\Templates\is_valid.h" />
+    <ClInclude Include="inc\World.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\Component\ComponentManager.cpp" />
+    <ClCompile Include="src\Component\TransformComponent.cpp" />
+    <ClCompile Include="src\Entity\EntityHandle.cpp" />
+    <ClCompile Include="src\Entity\EntityManager.cpp" />
+    <ClCompile Include="src\World.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Grok3d_Windows.licenseheader" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
