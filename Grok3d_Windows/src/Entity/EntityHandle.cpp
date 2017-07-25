@@ -15,10 +15,6 @@ using namespace Grok3d::Components;
 
 auto hasComponentBitOffset = Grok3d::Templates::is_valid([](auto&& x) -> decltype(x.ComponentBitOffset()) { });
 
-GRK_TransformComponent test;
-
-static_assert(decltype(hasComponentBitOffset(test))::value == true, "");
-
 #define RETURN_FAILURE_IF_ENTITY_DESTROYED(error, statements) \
     do {\
         if (IsDestroyed()) \
