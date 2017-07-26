@@ -13,6 +13,8 @@
 #include "Component/ComponentManager.h"
 #include "Component/TransformComponent.h"
 
+#include <vector>
+
 namespace Grok3d 
 {
     class GRK_World
@@ -48,6 +50,8 @@ namespace Grok3d
 
         Grok3d::Components::GRK_ComponentManager<Grok3d::Components::GRK_TransformComponent> m_translationComponentManager;
         //TODO inf pointer to each componentmanager, do a static array of them and use their defines, populate it in constructor and see source line 50
+
+        std::vector<Grok3d::Components::GRK_ComponentManagerBase*> m_componentManagers;
     };
 } /*Grok3d*/
 

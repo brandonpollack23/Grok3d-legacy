@@ -11,6 +11,7 @@ using namespace Grok3d::Entities;
 
 GRK_World::GRK_World()
 {
+    m_componentManagers.push_back(&m_translationComponentManager);
 }
 
 GRK_EntityHandle GRK_World::CreateEntity()
@@ -42,7 +43,7 @@ ComponentType* GRK_World::GetComponent(Grok3d::Entities::GRK_Entity entity)
 template<class ComponentType>
 GRK_ComponentManager<ComponentType>* GRK_World::GetComponentManager()
 {
-    return ComponentType::componentManager;
+    //TODO 0
 }
 
 GRK_Result GRK_World::DeleteEntity(GRK_Entity entity)

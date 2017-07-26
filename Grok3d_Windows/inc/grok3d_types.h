@@ -20,12 +20,10 @@
 #define GRK_NOSUCHCOMPONENTINENTITY                 1 << 6
 #define GRK_MUSTUSECOMPONENTHANDLETODELETEBEHAVIOUR 1 << 7
 
-//Component bit shifts
-enum class GRK_Component_BitShifts
+constexpr unsigned int IndexToMask(unsigned int index)
 {
-    TransformComponent = 0,
-    BehaviourComponent = 1,
-};
+    return 1 << index;
+}
 
 //Forward declarations for headers
 namespace Grok3d
@@ -45,9 +43,11 @@ namespace Grok3d
 
     namespace Components
     {
+        class GRK_Component;
         template<class ComponentType> class ComponentHandle;
         // DOCUMENTATION IMPORTANT : every component must implement a public field for componentManager pointer,
         // this makes templates not fail and it's easy to get the right manager in world etc
+        class GRK_ComponentManagerBase;
         template<class ComponentType> class GRK_ComponentManager;
 
         class GRK_TransformComponent;

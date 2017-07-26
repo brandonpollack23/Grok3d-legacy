@@ -60,6 +60,9 @@
     <ClInclude Include="inc\Component\ComponentHandle.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="inc\Component\Component.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Component\ComponentManager.cpp">
@@ -75,6 +78,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Component\TransformComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Component\Component.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

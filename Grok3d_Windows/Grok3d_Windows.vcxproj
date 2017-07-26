@@ -114,6 +114,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="inc\Component\Component.h" />
     <ClInclude Include="inc\Component\ComponentHandle.h" />
     <ClInclude Include="inc\Component\TransformComponent.h" />
     <ClInclude Include="inc\grok3d_types.h" />
@@ -127,6 +128,7 @@
     <ClInclude Include="inc\World.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Component\Component.cpp" />
     <ClCompile Include="src\Component\ComponentManager.cpp" />
     <ClCompile Include="src\Component\TransformComponent.cpp" />
     <ClCompile Include="src\Entity\EntityHandle.cpp" />

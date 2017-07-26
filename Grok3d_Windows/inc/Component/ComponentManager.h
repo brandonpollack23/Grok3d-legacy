@@ -11,10 +11,14 @@
 
 #include "../grok3d_types.h"
 
-namespace Grok3d { namespace Components {
+namespace Grok3d { namespace Components 
+{
+    class GRK_ComponentManagerBase
+    {
+    };
 
     template<class ComponentType>
-    class GRK_ComponentManager
+    class GRK_ComponentManager : public GRK_ComponentManagerBase
     {
     public:
         GRK_ComponentManager();

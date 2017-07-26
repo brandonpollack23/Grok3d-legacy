@@ -7,13 +7,12 @@
 #include "World.h"
 
 #include "templates/is_valid.h"
-#include "templates/enable_if.h"
 
 using namespace Grok3d;
 using namespace Grok3d::Entities;
 using namespace Grok3d::Components;
 
-auto hasComponentBitOffset = Grok3d::Templates::is_valid([](auto&& x) -> decltype(x.ComponentBitOffset()) { });
+auto hasComponentTypeAccessIndex = Grok3d::Templates::is_valid([](auto&& x) -> decltype(x::GetComponentTypeAccessIndex()) { });
 
 #define RETURN_FAILURE_IF_ENTITY_DESTROYED(error, statements) \
     do {\
@@ -41,7 +40,7 @@ which makes it registerd to the game
 
 saying entity.addcomponent is just more intuitive than world.getmanager().addcomponent(entity, component)
 
-using templates to require ComponentBitOffset static method
+using templates to require GetComponentTypeAccessIndex static method
 */
 //in case of fire use this
 //template<class ComponentType>
@@ -50,17 +49,17 @@ using templates to require ComponentBitOffset static method
 template<class ComponentType>
 GRK_Result GRK_EntityHandle::AddComponent(ComponentType& component)
 {
-    static_assert(decltype(hasComponentBitOffset(component))::value);
+    static_assert(decltype(hasComponentTypeAccessIndex(component))::value);
     RETURN_FAILURE_IF_ENTITY_DESTROYED(
         GRK_NOSUCHENTITY,
         //can't have two components of the same type EXCEPT BEHAVIOUR COMPONENTS WHICH ARE SCRIPTS
-        if (m_components & ComponentType.ComponentBitOffset() > 0 && ComponentType.ComponentBitOffset() != GRK_BEHAVIOURCOMPONENT_BITSHIFT)
+        if (m_components & IndexToMask(ComponentType::GetComponentTypeAccessIndex()) > 0 && !std::is_same<decltype(ComponentType), GRK_BehaviourComponent>)
         {
             return GRK_COMPONENTALREADYADDED;   
         }
         else
         {
-            m_components |= ComponentType.ComponentBitOffset();
+            m_components |= IndexToMask(ComponentType::GetComponentTypeAccessIndex());
             return m_world->AddComponent<ComponentType>(m_entity, component);
         });
 }
@@ -68,12 +67,11 @@ GRK_Result GRK_EntityHandle::AddComponent(ComponentType& component)
 template<class ComponentType>
 GRK_Result GRK_EntityHandle::RemoveComponent()
 {
-    static_assert(decltype(hasComponentBitOffset(component))::value);
     RETURN_FAILURE_IF_ENTITY_DESTROYED(
         GRK_NOSUCHENTITY,
-        if (m_components & ComponentType.ComponentBitOffset() == 0)
+        if (m_components & IndexToMask(ComponentType::GetComponentTypeAccessIndex()) == 0)
         {
-            m_components &= ~ComponentType.ComponentBitOffset();
+            m_components &= IndexToMask(~(ComponentType::GetComponentTypeAccessIndex()));
             return m_world->RemoveComponent<ComponentType>(m_entity); 
         }
         else
@@ -85,10 +83,10 @@ GRK_Result GRK_EntityHandle::RemoveComponent()
 template<class ComponentType>
 ComponentType* GRK_EntityHandle::GetComponent()
 {
-    static_assert(decltype(hasComponentBitOffset(component))::value);
+    static_assert(decltype(hasComponentTypeAccessIndex(component))::value);
     RETURN_FAILURE_IF_ENTITY_DESTROYED(
         GRK_NOSUCHENTITY,
-        if (m_components & ComponentType.ComponentBitOffset() == 0)
+        if (m_components & IndexToMask(ComponentType::GetComponentTypeAccessIndex()) == 0)
         {
             return m_world->GetComponent<ComponentType>(m_entity);
         }
@@ -112,8 +110,8 @@ GRK_Result GRK_EntityHandle::Destroy()
 template<class ComponentType>
 GRK_Result GRK_EntityHandle::ComponentDestroyedByHandleCleanup()
 {
-    static_assert(decltype(hasComponentBitOffset(component))::value);
-    m_components &= ~ComponentType.ComponentBitOffset()
+    static_assert(decltype(hasComponentTypeAccessIndex(component))::value);
+    m_components &= IndexToMask(~(ComponentType::GetComponentTypeAccessIndex()))
 }
 
 bool inline GRK_EntityHandle::IsDestroyed()
