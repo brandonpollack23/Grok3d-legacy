@@ -25,7 +25,7 @@ GRK_EntityHandle GRK_World::CreateEntity()
 template<class ComponentType>
 GRK_Result GRK_World::AddComponent(GRK_Entity entity, ComponentType& newComponent)
 {
-    static_assert(hasComponentTypeAccessIndex(ComponentType));
+    static_assert(hasComponentTypeAccessIndex(ComponentType), "GRK_World::AddComponent Method type param not base of GRK_Component");
 
     if (entity == 0)
     {
@@ -46,7 +46,7 @@ GRK_Result GRK_World::AddComponent(GRK_Entity entity, ComponentType& newComponen
 template<class ComponentType>
 GRK_Result GRK_World::RemoveComponent(GRK_Entity entity)
 {
-    static_assert(hasComponentTypeAccessIndex(ComponentType));
+    static_assert(hasComponentTypeAccessIndex(ComponentType), "GRK_World::RemoveComponent Method type param not base of GRK_Component");
 
     if (entity == 0)
     {
@@ -67,7 +67,7 @@ GRK_Result GRK_World::RemoveComponent(GRK_Entity entity)
 template<class ComponentType>
 ComponentType* GRK_World::GetComponent(Grok3d::Entities::GRK_Entity entity)
 {
-    static_assert(hasComponentTypeAccessIndex(ComponentType));
+    static_assert(hasComponentTypeAccessIndex(ComponentType), "GRK_World::GetComponent Method type param not base of GRK_Component");
 
     if (
         entity == 0 ||
@@ -82,7 +82,7 @@ ComponentType* GRK_World::GetComponent(Grok3d::Entities::GRK_Entity entity)
 template<class ComponentType>
 GRK_ComponentManager<ComponentType>* GRK_World::GetComponentManager()
 {
-    static_assert(hasComponentTypeAccessIndex(ComponentType));
+    static_assert(hasComponentTypeAccessIndex(ComponentType), "GRK_World::GetComponentManager Method type param not base of GRK_Component");
 
     //lazy instantiation of component managers, if array - 1 is smaller than the index, we havent created this manager yet for 
     //the class

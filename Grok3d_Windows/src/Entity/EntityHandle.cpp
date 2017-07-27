@@ -47,7 +47,7 @@ using templates to require GetComponentTypeAccessIndex static method
 template<class ComponentType>
 GRK_Result GRK_EntityHandle::AddComponent(ComponentType& component)
 {
-    static_assert(decltype(hasComponentTypeAccessIndex(component))::value);
+    static_assert(decltype(hasComponentTypeAccessIndex(component))::value, "GRK_EntityHandle::AddComponent Method type param not base of GRK_Component");
     RETURN_FAILURE_IF_ENTITY_DESTROYED(
         GRK_NOSUCHENTITY,
         //can't have two components of the same type
@@ -82,7 +82,7 @@ GRK_Result GRK_EntityHandle::RemoveComponent()
 template<class ComponentType>
 ComponentType* GRK_EntityHandle::GetComponent()
 {
-    static_assert(decltype(hasComponentTypeAccessIndex(component))::value);
+    static_assert(decltype(hasComponentTypeAccessIndex(component))::value, "GRK_EntityHandle::GetComponent Method type param not base of GRK_Component");
     RETURN_FAILURE_IF_ENTITY_DESTROYED(
         GRK_NOSUCHENTITY,
         if (m_components & IndexToMask(ComponentType::GetComponentTypeAccessIndex()) == 0)
@@ -102,14 +102,6 @@ GRK_Result GRK_EntityHandle::Destroy()
     GRK_Result::NoSuchEntity,
     m_entity = 0;
     return m_world->DeleteEntity(m_entity););
-}
-
-//convenience function to remove from bitmask but dont do full delete as it has already been called from this manager
-template<class ComponentType>
-GRK_Result GRK_EntityHandle::ComponentDestroyedByHandleCleanup()
-{
-    static_assert(decltype(hasComponentTypeAccessIndex(component))::value);
-    m_components &= IndexToMask(~(ComponentType::GetComponentTypeAccessIndex()))
 }
 
 bool inline GRK_EntityHandle::IsDestroyed()

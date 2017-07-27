@@ -33,10 +33,6 @@ namespace Grok3d { namespace Entities
         bool inline HasComponents(int componentBits);
 
     private:
-        template<class ComponentType>
-        Grok3d::GRK_Result ComponentDestroyedByHandleCleanup();
-
-    private:
         Grok3d::Entities::GRK_Entity m_entity;
         Grok3d::GRK_World* m_world;
     };
