@@ -63,6 +63,9 @@
     <ClInclude Include="inc\Component\Component.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="inc\Assertions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Component\ComponentManager.cpp">

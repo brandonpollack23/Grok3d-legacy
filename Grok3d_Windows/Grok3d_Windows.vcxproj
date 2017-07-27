@@ -114,6 +114,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="inc\Assertions.h" />
     <ClInclude Include="inc\Component\Component.h" />
     <ClInclude Include="inc\Component\ComponentHandle.h" />
     <ClInclude Include="inc\Component\TransformComponent.h" />

@@ -29,8 +29,6 @@ namespace Grok3d
         Grok3d::Entities::GRK_EntityHandle CreateEntity();
 
     private:
-        Grok3d::GRK_Result DeleteEntity(Grok3d::Entities::GRK_Entity entity);
-
         template<class ComponentType>
         Grok3d::Components::GRK_ComponentManager<ComponentType>* GetComponentManager();
 
@@ -44,13 +42,14 @@ namespace Grok3d
         template<class ComponentType>
         Grok3d::GRK_Result RemoveComponent(Grok3d::Entities::GRK_Entity entity);
 
+        Grok3d::Components::GRK_ComponentBitMask GetEntityComponentsBitMask(Grok3d::Entities::GRK_Entity entity);
+
+        Grok3d::GRK_Result DeleteEntity(Grok3d::Entities::GRK_Entity entity);
+
+        std::vector<Grok3d::Entities::GRK_Entity>& GetDeletedUncleanedEntities();
 
     private:
         Grok3d::Entities::GRK_EntityManager m_entityManager;
-
-        Grok3d::Components::GRK_ComponentManager<Grok3d::Components::GRK_TransformComponent> m_translationComponentManager;
-        //TODO inf pointer to each componentmanager, do a static array of them and use their defines, populate it in constructor and see source line 50
-
         std::vector<Grok3d::Components::GRK_ComponentManagerBase*> m_componentManagers;
     };
 } /*Grok3d*/

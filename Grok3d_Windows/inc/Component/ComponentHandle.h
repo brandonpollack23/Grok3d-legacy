@@ -6,7 +6,7 @@
 namespace Grok3d { namespace Components
 {
     template<class ComponentType>
-    class ComponentHandle
+    class GRK_ComponentHandle
     {
     public:
         Grok3d::Entities::GRK_Entity GetOwningEntity();

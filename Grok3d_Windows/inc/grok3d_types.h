@@ -9,17 +9,6 @@
 * As such there are no header guards so:
 * DO NOT INCLUDE HEADERS HERE */
 
-//GRK_Result types
-#define GRK_OK                                      0
-#define GRK_NOSUCHELEMENT                           1
-#define GRK_NOSPACEREMAINING                        1 << 1
-#define GRK_NOSUCHENTITY                            1 << 2
-#define GRK_ENTITYALREADYHASCOMPONENT               1 << 3
-#define GRK_NOSUCHCOMPONENTMANAGER                  1 << 4
-#define GRK_COMPONENTALREADYADDED                   1 << 5
-#define GRK_NOSUCHCOMPONENTINENTITY                 1 << 6
-#define GRK_MUSTUSECOMPONENTHANDLETODELETEBEHAVIOUR 1 << 7
-
 constexpr unsigned int IndexToMask(unsigned int index)
 {
     return 1 << index;
@@ -28,7 +17,19 @@ constexpr unsigned int IndexToMask(unsigned int index)
 //Forward declarations for headers
 namespace Grok3d
 {
-    typedef int GRK_Result;
+    enum class GRK_Result
+    {
+        Ok = 0,
+        NoSuchElement,
+        NoSpaceRemaining,
+        NoSuchEntity,
+        EntityAlreadyDeleted,
+        EntityAlreadyHasComponent,
+        NoSuchComponentManager,
+        ComponentAlreadyAdded,
+        NoSuchComponentIdentity,
+        MustUseComponentHandleToDeleteBehaviour,
+    };
 
     class GRK_World;
 
@@ -44,7 +45,7 @@ namespace Grok3d
     namespace Components
     {
         class GRK_Component;
-        template<class ComponentType> class ComponentHandle;
+        template<class ComponentType> class GRK_ComponentHandle;
         // DOCUMENTATION IMPORTANT : every component must implement a public field for componentManager pointer,
         // this makes templates not fail and it's easy to get the right manager in world etc
         class GRK_ComponentManagerBase;

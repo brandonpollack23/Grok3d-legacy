@@ -13,7 +13,7 @@ namespace Grok3d { namespace Entities
     class GRK_EntityHandle
     {
     template<class T>
-    friend class Grok3d::Components::ComponentHandle;
+    friend class Grok3d::Components::GRK_ComponentHandle;
     public:
         GRK_EntityHandle(Grok3d::GRK_World* world, Grok3d::Entities::GRK_Entity entity);
 
@@ -39,8 +39,6 @@ namespace Grok3d { namespace Entities
     private:
         Grok3d::Entities::GRK_Entity m_entity;
         Grok3d::GRK_World* m_world;
-
-        Grok3d::Components::GRK_ComponentBitMask m_components;
     };
 } /*Entities*/ } /*Grok3d*/
 

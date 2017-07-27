@@ -21,8 +21,10 @@ namespace Grok3d { namespace Components
     class GRK_ComponentManager : public GRK_ComponentManagerBase
     {
     public:
-        GRK_ComponentManager();
+        GRK_ComponentManager(GRK_World* world);
         //implicit destructor is fine
+
+        Grok3d::GRK_Result DeleteEntity(Grok3d::Entities::GRK_Entity entity);
 
         Grok3d::GRK_Result AddComponent(Grok3d::Entities::GRK_Entity entity, ComponentType& component);
 
@@ -31,11 +33,15 @@ namespace Grok3d { namespace Components
         Grok3d::GRK_Result RemoveComponent(Grok3d::Entities::GRK_Entity entity);
 
         Grok3d::GRK_Result ForEach(std::function<GRK_Result(ComponentType component)> lambda);
+
+        Grok3d::GRK_Result GRK_ComponentManager<ComponentType>::GarbageCollection();
     private:
         typedef int ComponentInstance;
 
         std::unordered_map<Grok3d::Entities::GRK_Entity, ComponentInstance>  m_entityMap;
         std::vector<ComponentType> m_components;
+
+        Grok3d::GRK_World* m_world;
     };
 } /*Components*/ } /*Grok3d*/
 

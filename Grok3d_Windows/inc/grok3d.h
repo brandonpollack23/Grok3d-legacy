@@ -14,5 +14,7 @@
 
 #include "World.h"
 
+#define INITIAL_ENTITY_ARRAY_SIZE 1024
+
 #endif
 

@@ -6,13 +6,12 @@
 
 #include "World.h"
 
-#include "templates/is_valid.h"
+#include "Assertions.h"
 
 using namespace Grok3d;
+using namespace Grok3d::Assertions;
 using namespace Grok3d::Entities;
 using namespace Grok3d::Components;
-
-auto hasComponentTypeAccessIndex = Grok3d::Templates::is_valid([](auto&& x) -> decltype(x::GetComponentTypeAccessIndex()) { });
 
 #define RETURN_FAILURE_IF_ENTITY_DESTROYED(error, statements) \
     do {\
@@ -22,9 +21,8 @@ auto hasComponentTypeAccessIndex = Grok3d::Templates::is_valid([](auto&& x) -> d
         } \
         else \
         { \
-            return statements; \
+            statements; \
         } \
-        return GRK_OK; \
     } while(0)
 
 GRK_EntityHandle::GRK_EntityHandle(GRK_World* world, GRK_Entity entity) : 
@@ -52,8 +50,9 @@ GRK_Result GRK_EntityHandle::AddComponent(ComponentType& component)
     static_assert(decltype(hasComponentTypeAccessIndex(component))::value);
     RETURN_FAILURE_IF_ENTITY_DESTROYED(
         GRK_NOSUCHENTITY,
-        //can't have two components of the same type EXCEPT BEHAVIOUR COMPONENTS WHICH ARE SCRIPTS
-        if (m_components & IndexToMask(ComponentType::GetComponentTypeAccessIndex()) > 0 && !std::is_same<decltype(ComponentType), GRK_BehaviourComponent>)
+        //can't have two components of the same type
+        // TODO 10 find a way to make it so we can have more than one BehaviourComponent
+        if (m_components & IndexToMask(ComponentType::GetComponentTypeAccessIndex()) > 0)
         {
             return GRK_COMPONENTALREADYADDED;   
         }
@@ -100,10 +99,9 @@ ComponentType* GRK_EntityHandle::GetComponent()
 GRK_Result GRK_EntityHandle::Destroy()
 {
     RETURN_FAILURE_IF_ENTITY_DESTROYED(
-    GRK_NOSUCHENTITY,
+    GRK_Result::NoSuchEntity,
     m_entity = 0;
-    m_components = 0;
-    m_world->DeleteEntity(m_entity););
+    return m_world->DeleteEntity(m_entity););
 }
 
 //convenience function to remove from bitmask but dont do full delete as it has already been called from this manager
@@ -123,5 +121,6 @@ bool inline GRK_EntityHandle::HasComponents(int componentBits)
 {
     RETURN_FAILURE_IF_ENTITY_DESTROYED(
         false,
-        ((m_components & componentBits) == componentBits));
+        GRK_ComponentBitMask components = m_world->GetEntityComponentsBitMask(m_entity);
+        return ((components & componentBits) == componentBits));
 }
