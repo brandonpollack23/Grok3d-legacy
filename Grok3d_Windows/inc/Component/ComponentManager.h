@@ -20,6 +20,7 @@ namespace Grok3d { namespace Components
     template<class ComponentType>
     class GRK_ComponentManager : public GRK_ComponentManagerBase
     {
+    static_assert(std::is_base_of<GRK_Component, ComponentType>::value, "The ComponentType passed to class GRK_ComponentManager was not of base GRK_Component");
     public:
         GRK_ComponentManager(GRK_World* world);
         //implicit destructor is fine
