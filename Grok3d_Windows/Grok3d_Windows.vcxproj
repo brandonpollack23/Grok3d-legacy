@@ -130,6 +130,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Component\Component.cpp" />
+    <ClCompile Include="src\Component\ComponentHandle.cpp" />
     <ClCompile Include="src\Component\ComponentManager.cpp" />
     <ClCompile Include="src\Component\TransformComponent.cpp" />
     <ClCompile Include="src\Entity\EntityHandle.cpp" />

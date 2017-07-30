@@ -4,6 +4,7 @@
 #include "Entity/EntityManager.h"
 
 #include "Component/ComponentManager.h"
+#include "Component/ComponentHandle.h"
 
 #include "Assertions.h"
 
@@ -65,7 +66,7 @@ GRK_Result GRK_World::RemoveComponent(GRK_Entity entity)
 }
 
 template<class ComponentType>
-ComponentType* GRK_World::GetComponent(Grok3d::Entities::GRK_Entity entity)
+GRK_ComponentHandle<ComponentType>* GRK_World::GetComponent(Grok3d::Entities::GRK_Entity entity)
 {
     static_assert(hasComponentTypeAccessIndex(ComponentType), "GRK_World::GetComponent Method type param not base of GRK_Component");
 
@@ -76,7 +77,9 @@ ComponentType* GRK_World::GetComponent(Grok3d::Entities::GRK_Entity entity)
         return nullptr;
     }
 
-    return GetComponentManager<ComponentType>()->GetComponent(entity);
+    auto componentManager = GetComponentManager<ComponentType>();
+
+    return GRK_ComponentHandle<ComponentType>(componentManager, componentManager->GetComponent(entity), entity);
 }
 
 template<class ComponentType>

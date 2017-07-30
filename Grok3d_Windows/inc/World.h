@@ -22,6 +22,7 @@ namespace Grok3d
     //make EntityHandle a friend so it can access the component creation methods, but nothing outside the engine can
     //this ensures the bitmask of components will always be up to date
     friend class Entities::GRK_EntityHandle;
+    template<class ComponentType> friend class Components::GRK_ComponentHandle;
 
     public:
         GRK_World();
@@ -37,7 +38,7 @@ namespace Grok3d
         Grok3d::GRK_Result AddComponent(Grok3d::Entities::GRK_Entity entity, ComponentType& newComponent);
 
         template<class ComponentType>
-        ComponentType* GetComponent(Grok3d::Entities::GRK_Entity entity);
+        Grok3d::Components::GRK_ComponentHandle<ComponentType>* GetComponent(Grok3d::Entities::GRK_Entity entity);
 
         template<class ComponentType>
         Grok3d::GRK_Result RemoveComponent(Grok3d::Entities::GRK_Entity entity);
