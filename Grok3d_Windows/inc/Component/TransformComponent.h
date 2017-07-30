@@ -73,7 +73,6 @@ namespace Grok3d { namespace Components
 
             //functionality
             void DetachChildren();
-            GRK_TransformComponent* FindChildByName(std::string& name);
             GRK_TransformComponent* GetChild(unsigned int index);
         private:
             GRK_TransformComponent* parent;
