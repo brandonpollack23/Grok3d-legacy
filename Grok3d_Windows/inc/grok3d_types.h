@@ -9,6 +9,9 @@
 * As such there are no header guards so:
 * DO NOT INCLUDE HEADERS HERE */
 
+//configure GLM
+#define GLM_PRECISION_HIGHP_FLOAT
+
 constexpr unsigned int IndexToMask(unsigned int index)
 {
     return 1 << index;

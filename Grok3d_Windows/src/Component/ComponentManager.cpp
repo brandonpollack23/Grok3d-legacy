@@ -77,9 +77,6 @@ ComponentType* GRK_ComponentManager<ComponentType>::GetComponent(GRK_Entity enti
 
 //removes component for specified entity if it exists
 //TODO Garbage collect this instead of deleting immediately by maintaining a list
-//Return values: 
-//GRK_OK
-//GRK_NOSUCHELEMENT : that entity has not componenet of that type
 template<class ComponentType>
 GRK_Result GRK_ComponentManager<ComponentType>::RemoveComponent(GRK_Entity entity)
 {

@@ -52,15 +52,7 @@ GRK_Result GRK_EntityHandle::AddComponent(ComponentType& component)
         GRK_NOSUCHENTITY,
         //can't have two components of the same type
         // TODO 10 find a way to make it so we can have more than one BehaviourComponent
-        if (m_components & IndexToMask(ComponentType::GetComponentTypeAccessIndex()) > 0)
-        {
-            return GRK_COMPONENTALREADYADDED;   
-        }
-        else
-        {
-            m_components |= IndexToMask(ComponentType::GetComponentTypeAccessIndex());
-            return m_world->AddComponent<ComponentType>(m_entity, component);
-        });
+        return m_world->AddComponent<ComponentType>(m_entity, component););
 }
 
 template<class ComponentType>
@@ -68,15 +60,7 @@ GRK_Result GRK_EntityHandle::RemoveComponent()
 {
     RETURN_FAILURE_IF_ENTITY_DESTROYED(
         GRK_NOSUCHENTITY,
-        if (m_components & IndexToMask(ComponentType::GetComponentTypeAccessIndex()) == 0)
-        {
-            m_components &= IndexToMask(~(ComponentType::GetComponentTypeAccessIndex()));
-            return m_world->RemoveComponent<ComponentType>(m_entity); 
-        }
-        else
-        {
-            return GRK_NOSUCHCOMPONENTINENTITY;
-        });
+        return m_world->RemoveComponent<ComponentType>(m_entity););
 }
 
 template<class ComponentType>
@@ -85,14 +69,7 @@ ComponentType* GRK_EntityHandle::GetComponent()
     static_assert(decltype(hasComponentTypeAccessIndex(component))::value, "GRK_EntityHandle::GetComponent Method type param not base of GRK_Component");
     RETURN_FAILURE_IF_ENTITY_DESTROYED(
         GRK_NOSUCHENTITY,
-        if (m_components & IndexToMask(ComponentType::GetComponentTypeAccessIndex()) == 0)
-        {
-            return m_world->GetComponent<ComponentType>(m_entity);
-        }
-        else
-        {
-            return nullptr;
-        });
+        return m_world->GetComponent<ComponentType>(m_entity););
 }
 
 

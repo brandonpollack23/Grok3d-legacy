@@ -33,15 +33,23 @@ GRK_Result GRK_World::AddComponent(GRK_Entity entity, ComponentType& newComponen
         return GRK_Result::EntityAlreadyDeleted;
     }
 
-    GRK_Result result = GetComponentManager<ComponentType>()->AddComponent(entity, newComponent);
-
-    if (result == GRK_Result::Ok)
+    //only add a component if one doesnt exist
+    if((m_entityManager.m_entityComponentsMap[entity] & IndexToMask(ComponentType::GetComponentTypeAccessIndex())) == 0)
     {
-        //add it to bitmask
-        m_entityManager.m_entityComponentsMap[entity] |= IndexToMask(ComponentType::GetComponentTypeAccessIndex());
-    }
+        GRK_Result result = GetComponentManager<ComponentType>()->AddComponent(entity, newComponent);
 
-    return result;
+        if (result == GRK_Result::Ok)
+        {
+            //add it to bitmask
+            m_entityManager.m_entityComponentsMap[entity] |= IndexToMask(ComponentType::GetComponentTypeAccessIndex());
+        }
+
+        return result;
+    }
+    else
+    {
+        return GRK_Result::ComponentAlreadyAdded;
+    }
 }
 
 template<class ComponentType>
@@ -54,19 +62,26 @@ GRK_Result GRK_World::RemoveComponent(GRK_Entity entity)
         return GRK_Result::EntityAlreadyDeleted;
     }
 
-     GRK_Result result = GetComponentManager<ComponentType>()->RemoveComponent(entity, newComponent);
+    if (m_entityManager.m_entityComponentsMap[entity] & IndexToMask(ComponentType::GetComponentTypeAccessIndex()) != 0)
+    {
+        GRK_Result result = GetComponentManager<ComponentType>()->RemoveComponent(entity, newComponent);
 
-     if (result == GRK_Result::Ok)
-     {
-        //remove it from bitmask
-        m_entityManager.m_entityComponentsMap[entity] &= ~(IndexToMask(ComponentType::GetComponentTypeAccessIndex()))
-     }
+        if (result == GRK_Result::Ok)
+        {
+            //remove it from bitmask
+            m_entityManager.m_entityComponentsMap[entity] &= ~(IndexToMask(ComponentType::GetComponentTypeAccessIndex()))
+        }
 
-     return result;
+        return result;
+    }
+    else
+    {
+        return GRK_Result::NoSuchElement;
+    }
 }
 
 template<class ComponentType>
-GRK_ComponentHandle<ComponentType>* GRK_World::GetComponent(Grok3d::Entities::GRK_Entity entity)
+GRK_ComponentHandle<ComponentType>* GRK_World::GetComponent(GRK_Entity entity)
 {
     static_assert(hasComponentTypeAccessIndex(ComponentType), "GRK_World::GetComponent Method type param not base of GRK_Component");
 
@@ -77,9 +92,16 @@ GRK_ComponentHandle<ComponentType>* GRK_World::GetComponent(Grok3d::Entities::GR
         return nullptr;
     }
 
-    auto componentManager = GetComponentManager<ComponentType>();
+    if ((m_entityManager.m_entityComponentsMap[entity] & IndexToMask(ComponentType::GetComponentTypeAccessIndex())) == 0)
+    {
+        auto componentManager = GetComponentManager<ComponentType>();
 
-    return GRK_ComponentHandle<ComponentType>(componentManager, componentManager->GetComponent(entity), entity);
+        return GRK_ComponentHandle<ComponentType>(componentManager, componentManager->GetComponent(entity), entity);
+    }
+    else
+    {
+        return GRK_Result::NoSuchElement;
+    }
 }
 
 template<class ComponentType>
