@@ -5,6 +5,7 @@
 
 #include "World.h"
 #include "Component/ComponentManager.h"
+#include "Component/TransformComponent.h"
 
 using namespace Grok3d;
 using namespace Grok3d::Components;
@@ -105,6 +106,14 @@ GRK_Result GRK_ComponentManager<ComponentType>::RemoveComponent(GRK_Entity entit
         m_components.pop_back();
         return GRK_OK;
     }
+}
+
+//Can't remove GRK_TransformComponent
+template<>
+GRK_Result GRK_ComponentManager<GRK_TransformComponent>::RemoveComponent(GRK_Entity entity)
+{
+    //TODO 20 log this 
+    return GRK_Result::Ok;
 }
 
 // This function just iterates over every component and applies a function
