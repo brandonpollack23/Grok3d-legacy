@@ -1,4 +1,5 @@
 #include "Component/ComponentHandle.h"
+#include "Component/TransformComponent.h"
 
 using namespace Grok3d;
 using namespace Grok3d::Entities;
@@ -28,5 +29,13 @@ ComponentType* GRK_ComponentHandle<ComponentType>::operator->()
 template<class ComponentType>
 GRK_Result GRK_ComponentHandle<ComponentType>::destroy()
 {
-    m_manager->RemoveComponent(m_entity);
+    return m_manager->RemoveComponent(m_entity);
+}
+
+//template specialization for GRK_TransformComponent, every entity MUST have this it cannot be destroyed
+template<>
+GRK_Result GRK_ComponentHandle<GRK_TransformComponent>::destroy()
+{
+    //TODO 20 log that this cant happen
+    return GRK_Result::Ok;
 }
