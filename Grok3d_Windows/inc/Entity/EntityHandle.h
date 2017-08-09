@@ -15,7 +15,7 @@ namespace Grok3d { namespace Entities
     template<class T>
     friend class Grok3d::Components::GRK_ComponentHandle;
     public:
-        GRK_EntityHandle(Grok3d::GRK_World* world, Grok3d::Entities::GRK_Entity entity);
+        GRK_EntityHandle(Grok3d::GRK_EntityComponentManager* entityComponentManager, Grok3d::Entities::GRK_Entity entity);
 
         Grok3d::GRK_Result Destroy();
         bool inline IsDestroyed();
@@ -34,7 +34,7 @@ namespace Grok3d { namespace Entities
 
     private:
         Grok3d::Entities::GRK_Entity m_entity;
-        Grok3d::GRK_World* m_world;
+        Grok3d::GRK_EntityComponentManager* m_manager;
     };
 } /*Entities*/ } /*Grok3d*/
 

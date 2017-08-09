@@ -33,15 +33,6 @@
     <ClInclude Include="inc\GrokUtils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="inc\World.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="inc\Component\ComponentManager.h">
-      <Filter>Header Files\Component</Filter>
-    </ClInclude>
-    <ClInclude Include="inc\Entity\EntityManager.h">
-      <Filter>Header Files\Entity</Filter>
-    </ClInclude>
     <ClInclude Include="inc\grok3d_types.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -66,19 +57,13 @@
     <ClInclude Include="inc\Assertions.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="inc\EntityComponentManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Component\ComponentManager.cpp">
-      <Filter>Source Files\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Entity\EntityManager.cpp">
-      <Filter>Source Files\Entities</Filter>
-    </ClCompile>
     <ClCompile Include="src\Entity\EntityHandle.cpp">
       <Filter>Source Files\Entities</Filter>
-    </ClCompile>
-    <ClCompile Include="src\World.cpp">
-      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Component\TransformComponent.cpp">
       <Filter>Source Files</Filter>
@@ -87,6 +72,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Component\ComponentHandle.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\EntityComponentManger.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

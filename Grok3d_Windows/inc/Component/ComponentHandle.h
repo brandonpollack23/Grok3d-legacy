@@ -20,7 +20,7 @@ namespace Grok3d { namespace Components
     private:
         Grok3d::Entities::GRK_Entity m_owner;
         ComponentType* m_component;
-        Grok3d::Components::GRK_ComponentManager<ComponentType>* m_manager;
+        Grok3d::GRK_EntityComponentManager* m_manager;
     };
 
 } /*Components*/ } /*Grok3d*/

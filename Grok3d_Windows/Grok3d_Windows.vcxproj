@@ -119,23 +119,19 @@
     <ClInclude Include="inc\Component\ComponentHandle.h" />
     <ClInclude Include="inc\Component\TransformComponent.h" />
     <ClInclude Include="inc\grok3d_types.h" />
-    <ClInclude Include="inc\Component\ComponentManager.h" />
     <ClInclude Include="inc\Entity\EntityHandle.h" />
-    <ClInclude Include="inc\Entity\EntityManager.h" />
     <ClInclude Include="inc\grok3d.h" />
     <ClInclude Include="inc\GrokUtils.h" />
     <ClInclude Include="inc\Templates\enable_if.h" />
     <ClInclude Include="inc\Templates\is_valid.h" />
-    <ClInclude Include="inc\World.h" />
+    <ClInclude Include="inc\EntityComponentManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Component\Component.cpp" />
     <ClCompile Include="src\Component\ComponentHandle.cpp" />
-    <ClCompile Include="src\Component\ComponentManager.cpp" />
     <ClCompile Include="src\Component\TransformComponent.cpp" />
     <ClCompile Include="src\Entity\EntityHandle.cpp" />
-    <ClCompile Include="src\Entity\EntityManager.cpp" />
-    <ClCompile Include="src\World.cpp" />
+    <ClCompile Include="src\EntityComponentManger.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Grok3d_Windows.licenseheader" />

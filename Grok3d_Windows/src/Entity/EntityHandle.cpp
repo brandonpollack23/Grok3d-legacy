@@ -4,7 +4,7 @@
 */
 #include "Entity/EntityHandle.h"
 
-#include "World.h"
+#include "EntityComponentManager.h"
 
 #include "Assertions.h"
 
@@ -25,8 +25,8 @@ using namespace Grok3d::Components;
         } \
     } while(0)
 
-GRK_EntityHandle::GRK_EntityHandle(GRK_World* world, GRK_Entity entity) : 
-    m_world(world),
+GRK_EntityHandle::GRK_EntityHandle(GRK_EntityComponentManager* entityComponentManager, GRK_Entity entity) : 
+    m_manager(entityComponentManager),
     m_entity(entity)
 {
 }
@@ -52,7 +52,7 @@ GRK_Result GRK_EntityHandle::AddComponent(ComponentType& component)
         GRK_NOSUCHENTITY,
         //can't have two components of the same type
         // TODO 10 find a way to make it so we can have more than one BehaviourComponent
-        return m_world->AddComponent<ComponentType>(m_entity, component););
+        return m_manager->AddComponent<ComponentType>(m_entity, component););
 }
 
 template<class ComponentType>
@@ -60,7 +60,7 @@ GRK_Result GRK_EntityHandle::RemoveComponent()
 {
     RETURN_FAILURE_IF_ENTITY_DESTROYED(
         GRK_NOSUCHENTITY,
-        return m_world->RemoveComponent<ComponentType>(m_entity););
+        return m_manager->RemoveComponent<ComponentType>(m_entity););
 }
 
 template<class ComponentType>
@@ -69,7 +69,7 @@ ComponentType* GRK_EntityHandle::GetComponent()
     static_assert(decltype(hasComponentTypeAccessIndex(component))::value, "GRK_EntityHandle::GetComponent Method type param not base of GRK_Component");
     RETURN_FAILURE_IF_ENTITY_DESTROYED(
         GRK_NOSUCHENTITY,
-        return m_world->GetComponent<ComponentType>(m_entity););
+        return m_manager->GetComponent<ComponentType>(m_entity););
 }
 
 
@@ -77,8 +77,8 @@ GRK_Result GRK_EntityHandle::Destroy()
 {
     RETURN_FAILURE_IF_ENTITY_DESTROYED(
     GRK_Result::NoSuchEntity,
-    m_entity = 0;
-    return m_world->DeleteEntity(m_entity););
+    return m_manager->DeleteEntity(m_entity);
+    m_entity = 0;);
 }
 
 bool inline GRK_EntityHandle::IsDestroyed()
@@ -90,6 +90,6 @@ bool inline GRK_EntityHandle::HasComponents(int componentBits)
 {
     RETURN_FAILURE_IF_ENTITY_DESTROYED(
         false,
-        GRK_ComponentBitMask components = m_world->GetEntityComponentsBitMask(m_entity);
+        GRK_ComponentBitMask components = m_manager->GetEntityComponentsBitMask(m_entity);
         return ((components & componentBits) == componentBits));
 }

@@ -21,7 +21,6 @@ namespace Grok3d
 
         Grok3d::Entities::GRK_EntityHandle CreateEntity();
 
-    private:
         //these component functions can only be called from GRK_EntityHandle or GRK_World!!!
         template<class ComponentType>
         Grok3d::GRK_Result AddComponent(Grok3d::Entities::GRK_Entity entity, ComponentType& newComponent);
