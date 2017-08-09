@@ -12,8 +12,6 @@ namespace Grok3d { namespace Entities
 {
     class GRK_EntityHandle
     {
-    template<class T>
-    friend class Grok3d::Components::GRK_ComponentHandle;
     public:
         GRK_EntityHandle(Grok3d::GRK_EntityComponentManager* entityComponentManager, Grok3d::Entities::GRK_Entity entity);
 
