@@ -7,32 +7,21 @@
 #define __WORLD__H
 
 #include "grok3d_types.h"
-
-#include "Entity/EntityManager.h"
-
-#include "Component/ComponentManager.h"
-#include "Component/TransformComponent.h"
+#include "grok3d.h"
 
 #include <vector>
+#include <unordered_map>
 
 namespace Grok3d 
 {
-    class GRK_World
+    class GRK_EntityComponentManager
     {
-    //make EntityHandle a friend so it can access the component creation methods, but nothing outside the engine can
-    //this ensures the bitmask of components will always be up to date
-    friend class Entities::GRK_EntityHandle;
-    template<class ComponentType> friend class Components::GRK_ComponentHandle;
-
     public:
-        GRK_World();
+        GRK_EntityComponentManager();
 
         Grok3d::Entities::GRK_EntityHandle CreateEntity();
 
     private:
-        template<class ComponentType>
-        Grok3d::Components::GRK_ComponentManager<ComponentType>* GetComponentManager();
-
         //these component functions can only be called from GRK_EntityHandle or GRK_World!!!
         template<class ComponentType>
         Grok3d::GRK_Result AddComponent(Grok3d::Entities::GRK_Entity entity, ComponentType& newComponent);
@@ -50,8 +39,23 @@ namespace Grok3d
         std::vector<Grok3d::Entities::GRK_Entity>& GetDeletedUncleanedEntities();
 
     private:
-        Grok3d::Entities::GRK_EntityManager m_entityManager;
-        std::vector<Grok3d::Components::GRK_ComponentManagerBase*> m_componentManagers;
+        //entity index information
+        Grok3d::Entities::GRK_Entity m_NextEntityId = 1;
+
+        //list of deleted entites that need to be GC'd
+        std::vector<Grok3d::Entities::GRK_Entity> m_deletedUncleatedEntities;
+
+        //index into vector for component
+        typedef int ComponentInstance;
+
+        //this is a map of entities to a bitmask of their components, used for system registration/component deletion checks etc
+        std::unordered_map<Grok3d::Entities::GRK_Entity, Grok3d::Components::GRK_ComponentBitMask> m_entityComponentsBitMaskMap;
+
+        //vector of maps from entity to component index into componentStore[ComponentType::Offset]
+        std::vector<std::unordered_map<Grok3d::Entities::GRK_Entity, ComponentInstance>> m_entityComponentIndexMaps;
+
+        //vector of vectors of components, each index is the associated componenttype's list of components, indexed by m_EntityMaps vector
+        std::vector<std::vector<Grok3d::Components::GRK_Component*>> m_componentsStore;
     };
 } /*Grok3d*/
 

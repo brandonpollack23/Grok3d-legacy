@@ -34,25 +34,21 @@ namespace Grok3d
         MustUseComponentHandleToDeleteBehaviour,
     };
 
-    class GRK_World;
+    class GRK_EntityComponentManager;
 
     namespace Entities
     {
         class GRK_EntityHandle;
 
         typedef int GRK_Entity;
-
-        class GRK_EntityManager;
     }
 
     namespace Components
     {
-        class GRK_Component;
-        template<class ComponentType> class GRK_ComponentHandle;
         // DOCUMENTATION IMPORTANT : every component must implement a public field for componentManager pointer,
         // this makes templates not fail and it's easy to get the right manager in world etc
-        class GRK_ComponentManagerBase;
-        template<class ComponentType> class GRK_ComponentManager;
+        class GRK_Component;
+        template<class ComponentType> class GRK_ComponentHandle;
 
         class GRK_TransformComponent;
 

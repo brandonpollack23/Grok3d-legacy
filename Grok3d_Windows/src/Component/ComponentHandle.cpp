@@ -6,8 +6,8 @@ using namespace Grok3d::Entities;
 using namespace Grok3d::Components;
 
 template<class ComponentType>
-GRK_ComponentHandle<ComponentType>::GRK_ComponentHandle(GRK_ComponentManager<ComponentType>* manager, ComponentType* component, GRK_Entity owner) : 
-    m_manager(manager), 
+GRK_ComponentHandle<ComponentType>::GRK_ComponentHandle(Grok3d::GRK_EntityComponentManager* entityComponentManager, ComponentType* component, GRK_Entity owner) : 
+    m_manager(entityComponentManager), 
     m_component(component),
     m_owner(owner)
 {

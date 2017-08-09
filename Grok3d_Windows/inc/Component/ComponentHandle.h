@@ -9,7 +9,7 @@ namespace Grok3d { namespace Components
     class GRK_ComponentHandle
     {
     public:
-        GRK_ComponentHandle(Grok3d::Components::GRK_ComponentManager<ComponentType>* manager, ComponentType* component, Grok3d::Entities::GRK_Entity owner);
+        GRK_ComponentHandle(Grok3d::GRK_EntityComponentManager* entityComponentManager, ComponentType* component, Grok3d::Entities::GRK_Entity owner);
 
         Grok3d::Entities::GRK_Entity GetOwningEntity();
 

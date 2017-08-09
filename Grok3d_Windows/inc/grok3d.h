@@ -7,12 +7,10 @@
 #define __GROK3D__H
 
 #include "entity/EntityHandle.h"
-#include "entity/EntityManager.h"
 
-#include "Component/ComponentManager.h"
 #include "Component/TransformComponent.h"
 
-#include "World.h"
+#include "EntityComponentManager.h"
 
 #define INITIAL_ENTITY_ARRAY_SIZE 1024
 
