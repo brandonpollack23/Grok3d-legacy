@@ -29,7 +29,6 @@ GRK_EntityComponentManager::GRK_EntityComponentManager()
 GRK_EntityHandle GRK_EntityComponentManager::CreateEntity()
 {
     //I could do a check here to see if we overflowed to 0 but that's just inconceivable that we'd have that many (2^32) entities    
-    //TODO 1 automatically add transform component
     GRK_Entity id = m_NextEntityId++;
 
     m_entityComponentsBitMaskMap[id] = 0;
