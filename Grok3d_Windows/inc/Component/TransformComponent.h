@@ -1,3 +1,7 @@
+/* Copyright (c) 2017 Brandon Pollack
+* Contact @ grok3d@gmail.com
+* This file is available under the MIT license included in the project
+*/
 #ifndef __TRANSLATIONCOMPONENT__H
 #define __TRANSLATIONCOMPONENT__H
 
@@ -16,84 +20,44 @@ namespace Grok3d { namespace Components
     class GRK_TransformComponent : public GRK_Component
     {
         public:
+            enum CoordinateSpace
+            {
+                Self,
+                World
+            };
+
+            //TODO as chaining lots of parents gets really big this will get slow, best to cache and have a dirty bit
             void SetParent(GRK_TransformComponent* newParent);
+            void AttachChild(GRK_TransformComponent* newChild);
             bool IsChildOf(GRK_TransformComponent* possibleParent);
             unsigned int GetSiblingIndex(); //use parent and iterate through the list looking for me
-            void SetSiblingIndex(unsigned int newIndex); //use parent and iterate through the list looking for me, and move me
+            int GetChildIndex(GRK_TransformComponent* possibleChild);
 
-            bool HasChanged();
             int ChildCount();
 
-            //TODO 30
-            //glm::mat4 GetLocalToWorldTransformMatrix();
-            //glm::mat4 GetWorldToLocalTransformMatrix();
-            
-            glm::vec3 SetWorldPosition();
-            void GetWorldPosition(glm::vec3 v);
+            glm::vec3 GetWorldPosition();
+            void SetWorldPosition(glm::vec3 v);
+            void SetWorldPosition(float x, float y, float z);
 
             glm::vec3 GetLocalPosition();
             void GetLocalPosition(glm::vec3 v);
 
-            glm::quat GetLocalRotation();
-            void GetLocalRotation(glm::quat q);
-
             glm::vec3 GetLocalScale();
-            void GetLocalScale(glm::vec3 v);
-
-            glm::quat GetWorldRotation();
-            void SetWorldRotation(glm::quat q);
-
-            //TODO 30
-            //glm::vec3 GetForward();
-            //void SetForward(glm::vec3 v);
-
-            //glm::vec3 GetUp();
-            //void SetUp(glm::vec3 v);
-
-            //glm::vec3 GetRight();
-            //void SetRight(glm::vec3 v);
-
-            //TODO 25
-            //void LookAt(glm::vec3 p);
-            //void Rotate(glm::vec3 eulerAngles, CoordinateSpace relativeTo = CoordinateSpace::Self);
-            //void RotateAround(glm::vec3 p, glm::vec3 axis, float angle);
-
-            //void SetPositionAndRotation(glm::vec3 position, glm::quat rotation);
-
-            //TODO 30
-            //transforms this points/direction/vector coordinates to world coordinates or opposite for inverse
-            //glm::vec3 TransformPoint(glm::vec3 p);
-            //glm::vec3 TransformPointInverse(glm::vec3 p);
-
-            //glm::vec3 TransformDirection(glm::vec3 direction);
-            //glm::vec3 TransformDirectionInverse(glm::vec3 direction);
-
-            //glm::vec3 TransformVector(glm::vec3 vector);
-            //glm::vec3 TransformVectorInverse(glm::vec3 vector);
+            void SetLocalScale(glm::vec3 v);
+            void SetLocalScale(float x, float y, float z);
 
             //functionality
             void DetachChildren();
             GRK_TransformComponent* GetChild(unsigned int index);
         private:
-            GRK_TransformComponent* parent;
-
-            //a flag that is set if transform is changed, helpful in determining if new MVP is needed etc
-            bool m_hasChanged;
-            unsigned int m_childCount;
-
-            //position, rotation, and scale relative to parent
-            glm::vec3 m_localPosition;
-            glm::quat m_localRotation;
-            glm::vec3 m_localScale;
-            glm::mat4 m_MVP;
+            GRK_TransformComponent* m_parent;
 
             std::vector<GRK_TransformComponent*> m_children;
-    };
 
-    enum CoordinateSpace
-    {
-        Self,
-        World
+            //position, rotation, and scale relative to parent
+            //TODO rotation as quaternion
+            glm::vec3 m_localPosition;
+            glm::vec3 m_localScale;
     };
 } /*Components*/ } /*Grok3d*/
 

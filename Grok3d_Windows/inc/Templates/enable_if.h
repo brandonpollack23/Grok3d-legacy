@@ -1,3 +1,7 @@
+/* Copyright (c) 2017 Brandon Pollack
+* Contact @ grok3d@gmail.com
+* This file is available under the MIT license included in the project
+*/
 #ifndef __ENABLE_IF__H
 #define __ENABLE_IF__H
 
