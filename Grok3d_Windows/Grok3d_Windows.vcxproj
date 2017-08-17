@@ -134,6 +134,7 @@
     <ClCompile Include="src\Component\TransformComponent.cpp" />
     <ClCompile Include="src\Entity\EntityHandle.cpp" />
     <ClCompile Include="src\EntityComponentManger.cpp" />
+    <ClCompile Include="src\maintest.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Grok3d_Windows.licenseheader" />

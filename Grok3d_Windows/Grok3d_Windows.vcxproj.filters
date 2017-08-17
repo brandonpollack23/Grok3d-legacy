@@ -83,6 +83,9 @@
     <ClCompile Include="src\Component\GameLogicComponent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\maintest.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Grok3d_Windows.licenseheader" />

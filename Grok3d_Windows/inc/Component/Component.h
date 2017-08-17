@@ -16,8 +16,13 @@ namespace Grok3d { namespace Components
     public:
         typedef unsigned int ComponentTypeAccessIndex;
 
+        //the definition must be in the header because that's how templated functions work, I'm afraid
         template<class ComponentType>
-        static ComponentTypeAccessIndex GetComponentTypeAccessIndex();
+        static ComponentTypeAccessIndex GetComponentTypeAccessIndex()
+        {
+            static const GRK_Component::ComponentTypeAccessIndex myComponentTypeAccessIndex = _offsetCounter++;
+            return myComponentTypeAccessIndex;
+        }
     private:
         //TODO multithread lock th is
         static ComponentTypeAccessIndex _offsetCounter;

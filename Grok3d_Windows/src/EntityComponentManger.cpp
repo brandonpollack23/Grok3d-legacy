@@ -6,6 +6,7 @@
 
 #include "Entity/EntityHandle.h"
 
+#include "Component/Component.h"
 #include "Component/ComponentHandle.h"
 
 #include "Assertions.h"
