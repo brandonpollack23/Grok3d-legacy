@@ -45,12 +45,11 @@ namespace Grok3d
 
     namespace Components
     {
-        // DOCUMENTATION IMPORTANT : every component must implement a public field for componentManager pointer,
-        // this makes templates not fail and it's easy to get the right manager in world etc
-        class GRK_Component;
         template<class ComponentType> class GRK_ComponentHandle;
 
+        class GRK_Component;
         class GRK_TransformComponent;
+        class GRK_GameLogicComponent;
 
         typedef int GRK_ComponentBitMask;
     }

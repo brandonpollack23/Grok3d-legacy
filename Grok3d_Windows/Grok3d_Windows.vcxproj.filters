@@ -60,6 +60,9 @@
     <ClInclude Include="inc\EntityComponentManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="inc\Component\GameLogicComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Entity\EntityHandle.cpp">
@@ -75,6 +78,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\EntityComponentManger.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Component\GameLogicComponent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

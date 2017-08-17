@@ -20,12 +20,6 @@ namespace Grok3d { namespace Components
     class GRK_TransformComponent : public GRK_Component
     {
         public:
-            enum CoordinateSpace
-            {
-                Self,
-                World
-            };
-
             //TODO as chaining lots of parents gets really big this will get slow, best to cache and have a dirty bit
             void SetParent(GRK_TransformComponent* newParent);
             void AttachChild(GRK_TransformComponent* newChild);

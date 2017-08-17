@@ -119,3 +119,16 @@ void GRK_TransformComponent::SetLocalScale(float x, float y, float z)
     m_localScale.z = z;
 }
 
+void GRK_TransformComponent::DetachChildren()
+{
+    for (auto child : m_children)
+    {
+        child->SetParent(nullptr);
+    }
+    m_children.clear();
+}
+
+GRK_TransformComponent* GRK_TransformComponent::GetChild(unsigned int index)
+{
+    return (index < m_children.size() && index > 0) ? m_children[index] : nullptr;
+}
