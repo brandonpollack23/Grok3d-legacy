@@ -26,8 +26,8 @@ GRK_EntityComponentManager::GRK_EntityComponentManager()
     m_entityComponentIndexMaps[0] = std::unordered_map<GRK_Entity, ComponentInstance>(INITIAL_ENTITY_ARRAY_SIZE);
 
     //same goes for componentStore
-    m_componentsStore = std::vector<std::vector<GRK_Component*>>(1);
-    m_componentsStore[0] = std::vector<GRK_Component*>(INITIAL_ENTITY_ARRAY_SIZE);
+    m_componentsStore = std::vector<std::vector<GRK_Component>>(1);
+    m_componentsStore[0] = std::vector<GRK_Component>(INITIAL_ENTITY_ARRAY_SIZE);
 }
 
 GRK_EntityHandle GRK_EntityComponentManager::CreateEntity()
@@ -52,22 +52,20 @@ GRK_EntityHandle GRK_EntityComponentManager::CreateEntity()
 template<class ComponentType>
 GRK_Result GRK_EntityComponentManager::AddComponent(GRK_Entity entity, ComponentType& newComponent)
 {
-    static_assert(hasComponentTypeAccessIndex(ComponentType), "GRK_EntityComponentManager::AddComponent Method type param not base of GRK_Component");
-
     if (entity == 0)
     {
         return GRK_Result::EntityAlreadyDeleted;
     }
 
     //only add a component if one doesnt exist
-    if((m_entityComponentsBitMaskMap[entity] & IndexToMask(ComponentType::GetComponentTypeAccessIndex())) == 0)
+    if((m_entityComponentsBitMaskMap[entity] & IndexToMask(GRK_Component::GetComponentTypeAccessIndex<ComponentType>())) == 0)
     {
         //this is a vector of the type we are trying to add
-        std::vector<GRK_Component*>* componentTypeVector = &m_componentsStore[ComponentType::GetComponentTypeAccessIndex];
+        std::vector<GRK_Component>* componentTypeVector = &(m_componentsStore[GRK_Component::GetComponentTypeAccessIndex<ComponentType>()]);
 
-        if (*componentTypeVector.size() == *componentTypeVector.max_size())
+        if (componentTypeVector->size() == componentTypeVector->max_size())
         {
-            return GRK_NOSPACEREMAINING;
+            return GRK_Result::NoSpaceRemaining;
         }
         else
         {
@@ -75,19 +73,19 @@ GRK_Result GRK_EntityComponentManager::AddComponent(GRK_Entity entity, Component
             //SCALE NUM and SCALE DEN
             //DOCUMENTATION put the formula for scale factor of this in the docs, %scale = (1+NUM/DEN)
             //resize vector if necessary
-            auto cap = *componentTypeVector.capacity();
-            if (cap == *componentTypeVector.size())
+            auto cap = componentTypeVector->capacity();
+            if (cap == componentTypeVector->size())
             {
-                *componentTypeVector.reserve(cap + cap / 10);
+                componentTypeVector->reserve(cap + cap / 10);
             }
 
             //add the component to the end our vector
-            *componentTypeVector.push_back(component);
+            componentTypeVector->push_back(newComponent);
 
             //the new size - 1 is the index of the vector the element is stored at
-            m_entityComponentIndexMaps[ComponentType::GetComponentTypeAccessIndex][entity] = *componentTypeVector.size() - 1;
+            m_entityComponentIndexMaps[GRK_Component::GetComponentTypeAccessIndex<ComponentType>()][entity] = static_cast<int>(componentTypeVector->size() - 1);
 
-            m_entityComponentsBitMaskMap[entity] |= IndexToMask(ComponentType::GetComponentTypeAccessIndex());
+            m_entityComponentsBitMaskMap[entity] |= IndexToMask(GRK_Component::GetComponentTypeAccessIndex<ComponentType>());
 
             return GRK_Result::Ok;
         }
@@ -103,19 +101,17 @@ GRK_Result GRK_EntityComponentManager::AddComponent(GRK_Entity entity, Component
 template<class ComponentType>
 GRK_Result GRK_EntityComponentManager::RemoveComponent(GRK_Entity entity)
 {
-    static_assert(hasComponentTypeAccessIndex(ComponentType), "GRK_EntityComponentManager::RemoveComponent Method type param not base of GRK_Component");
-
     if (entity == 0)
     {
         return GRK_Result::EntityAlreadyDeleted;
     }
 
-    if (m_entityComponentsBitMaskMap[entity] & IndexToMask(ComponentType::GetComponentTypeAccessIndex()) != 0)
+    if (m_entityComponentsBitMaskMap[entity] & IndexToMask(GRK_Component::GetComponentTypeAccessIndex<ComponentType>()) != 0)
     {
         //this is a vector of the type we are trying to remove
         std::vector<GRK_Component*>* componentTypeVector = &m_componentsStore[ComponentType::GetComponentTypeAccessIndex()];
         //this is the map of entity to components for this type
-        std::unordered_map<GRK_Entity, GRK_Component*>* entityInstanceMap = &m_entityComponentIndexMaps[ComponentType::GetComponentTypeAccessIndex()];
+        std::unordered_map<GRK_Entity, GRK_Component*>* entityInstanceMap = &m_entityComponentIndexMaps[GRK_Component::GetComponentTypeAccessIndex<ComponentType>()];
 
         //check if the elment is in the map
         //and do what we need to if it is not
@@ -129,18 +125,18 @@ GRK_Result GRK_EntityComponentManager::RemoveComponent(GRK_Entity entity)
             //this entity exists so we move the last element of the components vector
             //to the spot that this one was taking up
             auto indexToMoveLastStoredComponent = *entityInstanceMap[entity];
-            auto lastElement = *componentTypeVector.back();
+            auto lastElement = componentTypeVector->back();
             //use std::move so we cannibilize any allocated components and dont copy them
             //TODO 3 implement std::move constructor (&&) for GRK_Components
-            *componentTypeVector[indexToMoveLastStoredComponent] = std::move(lastElement);
+            *(componentTypeVector)[indexToMoveLastStoredComponent] = std::move(lastElement);
 
             //then remove it from the map
             //and shorten our vector
-            *entityInstanceMap.erase(it);
-            *componentTypeVector.pop_back();
+            entityInstanceMap->erase(it);
+            componentTypeVector->pop_back();
 
             //remove it from bitmask
-            *m_entityComponentsBitMaskMap[entity] &= ~(IndexToMask(ComponentType::GetComponentTypeAccessIndex()));
+            *(m_entityComponentsBitMaskMap)[entity] &= ~(IndexToMask(GRK_Component::GetComponentTypeAccessIndex<ComponentType>()));
 
             return GRK_Result::Ok;
         }
@@ -154,20 +150,18 @@ GRK_Result GRK_EntityComponentManager::RemoveComponent(GRK_Entity entity)
 template<class ComponentType>
 GRK_ComponentHandle<ComponentType>* GRK_EntityComponentManager::GetComponent(GRK_Entity entity)
 {
-    static_assert(hasComponentTypeAccessIndex(ComponentType), "GRK_EntityComponentManager::GetComponent Method type param not base of GRK_Component");
-
     if (
         entity == 0 ||
-        (m_entityComponentsBitMaskMap[entity] & IndexToMask(ComponentType::GetComponentTypeAccessIndex()) == 0))
+        (m_entityComponentsBitMaskMap[entity] & IndexToMask(GRK_Component::GetComponentTypeAccessIndex<ComponentType>()) == 0))
     {
         return nullptr;
     }
 
-    if ((m_entityComponentsBitMaskMap[entity] & IndexToMask(ComponentType::GetComponentTypeAccessIndex())) == 0)
+    if ((m_entityComponentsBitMaskMap[entity] & IndexToMask(GRK_Component::GetComponentTypeAccessIndex<ComponentType>())) == 0)
     {
         //this is a vector of the type we are trying to remove
         std::vector<GRK_Component*>* componentTypeVector = &m_componentsStore[ComponentType::GetComponentTypeAccessIndex()];
-        std::unordered_map<GRK_Entity, ComponentInstance>* entityInstanceMap = m_entityComponentIndexMaps[ComponentType::GetComponentTypeAccessIndex()];
+        std::unordered_map<GRK_Entity, ComponentInstance>* entityInstanceMap = m_entityComponentIndexMaps[GRK_Component::GetComponentTypeAccessIndex<ComponentType>()];
 
         ComponentInstance instance = entityInstanceMap[entity];
 

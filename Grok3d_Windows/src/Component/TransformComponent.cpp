@@ -42,7 +42,7 @@ int GRK_TransformComponent::GetChildIndex(GRK_TransformComponent* possibleChild)
 
 int GRK_TransformComponent::ChildCount()
 {
-    return this->m_children.size();
+    return static_cast<int>(this->m_children.size());
 }
 
 glm::vec3 GRK_TransformComponent::GetWorldPosition()

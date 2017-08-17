@@ -16,5 +16,5 @@ template<class ComponentType>
 GRK_Component::ComponentTypeAccessIndex GRK_Component::GetComponentTypeAccessIndex()
 {
     static const GRK_Component::ComponentTypeAccessIndex myComponentTypeAccessIndex = _offsetCounter++;
-    return myBitShift;
+    return myComponentTypeAccessIndex;
 }

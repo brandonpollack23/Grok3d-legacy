@@ -19,6 +19,7 @@ namespace Grok3d { namespace Components
         template<class ComponentType>
         static ComponentTypeAccessIndex GetComponentTypeAccessIndex();
     private:
+        //TODO multithread lock th is
         static ComponentTypeAccessIndex _offsetCounter;
     };
 } /*Components*/ } /*Grok3d*/

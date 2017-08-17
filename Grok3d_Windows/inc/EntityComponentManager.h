@@ -54,7 +54,7 @@ namespace Grok3d
         std::vector<std::unordered_map<Grok3d::Entities::GRK_Entity, ComponentInstance>> m_entityComponentIndexMaps;
 
         //vector of vectors of components, each index is the associated componenttype's list of components, indexed by m_EntityMaps vector
-        std::vector<std::vector<Grok3d::Components::GRK_Component*>> m_componentsStore;
+        std::vector<std::vector<Grok3d::Components::GRK_Component>> m_componentsStore;
     };
 } /*Grok3d*/
 
