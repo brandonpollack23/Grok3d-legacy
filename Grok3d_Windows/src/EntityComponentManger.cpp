@@ -9,12 +9,15 @@
 #include "Component/Component.h"
 #include "Component/ComponentHandle.h"
 
+#include "System/SystemManager.h"
+
 #include "Assertions.h"
 
 using namespace Grok3d;
 using namespace Grok3d::Assertions;
 using namespace Grok3d::Components;
 using namespace Grok3d::Entities;
+using namespace Grok3d::Systems;
 
 GRK_EntityComponentManager::GRK_EntityComponentManager()
 {
@@ -29,6 +32,12 @@ GRK_EntityComponentManager::GRK_EntityComponentManager()
     //same goes for componentStore
     m_componentsStore = std::vector<std::vector<GRK_Component>>(1);
     m_componentsStore[0] = std::vector<GRK_Component>(INITIAL_ENTITY_ARRAY_SIZE);
+}
+
+GRK_Result GRK_EntityComponentManager::Initialize(GRK_SystemManager* systemManager)
+{
+    m_systemManager = systemManager;
+    m_isInitialized = true;
 }
 
 GRK_EntityHandle GRK_EntityComponentManager::CreateEntity()
@@ -206,4 +215,9 @@ GRK_Result GRK_EntityComponentManager::DeleteEntity(GRK_Entity entity)
 std::vector<GRK_Entity>& GRK_EntityComponentManager::GetDeletedUncleanedEntities()
 {
     return m_deletedUncleatedEntities;
+}
+
+void GRK_EntityComponentManager::RegisterSystem(GRK_System* system)
+{
+
 }

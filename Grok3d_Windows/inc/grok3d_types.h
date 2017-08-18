@@ -20,6 +20,8 @@ constexpr unsigned int IndexToMask(unsigned int index)
 //Forward declarations for headers
 namespace Grok3d
 {
+    class GRK_Engine;
+
     enum class GRK_Result
     {
         Ok = 0,
@@ -52,6 +54,12 @@ namespace Grok3d
         class GRK_GameLogicComponent;
 
         typedef int GRK_ComponentBitMask;
+    }
+
+    namespace Systems
+    {
+        class GRK_SystemManager;
+        class GRK_System;
     }
 }
 

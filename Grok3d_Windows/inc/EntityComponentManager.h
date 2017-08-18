@@ -19,6 +19,8 @@ namespace Grok3d
     public:
         GRK_EntityComponentManager();
 
+        GRK_Result Initialize(Grok3d::Systems::GRK_SystemManager* systemManager);
+
         Grok3d::Entities::GRK_EntityHandle CreateEntity();
 
         //these component functions can only be called from GRK_EntityHandle or GRK_World!!!
@@ -38,6 +40,9 @@ namespace Grok3d
         std::vector<Grok3d::Entities::GRK_Entity>& GetDeletedUncleanedEntities();
 
     private:
+        bool m_isInitialized = false;
+
+        Grok3d::Systems::GRK_SystemManager* m_systemManager;
         //entity index information
         Grok3d::Entities::GRK_Entity m_NextEntityId = 1;
 
