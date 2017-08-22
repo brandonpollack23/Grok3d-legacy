@@ -25,15 +25,16 @@ namespace Grok3d
     enum class GRK_Result
     {
         Ok = 0,
-        NoSuchElement,
-        NoSpaceRemaining,
-        NoSuchEntity,
-        EntityAlreadyDeleted,
-        EntityAlreadyHasComponent,
-        NoSuchComponentManager,
-        ComponentAlreadyAdded,
-        NoSuchComponentIdentity,
-        MustUseComponentHandleToDeleteBehaviour,
+        NoSuchElement = 1,
+        NoSpaceRemaining = 1 << 1,
+        NoSuchEntity = 1 << 2,
+        EntityAlreadyDeleted = 1 << 3,
+        EntityAlreadyHasComponent = 1 << 4,
+        NoSuchComponentManager = 1 << 5,
+        ComponentAlreadyAdded = 1 << 6,
+        NoSuchComponentIdentity = 1 << 7,
+        MustUseComponentHandleToDeleteBehaviour = 1 << 8,
+        ErrorAddingToSystem = 1 << 9,
     };
 
     class GRK_EntityComponentManager;
