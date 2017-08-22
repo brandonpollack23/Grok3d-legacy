@@ -61,6 +61,7 @@ namespace Grok3d
     {
         class GRK_SystemManager;
         class GRK_System;
+        class GRK_GameLogicSystem : public GRK_System;
     }
 }
 

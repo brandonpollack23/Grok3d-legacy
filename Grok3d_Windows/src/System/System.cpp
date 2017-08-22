@@ -10,12 +10,12 @@ GRK_System::GRK_System()
     m_trackedEntities = new std::unordered_set<GRK_Entity>(INITIAL_ENTITY_ARRAY_SIZE);
 }
 
-GRK_Result GRK_System::UpdateSystemEntities(GRK_Entity entity, GRK_ComponentBitMask newBitMask)
+GRK_Result GRK_System::UpdateSystemEntities(GRK_EntityHandle entity)
 {
     GRK_ComponentBitMask myMask = GetComponentsBitMask();
 
     //if mask has all components I need
-    if ((myMask & newBitMask) == newBitMask)
+    if (entity.HasComponents(myMask))
     {
         try
         {
