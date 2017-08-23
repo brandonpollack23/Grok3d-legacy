@@ -7,6 +7,23 @@
 #define __ENTITYHANDLER__H
 
 #include "grok3d_types.h"
+#include "EntityComponentManager.h"
+#include "Component/ComponentHandle.h"
+
+#include <type_traits>
+#include <functional>
+
+#define RETURN_FAILURE_IF_ENTITY_DESTROYED(error, statements) \
+    do {\
+        if (IsDestroyed()) \
+        { \
+            return error; \
+        } \
+        else \
+        { \
+            statements; \
+        } \
+    } while(0)
 
 namespace Grok3d { namespace Entities 
 {
@@ -25,12 +42,23 @@ namespace Grok3d { namespace Entities
         Grok3d::GRK_Result RemoveComponent();
 
         template<class ComponentType>
-        ComponentType* GetComponent();
+        Grok3d::Components::GRK_ComponentHandle<ComponentType> GetComponent()
+        {
+            static_assert(
+                std::is_base_of<GRK_Component, ComponentType>::value,
+                "GRK_EntityHandle::GetComponent Method type param not base of GRK_Component");
 
-        // STRETCH 1: change this to just take in template of which component
-        bool inline HasComponents(int componentBits);
+            RETURN_FAILURE_IF_ENTITY_DESTROYED(
+                Grok3d::Components::GRK_ComponentHandle<ComponentType>(nullptr, nullptr, -1),
+                return m_manager->GetComponent<ComponentType>(m_entity););
+        }
+
+        bool HasComponents(Grok3d::Components::GRK_ComponentBitMask componentBits);
+
+        bool operator==(const Grok3d::Entities::GRK_EntityHandle& rhs) const;
 
     private:
+        friend ::std::hash<GRK_EntityHandle>;
         Grok3d::Entities::GRK_Entity m_entity;
         Grok3d::GRK_EntityComponentManager* m_manager;
     };

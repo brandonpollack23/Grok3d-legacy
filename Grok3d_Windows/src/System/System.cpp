@@ -1,13 +1,17 @@
-#include "System/system.h"
 #include "grok3d.h"
+#include "System/system.h"
+#include "Entity/EntityHandle.h"
+
+#include <unordered_set>
 
 using namespace Grok3d;
 using namespace Grok3d::Entities;
+using namespace Grok3d::Components;
 using namespace Grok3d::Systems;
 
 GRK_System::GRK_System()
 {
-    m_trackedEntities = new std::unordered_set<GRK_Entity>(INITIAL_ENTITY_ARRAY_SIZE);
+    m_trackedEntities = std::unordered_set<GRK_EntityHandle>(INITIAL_ENTITY_ARRAY_SIZE);
 }
 
 GRK_Result GRK_System::UpdateSystemEntities(GRK_EntityHandle entity)
@@ -31,9 +35,9 @@ GRK_Result GRK_System::UpdateSystemEntities(GRK_EntityHandle entity)
         auto itRemove = m_trackedEntities.find(entity);
         if (itRemove != m_trackedEntities.end())
         {
-            m_trackedEntities.remove(entity);
+            m_trackedEntities.erase(entity);
         }
     }
 
-    return GRK_OK;
+    return GRK_Result::Ok;
 }

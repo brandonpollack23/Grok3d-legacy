@@ -10,24 +10,9 @@ using namespace Grok3d::Entities;
 using namespace Grok3d::Components;
 
 template<class ComponentType>
-GRK_ComponentHandle<ComponentType>::GRK_ComponentHandle(Grok3d::GRK_EntityComponentManager* entityComponentManager, ComponentType* component, GRK_Entity owner) : 
-    m_manager(entityComponentManager), 
-    m_component(component),
-    m_owner(owner)
-{
-    static_assert(std::is_base_of<GRK_Component, ComponentType>::value, "The ComponentType passed to class GRK_ComponentHandle was not of base GRK_Component");
-}
-
-template<class ComponentType>
 GRK_Entity GRK_ComponentHandle<ComponentType>::GetOwningEntity()
 {
     return m_owner;
-}
-
-template<class ComponentType>
-ComponentType* GRK_ComponentHandle<ComponentType>::operator->()
-{
-    return m_component;
 }
 
 template<class ComponentType>

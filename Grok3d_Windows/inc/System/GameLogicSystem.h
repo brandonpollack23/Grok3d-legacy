@@ -2,6 +2,7 @@
 #define __GAMELOGICSYSTEM__H
 
 #include "grok3d_types.h"
+#include "System/System.h"
 
 namespace Grok3d { namespace Systems
 {
@@ -9,10 +10,10 @@ namespace Grok3d { namespace Systems
     {
         public:
             GRK_GameLogicSystem::GRK_GameLogicSystem();
-            virtual void Update(float dt) override;
+            virtual GRK_Result Update(float dt) override;
         
         protected:
-            virtual Grok3d::Component::GRK_ComponentBitMask GetComponentsBitMask() override;
+            virtual Grok3d::Components::GRK_ComponentBitMask GetComponentsBitMask() override;
     };
 } /*Systems*/ } /*Grok3d*/
 

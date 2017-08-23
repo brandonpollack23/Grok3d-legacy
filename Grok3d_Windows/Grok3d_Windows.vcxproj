@@ -123,6 +123,9 @@
     <ClInclude Include="inc\Entity\EntityHandle.h" />
     <ClInclude Include="inc\grok3d.h" />
     <ClInclude Include="inc\GrokUtils.h" />
+    <ClInclude Include="inc\System\GameLogicSystem.h" />
+    <ClInclude Include="inc\System\System.h" />
+    <ClInclude Include="inc\System\SystemManager.h" />
     <ClInclude Include="inc\Templates\enable_if.h" />
     <ClInclude Include="inc\Templates\is_valid.h" />
     <ClInclude Include="inc\EntityComponentManager.h" />
@@ -135,6 +138,9 @@
     <ClCompile Include="src\Entity\EntityHandle.cpp" />
     <ClCompile Include="src\EntityComponentManger.cpp" />
     <ClCompile Include="src\maintest.cpp" />
+    <ClCompile Include="src\System\GameLogicSystem.cpp" />
+    <ClCompile Include="src\System\System.cpp" />
+    <ClCompile Include="src\System\SystemManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Grok3d_Windows.licenseheader" />

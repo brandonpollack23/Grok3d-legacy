@@ -13,11 +13,21 @@ namespace Grok3d { namespace Components
     class GRK_ComponentHandle
     {
     public:
-        GRK_ComponentHandle(Grok3d::GRK_EntityComponentManager* entityComponentManager, ComponentType* component, Grok3d::Entities::GRK_Entity owner);
+        GRK_ComponentHandle(Grok3d::GRK_EntityComponentManager* entityComponentManager, ComponentType* component, Grok3d::Entities::GRK_Entity owner) :
+            m_manager(entityComponentManager),
+            m_component(component),
+            m_owner(owner)
+        {
+            static_assert(std::is_base_of<GRK_Component, ComponentType>::value, "The ComponentType passed to class GRK_ComponentHandle was not of base GRK_Component");
+        }
+
 
         Grok3d::Entities::GRK_Entity GetOwningEntity();
 
-        ComponentType* operator->();
+        ComponentType* operator->()
+        {
+            return m_component;
+        }
 
         Grok3d::GRK_Result destroy();
 

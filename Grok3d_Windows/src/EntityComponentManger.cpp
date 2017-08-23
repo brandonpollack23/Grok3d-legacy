@@ -38,6 +38,8 @@ GRK_Result GRK_EntityComponentManager::Initialize(GRK_SystemManager* systemManag
 {
     m_systemManager = systemManager;
     m_isInitialized = true;
+
+    return GRK_Result::Ok;
 }
 
 GRK_EntityHandle GRK_EntityComponentManager::CreateEntity()
@@ -157,34 +159,6 @@ GRK_Result GRK_EntityComponentManager::RemoveComponent(GRK_Entity entity)
     }
 }
 
-template<class ComponentType>
-GRK_ComponentHandle<ComponentType>* GRK_EntityComponentManager::GetComponent(GRK_Entity entity)
-{
-    if (
-        entity == 0 ||
-        (m_entityComponentsBitMaskMap[entity] & IndexToMask(GRK_Component::GetComponentTypeAccessIndex<ComponentType>()) == 0))
-    {
-        return nullptr;
-    }
-
-    if ((m_entityComponentsBitMaskMap[entity] & IndexToMask(GRK_Component::GetComponentTypeAccessIndex<ComponentType>())) == 0)
-    {
-        //this is a vector of the type we are trying to remove
-        std::vector<GRK_Component*>* componentTypeVector = &m_componentsStore[ComponentType::GetComponentTypeAccessIndex()];
-        std::unordered_map<GRK_Entity, ComponentInstance>* entityInstanceMap = m_entityComponentIndexMaps[GRK_Component::GetComponentTypeAccessIndex<ComponentType>()];
-
-        ComponentInstance instance = entityInstanceMap[entity];
-
-        ComponentType* componentPointer = static_cast<ComponentType*>(&(*componentTypeVector[instance]));
-
-        return GRK_ComponentHandle<ComponentType>(this, componentPointer, entity);
-    }
-    else
-    {
-        return GRK_Result::NoSuchElement;
-    }
-}
-
 GRK_ComponentBitMask GRK_EntityComponentManager::GetEntityComponentsBitMask(GRK_Entity entity)
 {
     if (entity != 0)
@@ -215,9 +189,4 @@ GRK_Result GRK_EntityComponentManager::DeleteEntity(GRK_Entity entity)
 std::vector<GRK_Entity>& GRK_EntityComponentManager::GetDeletedUncleanedEntities()
 {
     return m_deletedUncleatedEntities;
-}
-
-void GRK_EntityComponentManager::RegisterSystem(GRK_System* system)
-{
-
 }

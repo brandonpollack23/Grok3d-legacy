@@ -13,18 +13,6 @@ using namespace Grok3d::Assertions;
 using namespace Grok3d::Entities;
 using namespace Grok3d::Components;
 
-#define RETURN_FAILURE_IF_ENTITY_DESTROYED(error, statements) \
-    do {\
-        if (IsDestroyed()) \
-        { \
-            return error; \
-        } \
-        else \
-        { \
-            statements; \
-        } \
-    } while(0)
-
 GRK_EntityHandle::GRK_EntityHandle(GRK_EntityComponentManager* entityComponentManager, GRK_Entity entity) : 
     m_manager(entityComponentManager),
     m_entity(entity)
@@ -63,16 +51,6 @@ GRK_Result GRK_EntityHandle::RemoveComponent()
         return m_manager->RemoveComponent<ComponentType>(m_entity););
 }
 
-template<class ComponentType>
-ComponentType* GRK_EntityHandle::GetComponent()
-{
-    static_assert(decltype(hasComponentTypeAccessIndex(component))::value, "GRK_EntityHandle::GetComponent Method type param not base of GRK_Component");
-    RETURN_FAILURE_IF_ENTITY_DESTROYED(
-        GRK_NOSUCHENTITY,
-        return m_manager->GetComponent<ComponentType>(m_entity););
-}
-
-
 GRK_Result GRK_EntityHandle::Destroy()
 {
     RETURN_FAILURE_IF_ENTITY_DESTROYED(
@@ -86,10 +64,20 @@ bool inline GRK_EntityHandle::IsDestroyed()
     return m_entity == 0;
 }
 
-bool inline GRK_EntityHandle::HasComponents(int componentBits)
+bool GRK_EntityHandle::HasComponents(GRK_ComponentBitMask componentBits)
 {
     RETURN_FAILURE_IF_ENTITY_DESTROYED(
         false,
         GRK_ComponentBitMask components = m_manager->GetEntityComponentsBitMask(m_entity);
         return ((components & componentBits) == componentBits));
+}
+
+bool GRK_EntityHandle::operator==(const Grok3d::Entities::GRK_EntityHandle& rhs) const
+{
+    return this->m_entity == rhs.m_entity;
+}
+
+typename std::hash<GRK_EntityHandle>::result_type std::hash<GRK_EntityHandle>::operator()(std::hash<GRK_EntityHandle>::argument_type const& e) const
+{
+    return hash<int>{}(e.m_entity);
 }

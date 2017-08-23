@@ -1,4 +1,7 @@
 #include "System/GameLogicSystem.h"
+#include "Entity/EntityHandle.h"
+#include "Component/GameLogicComponent.h"
+#include "Component/ComponentHandle.h"
 
 using namespace Grok3d;
 using namespace Grok3d::Components;
@@ -8,16 +11,18 @@ GRK_GameLogicSystem::GRK_GameLogicSystem() : GRK_System()
 {
 }
 
-void GRK_GameLogicSystem::Update(float dt)
+GRK_Result GRK_GameLogicSystem::Update(float dt)
 {
     for (auto entity : m_trackedEntities)
     {
-        GRK_GameLogicComponent logicComponent = entity.GetComponent<GRK_GameLogicComponent>();
-        logicComponent.Update(dt);
+        auto logicComponent = entity.GetComponent<GRK_GameLogicComponent>();
+        logicComponent->Update(dt);
     }
+
+    return GRK_Result::Ok;
 }
 
-GRK_ComponentBitMask GetComponentsBitMask()
+GRK_ComponentBitMask GRK_GameLogicSystem::GetComponentsBitMask()
 {
     static GRK_ComponentBitMask mask = 
         GRK_Component::GetComponentTypeAccessIndex<GRK_GameLogicComponent>();

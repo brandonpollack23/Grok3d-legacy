@@ -6,8 +6,16 @@
 
 #define __WORLD__H
 
-#include "grok3d_types.h"
 #include "grok3d.h"
+#include "grok3d_types.h"
+
+#include "EntityComponentManager.h"
+#include "Entity/EntityHandle.h"
+
+#include "Component/Component.h"
+#include "Component/ComponentHandle.h"
+
+#include "System/SystemManager.h"
 
 #include <vector>
 #include <unordered_map>
@@ -28,7 +36,33 @@ namespace Grok3d
         Grok3d::GRK_Result AddComponent(Grok3d::Entities::GRK_Entity entity, ComponentType& newComponent);
 
         template<class ComponentType>
-        Grok3d::Components::GRK_ComponentHandle<ComponentType>* GetComponent(Grok3d::Entities::GRK_Entity entity);
+        Grok3d::Components::GRK_ComponentHandle<ComponentType> GetComponent(Grok3d::Entities::GRK_Entity entity)
+        {
+            if (
+                entity == 0 ||
+                (m_entityComponentsBitMaskMap[entity] & (IndexToMask(GRK_Component::GetComponentTypeAccessIndex<ComponentType>())) == 0)
+                )
+            {
+                return Grok3d::Components::GRK_ComponentHandle<ComponentType>(nullptr, nullptr, -1);
+            }
+            else if ((m_entityComponentsBitMaskMap[entity] & IndexToMask(GRK_Component::GetComponentTypeAccessIndex<ComponentType>())) == 0)
+            {
+                //this is a vector of the type we are trying to remove
+                std::vector<Components::GRK_Component>* componentTypeVector = &m_componentsStore[Components::GRK_Component::GetComponentTypeAccessIndex<ComponentType>()];
+                std::unordered_map<Entities::GRK_Entity, ComponentInstance>* entityInstanceMap = &m_entityComponentIndexMaps[GRK_Component::GetComponentTypeAccessIndex<ComponentType>()];
+
+                ComponentInstance instance = (*entityInstanceMap)[entity];
+
+                ComponentType* componentPointer = static_cast<ComponentType*>(&(*componentTypeVector)[instance]);
+
+                return GRK_ComponentHandle<ComponentType>(this, componentPointer, entity);
+            }
+            else
+            {
+                return Grok3d::Components::GRK_ComponentHandle<ComponentType>(nullptr, nullptr, -1);
+            }
+
+        }
 
         template<class ComponentType>
         Grok3d::GRK_Result RemoveComponent(Grok3d::Entities::GRK_Entity entity);
