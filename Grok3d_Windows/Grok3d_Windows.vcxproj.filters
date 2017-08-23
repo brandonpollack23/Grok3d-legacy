@@ -42,19 +42,10 @@
     <ClInclude Include="inc\Component\TransformComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="inc\Templates\is_valid.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="inc\Templates\enable_if.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="inc\Component\ComponentHandle.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="inc\Component\Component.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="inc\Assertions.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="inc\EntityComponentManager.h">
@@ -81,9 +72,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Component\Component.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Component\ComponentHandle.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\EntityComponentManger.cpp">

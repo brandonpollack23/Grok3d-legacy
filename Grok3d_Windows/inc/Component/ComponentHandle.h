@@ -22,20 +22,34 @@ namespace Grok3d { namespace Components
         }
 
 
-        Grok3d::Entities::GRK_Entity GetOwningEntity();
+        Grok3d::Entities::GRK_Entity GetOwningEntity()
+        {
+            return m_owner;
+        }
 
         ComponentType* operator->()
         {
             return m_component;
         }
 
-        Grok3d::GRK_Result destroy();
+        Grok3d::GRK_Result destroy()
+        {
+            return m_manager->RemoveComponent(m_entity);
+        }
 
     private:
         Grok3d::Entities::GRK_Entity m_owner;
         ComponentType* m_component;
         Grok3d::GRK_EntityComponentManager* m_manager;
     };
+
+    //template specialization for GRK_TransformComponent, every entity MUST have this it cannot be destroyed
+    template<>
+    GRK_Result GRK_ComponentHandle<GRK_TransformComponent>::destroy()
+    {
+        //TODO 20 log that this cant happen
+        return GRK_Result::Ok;
+    }
 
 } /*Components*/ } /*Grok3d*/
 
