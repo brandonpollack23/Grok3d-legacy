@@ -10,15 +10,14 @@ namespace Grok3d { namespace Systems
 {
     class GRK_SystemManager
     {
-        //TODO
     public:
-            GRK_SystemManager();
-            
-            //thie function does a check to see if all the bits in it's bit mask 
-            //are in it's bit mask
-            Grok3d::GRK_Result UpdateSystemEntities(
-                    Grok3d::Entities::GRK_EntityHandle entity,
-                    Grok3d::Components::GRK_ComponentBitMask newBitMask);
+        GRK_SystemManager();
+
+        //thie function does a check to see if all the bits in it's bit mask 
+        //are in it's bit mask
+        Grok3d::GRK_Result UpdateSystemEntities(Grok3d::Entities::GRK_EntityHandle& entity);
+
+        Grok3d::GRK_Result UnregisterEntity(Grok3d::Entities::GRK_EntityHandle& entity);
 
         Grok3d::GRK_Result UpdateSystems(float dt);
 

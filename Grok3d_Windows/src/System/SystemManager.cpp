@@ -13,15 +13,25 @@ GRK_SystemManager::GRK_SystemManager()
     //m_systems = {};
 }
 
-GRK_Result GRK_SystemManager::UpdateSystemEntities(
-        GRK_EntityHandle entity, 
-        GRK_ComponentBitMask newBitMask)
+GRK_Result GRK_SystemManager::UpdateSystemEntities(GRK_EntityHandle& entity)
 {
     GRK_Result result = GRK_Result::Ok;
 
     for(auto system : m_systems)
     {
         result |= system->UpdateSystemEntities(entity);
+    }
+
+    return result;
+}
+
+GRK_Result GRK_SystemManager::UnregisterEntity(GRK_EntityHandle& entity)
+{
+    GRK_Result result = GRK_Result::Ok;
+
+    for (auto system : m_systems)
+    {
+        result |= system->UnregisterEntity(entity);
     }
 
     return result;

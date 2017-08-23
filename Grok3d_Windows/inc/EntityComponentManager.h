@@ -62,6 +62,7 @@ namespace Grok3d
                     //TODO 8 have 2 CVARs that customizes load reallocation size, for now i'm doing 10% larger
                     //SCALE NUM and SCALE DEN
                     //DOCUMENTATION put the formula for scale factor of this in the docs, %scale = (1+NUM/DEN)
+
                     //resize vector if necessary
                     auto cap = componentTypeVector->capacity();
                     if (cap == componentTypeVector->size())
@@ -73,9 +74,13 @@ namespace Grok3d
                     componentTypeVector->push_back(newComponent);
 
                     //the new size - 1 is the index of the vector the element is stored at
-                    m_entityComponentIndexMaps[GRK_Component::GetComponentTypeAccessIndex<ComponentType>()][entity] = static_cast<int>(componentTypeVector->size() - 1);
+                    std::unordered_map<GRK_Entity, ComponentInstance>* entityInstanceMap = &m_entityComponentIndexMaps[GRK_Component::GetComponentTypeAccessIndex<ComponentType>()];
+                    (*entityInstanceMap)[entity] = static_cast<ComponentInstance>(componentTypeVector->size() - 1);
 
                     m_entityComponentsBitMaskMap[entity] |= IndexToMask(GRK_Component::GetComponentTypeAccessIndex<ComponentType>());
+
+                    //inform all systems of new component added to this entity
+                    m_systemManager->UpdateSystemEntities(GRK_EntityHandle(this, entity));
 
                     return GRK_Result::Ok;
                 }
@@ -89,23 +94,25 @@ namespace Grok3d
         template<class ComponentType>
         Grok3d::Components::GRK_ComponentHandle<ComponentType> GetComponent(Grok3d::Entities::GRK_Entity entity)
         {
-            if (
-                entity == 0 ||
-                (m_entityComponentsBitMaskMap[entity] & (IndexToMask(GRK_Component::GetComponentTypeAccessIndex<ComponentType>())) == 0)
-                )
+            GRK_ComponentBitMask componentMask = static_cast<GRK_ComponentBitMask>(IndexToMask(GRK_Component::GetComponentTypeAccessIndex<ComponentType>()));
+
+            if (entity == 0 || (m_entityComponentsBitMaskMap[entity] & componentMask) == 0)
             {
                 return Grok3d::Components::GRK_ComponentHandle<ComponentType>(nullptr, nullptr, -1);
             }
-            else if ((m_entityComponentsBitMaskMap[entity] & IndexToMask(GRK_Component::GetComponentTypeAccessIndex<ComponentType>())) == 0)
+            else if ((m_entityComponentsBitMaskMap[entity] & componentMask) == componentMask)
             {
                 //this is a vector of the type we are trying to remove
                 std::vector<Components::GRK_Component>* componentTypeVector = &m_componentsStore[GRK_Component::GetComponentTypeAccessIndex<ComponentType>()];
                 std::unordered_map<Entities::GRK_Entity, ComponentInstance>* entityInstanceMap = &m_entityComponentIndexMaps[GRK_Component::GetComponentTypeAccessIndex<ComponentType>()];
 
+                //get the instance (index in our vector) from teh entityInstanceMap
                 ComponentInstance instance = (*entityInstanceMap)[entity];
 
+                //use the instance to index the array of that componenttype
                 ComponentType* componentPointer = static_cast<ComponentType*>(&(*componentTypeVector)[instance]);
 
+                //return it in a handle
                 return GRK_ComponentHandle<ComponentType>(this, componentPointer, entity);
             }
             else
@@ -120,15 +127,18 @@ namespace Grok3d
         template<class ComponentType>
         Grok3d::GRK_Result RemoveComponent(Grok3d::Entities::GRK_Entity entity)
         {
+            GRK_ComponentBitMask componentMask = static_cast<GRK_ComponentBitMask>(IndexToMask(GRK_Component::GetComponentTypeAccessIndex<ComponentType>()));
+
             if (entity == 0)
             {
                 return GRK_Result::EntityAlreadyDeleted;
             }
 
-            if (m_entityComponentsBitMaskMap[entity] & IndexToMask(GRK_Component::GetComponentTypeAccessIndex<ComponentType>()) != 0)
+            if ((m_entityComponentsBitMaskMap[entity] & componentMask) == componentMask)
             {
                 //this is a vector of the type we are trying to remove
                 std::vector<GRK_Component*>* componentTypeVector = &m_componentsStore[ComponentType::GetComponentTypeAccessIndex()];
+
                 //this is the map of entity to components for this type
                 std::unordered_map<GRK_Entity, GRK_Component*>* entityInstanceMap = &m_entityComponentIndexMaps[GRK_Component::GetComponentTypeAccessIndex<ComponentType>()];
 

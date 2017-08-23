@@ -68,16 +68,15 @@ GRK_Result GRK_EntityComponentManager::DeleteEntity(GRK_Entity entity)
     GRK_Result result = GRK_Result::Ok;
 
     //ComponentManager's deleting their components is handled by GarbageCollection
-
-    //TODO 7 iterate through all systems delete entity
-
     m_entityComponentsBitMaskMap.erase(entity);
     m_deletedUncleatedEntities.push_back(entity);
+
+    // send a component bit mask of 0 to all Systems, no components means any system will unregister
+    m_systemManager->UnregisterEntity(GRK_EntityHandle(this, entity));
 
     return result;
 }
 
-//TODO 20 change to GC
 std::vector<GRK_Entity>& GRK_EntityComponentManager::GetDeletedUncleanedEntities()
 {
     return m_deletedUncleatedEntities;
