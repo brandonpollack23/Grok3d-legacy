@@ -48,7 +48,7 @@ namespace Grok3d
             else if ((m_entityComponentsBitMaskMap[entity] & IndexToMask(GRK_Component::GetComponentTypeAccessIndex<ComponentType>())) == 0)
             {
                 //this is a vector of the type we are trying to remove
-                std::vector<Components::GRK_Component>* componentTypeVector = &m_componentsStore[Components::GRK_Component::GetComponentTypeAccessIndex<ComponentType>()];
+                std::vector<Components::GRK_Component>* componentTypeVector = &m_componentsStore[GRK_Component::GetComponentTypeAccessIndex<ComponentType>()];
                 std::unordered_map<Entities::GRK_Entity, ComponentInstance>* entityInstanceMap = &m_entityComponentIndexMaps[GRK_Component::GetComponentTypeAccessIndex<ComponentType>()];
 
                 ComponentInstance instance = (*entityInstanceMap)[entity];
@@ -59,7 +59,7 @@ namespace Grok3d
             }
             else
             {
-                return Grok3d::Components::GRK_ComponentHandle<ComponentType>(nullptr, nullptr, -1);
+                return GRK_ComponentHandle<ComponentType>(nullptr, nullptr, -1);
             }
 
         }
