@@ -13,14 +13,16 @@ namespace Grok3d { namespace Components
     class GRK_ComponentHandle
     {
     public:
-        GRK_ComponentHandle(Grok3d::GRK_EntityComponentManager* entityComponentManager, ComponentType* component, Grok3d::Entities::GRK_Entity owner) :
+        GRK_ComponentHandle(
+                Grok3d::GRK_EntityComponentManager* entityComponentManager,
+                ComponentType* component,
+                Grok3d::Entities::GRK_Entity owner) :
             m_manager(entityComponentManager),
             m_component(component),
             m_owner(owner)
         {
             static_assert(std::is_base_of<GRK_Component, ComponentType>::value, "The ComponentType passed to class GRK_ComponentHandle was not of base GRK_Component");
         }
-
 
         Grok3d::Entities::GRK_Entity GetOwningEntity()
         {
@@ -32,7 +34,7 @@ namespace Grok3d { namespace Components
             return m_component;
         }
 
-        Grok3d::GRK_Result destroy()
+        Grok3d::GRK_Result Destroy()
         {
             return m_manager->RemoveComponent(m_entity);
         }
@@ -45,7 +47,7 @@ namespace Grok3d { namespace Components
 
     //template specialization for GRK_TransformComponent, every entity MUST have this it cannot be destroyed
     template<>
-    GRK_Result GRK_ComponentHandle<GRK_TransformComponent>::destroy()
+    GRK_Result GRK_ComponentHandle<GRK_TransformComponent>::Destroy()
     {
         //TODO 20 log that this cant happen
         return GRK_Result::Ok;

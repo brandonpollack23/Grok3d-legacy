@@ -35,7 +35,7 @@ namespace Grok3d
         // Stretch 2: Make CompomentManager::AddComponenet only take in entity, have it construct the component as part of the array and 
         //   make the arguments of that constructor also a generic Args template and pass that in here
 
-        //adds a component of generic type to this manager and associates it with an entity
+        // adds a component of generic type to this manager and associates it with an entity
         // componenet parameter is by reference so it isn't copied twice when it is put in the array
         // I chose to have the component constructed and then copied because it is easier than passing a factory function
         // to this generic class and calling it on AddComponent with all it's parameters wrapped in a generic args class
@@ -74,10 +74,12 @@ namespace Grok3d
                     componentTypeVector->push_back(newComponent);
 
                     //the new size - 1 is the index of the vector the element is stored at
-                    std::unordered_map<GRK_Entity, ComponentInstance>* entityInstanceMap = &m_entityComponentIndexMaps[GRK_Component::GetComponentTypeAccessIndex<ComponentType>()];
+                    std::unordered_map<GRK_Entity, ComponentInstance>* entityInstanceMap =
+                        &m_entityComponentIndexMaps[GRK_Component::GetComponentTypeAccessIndex<ComponentType>()];
                     (*entityInstanceMap)[entity] = static_cast<ComponentInstance>(componentTypeVector->size() - 1);
 
-                    m_entityComponentsBitMaskMap[entity] |= IndexToMask(GRK_Component::GetComponentTypeAccessIndex<ComponentType>());
+                    m_entityComponentsBitMaskMap[entity] |=
+                        IndexToMask(GRK_Component::GetComponentTypeAccessIndex<ComponentType>());
 
                     //inform all systems of new component added to this entity
                     m_systemManager->UpdateSystemEntities(GRK_EntityHandle(this, entity));
@@ -94,7 +96,8 @@ namespace Grok3d
         template<class ComponentType>
         Grok3d::Components::GRK_ComponentHandle<ComponentType> GetComponent(Grok3d::Entities::GRK_Entity entity)
         {
-            GRK_ComponentBitMask componentMask = static_cast<GRK_ComponentBitMask>(IndexToMask(GRK_Component::GetComponentTypeAccessIndex<ComponentType>()));
+            GRK_ComponentBitMask componentMask =
+                static_cast<GRK_ComponentBitMask>(IndexToMask(GRK_Component::GetComponentTypeAccessIndex<ComponentType>()));
 
             if (entity == 0 || (m_entityComponentsBitMaskMap[entity] & componentMask) == 0)
             {
@@ -103,8 +106,10 @@ namespace Grok3d
             else if ((m_entityComponentsBitMaskMap[entity] & componentMask) == componentMask)
             {
                 //this is a vector of the type we are trying to remove
-                std::vector<Components::GRK_Component>* componentTypeVector = &m_componentsStore[GRK_Component::GetComponentTypeAccessIndex<ComponentType>()];
-                std::unordered_map<Entities::GRK_Entity, ComponentInstance>* entityInstanceMap = &m_entityComponentIndexMaps[GRK_Component::GetComponentTypeAccessIndex<ComponentType>()];
+                std::vector<Components::GRK_Component>* componentTypeVector =
+                    &m_componentsStore[GRK_Component::GetComponentTypeAccessIndex<ComponentType>()];
+                std::unordered_map<Entities::GRK_Entity, ComponentInstance>* entityInstanceMap =
+                    &m_entityComponentIndexMaps[GRK_Component::GetComponentTypeAccessIndex<ComponentType>()];
 
                 //get the instance (index in our vector) from teh entityInstanceMap
                 ComponentInstance instance = (*entityInstanceMap)[entity];
@@ -156,7 +161,6 @@ namespace Grok3d
                     auto indexToMoveLastStoredComponent = *entityInstanceMap[entity];
                     auto lastElement = componentTypeVector->back();
                     //use std::move so we cannibilize any allocated components and dont copy them
-                    //TODO 3 implement std::move constructor (&&) for GRK_Components
                     *(componentTypeVector)[indexToMoveLastStoredComponent] = std::move(lastElement);
 
                     //then remove it from the map

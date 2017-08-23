@@ -35,19 +35,12 @@ namespace Grok3d { namespace Entities
         Grok3d::GRK_Result Destroy();
         bool inline IsDestroyed();
 
-        /** AddComponent
-            This function adds a component to the system and forwards to the entire world,
-            including the respective component manager,
-            which makes it registerd to the game
-
-            saying entity.addcomponent is just more intuitive than world.getmanager().addcomponent(entity, component)
-
-            using templates to require GetComponentTypeAccessIndex static method
-        */
-        //in case of fire use this
-        //template<class ComponentType>
-        //auto GRK_EntityHandle::AddComponent(ComponentType& component)
-        //-> typename Grok3d::Templates::enable_if<, GRK_Result>::type
+        // AddComponent
+        // This function adds a component to the system and forwards to the entire world,
+        // including the respective component manager,
+        // which makes it registerd to the game
+        // saying entity.addcomponent is just more intuitive than world.getmanager().addcomponent(entity, component)
+        // using templates to require GetComponentTypeAccessIndex static method
         template<class ComponentType>
         Grok3d::GRK_Result AddComponent(ComponentType& component)
         {
@@ -57,8 +50,6 @@ namespace Grok3d { namespace Entities
 
             RETURN_FAILURE_IF_ENTITY_DESTROYED(
                 GRK_NOSUCHENTITY,
-                //can't have two components of the same type
-                // TODO 10 find a way to make it so we can have more than one BehaviourComponent
                 return m_manager->AddComponent<ComponentType>(m_entity, component););
         }
 

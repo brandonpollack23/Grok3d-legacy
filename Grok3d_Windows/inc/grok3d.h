@@ -8,7 +8,14 @@
 
 #include "entity/EntityHandle.h"
 
+#include "Component/Component.h"
+#include "Component/ComponentHandle.h"
 #include "Component/TransformComponent.h"
+#include "Component/GameLogicComponent.h"
+
+#include "System/System.h"
+#include "System/SystemManager.h"
+#include "System/GameLogicSystem.h"
 
 #include "EntityComponentManager.h"
 

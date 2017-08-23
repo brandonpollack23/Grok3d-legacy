@@ -5,7 +5,7 @@ using namespace Grok3d::Components;
 
 void GRK_GameLogicComponent::Update(float dt)
 {
-    for (auto behaviour : m_behaviours)
+    for (const auto& behaviour : m_behaviours)
     {
         behaviour->Update(dt);
     }
