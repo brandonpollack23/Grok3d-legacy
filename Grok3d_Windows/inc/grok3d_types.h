@@ -24,7 +24,7 @@ namespace Grok3d
 {
     class GRK_Engine;
 
-    enum class GRK_Result : int
+    enum class GRK_Result : unsigned int
     {
         Ok = 0,
         NoSuchElement = 1,
@@ -37,6 +37,7 @@ namespace Grok3d
         NoSuchComponentIdentity = 1 << 7,
         MustUseComponentHandleToDeleteBehaviour = 1 << 8,
         ErrorAddingToSystem = 1 << 9,
+        EngineFailureNoInitialState = 1 << 10,
     };
 
     using T = std::underlying_type_t<GRK_Result>;

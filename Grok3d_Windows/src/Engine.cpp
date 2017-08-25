@@ -27,7 +27,7 @@ GRK_Result GRK_Engine::Initialize()
 
 void GRK_Engine::Update(float dt)
 {
-    m_systemManager.Update(dt);
+    m_systemManager.UpdateSystems(dt);
 }
 
 void GRK_Engine::Run()
@@ -47,7 +47,7 @@ void GRK_Engine::Run()
     //run until break
     while(true)
     {
-        m_systemManager.Update(dt);
+        this->Update(dt);
 
         time(&currentTime);
         dt = difftime(currentTime, lastTime);
@@ -55,8 +55,10 @@ void GRK_Engine::Run()
 }
 
 GRK_Result GRK_Engine::InjectInitialization(
-        std::function<GRK_Result, GRK_EntityComponentManager&> initFunction)
+        std::function<GRK_Result(GRK_EntityComponentManager&)> initFunction)
 {
     m_initFunction = initFunction;
+
+    return GRK_Result::Ok;
 }
 
