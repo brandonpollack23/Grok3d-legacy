@@ -16,19 +16,14 @@ using namespace Grok3d::Components;
 using namespace Grok3d::Entities;
 using namespace Grok3d::Systems;
 
-GRK_EntityComponentManager::GRK_EntityComponentManager()
+GRK_EntityComponentManager::GRK_EntityComponentManager() :
+    m_entityComponentsBitMaskMap(std::unordered_map<GRK_Entity, GRK_ComponentBitMask>(INITIAL_ENTITY_ARRAY_SIZE),
+    m_deletedUncleatedEntities(std::vector<GRK_Entiy>(INITIAL_ENTITY_ARRAY_SIZE/4),
+    m_entityComponentIndexMaps(std::vector<std::unordered_map<GRK_Entity, ComponentInstance>>(1)),
+    m_componentsStore(std::vector<std::vector<GRK_Component>>(1)),
+    m_entityComponentIndexMaps[0](std::unordered_map<GRK_Entity, ComponentInstance>(INITIAL_ENTITY_ARRAY_SIZE)),
+    m_componentsStore[0](std::vector<GRK_Component>(INITIAL_ENTITY_ARRAY_SIZE))
 {
-    //TODO 10 INITIAL_ENTITY_ARRAY_SIZE is a init CVAR just like in ComponentManager
-    m_entityComponentsBitMaskMap = std::unordered_map<GRK_Entity, GRK_ComponentBitMask>(INITIAL_ENTITY_ARRAY_SIZE);
-    m_deletedUncleatedEntities = std::vector<GRK_Entity>(INITIAL_ENTITY_ARRAY_SIZE/4);
-
-    //intialize entityInstanceMaps to 1 since the only REQUIRED componenttype is TransformComponent
-    m_entityComponentIndexMaps = std::vector<std::unordered_map<GRK_Entity, ComponentInstance>>(1);
-    m_entityComponentIndexMaps[0] = std::unordered_map<GRK_Entity, ComponentInstance>(INITIAL_ENTITY_ARRAY_SIZE);
-
-    //same goes for componentStore
-    m_componentsStore = std::vector<std::vector<GRK_Component>>(1);
-    m_componentsStore[0] = std::vector<GRK_Component>(INITIAL_ENTITY_ARRAY_SIZE);
 }
 
 GRK_Result GRK_EntityComponentManager::Initialize(GRK_SystemManager* systemManager)
