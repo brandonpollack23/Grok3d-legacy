@@ -118,10 +118,10 @@
     <ClInclude Include="inc\Component\ComponentHandle.h" />
     <ClInclude Include="inc\Component\GameLogicComponent.h" />
     <ClInclude Include="inc\Component\TransformComponent.h" />
+    <ClInclude Include="inc\Engine.h" />
     <ClInclude Include="inc\grok3d_types.h" />
     <ClInclude Include="inc\Entity\EntityHandle.h" />
     <ClInclude Include="inc\grok3d.h" />
-    <ClInclude Include="inc\GrokUtils.h" />
     <ClInclude Include="inc\System\GameLogicSystem.h" />
     <ClInclude Include="inc\System\System.h" />
     <ClInclude Include="inc\System\SystemManager.h" />
@@ -131,6 +131,7 @@
     <ClCompile Include="src\Component\Component.cpp" />
     <ClCompile Include="src\Component\GameLogicComponent.cpp" />
     <ClCompile Include="src\Component\TransformComponent.cpp" />
+    <ClCompile Include="src\Engine.cpp" />
     <ClCompile Include="src\Entity\EntityHandle.cpp" />
     <ClCompile Include="src\EntityComponentManger.cpp" />
     <ClCompile Include="src\maintest.cpp" />
