@@ -4,7 +4,7 @@ using namespace Grok3d;
 using namespace Grok3d::Entities;
 using namespace Grok3d::Components;
 
-class MoveBackAndForthBehavour : GRK_GameBehaviourBase
+class MoveBackAndForthBehavour : public GRK_GameBehaviourBase
 {
     public:
         MoveBackAndForthBehavour(GRK_Entity entity, GRK_EntityComponentManager* entityComponentManger) : 
@@ -15,7 +15,7 @@ class MoveBackAndForthBehavour : GRK_GameBehaviourBase
 
         void Update(float dt) override
         {
-            const float speed = 1 / 3.0;
+            const double speed = 1 / 3.0;
 
             float direction = 1;
 
@@ -41,6 +41,9 @@ int main()
     {
         auto pointEntity = ecm.CreateEntity();
         MoveBackAndForthBehavour moveBehaviour(pointEntity, &ecm);
+        GRK_GameLogicComponent glc;
+        glc.RegisterBehaviour(&moveBehaviour);
+        pointEntity.AddComponent(glc);
         return GRK_Result::Ok;
     };
 

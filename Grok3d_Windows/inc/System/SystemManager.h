@@ -3,6 +3,7 @@
 
 #include "grok3d_types.h"
 #include "System/System.h"
+#include "System/GameLogicSystem.h"
 
 #include <array>
 
@@ -25,6 +26,7 @@ namespace Grok3d { namespace Systems
 
     private:
             std::array<GRK_System*, 1> m_systems;
+            GRK_GameLogicSystem m_gls;
     };
 } /*Systems*/ } /*Grok3d*/
 

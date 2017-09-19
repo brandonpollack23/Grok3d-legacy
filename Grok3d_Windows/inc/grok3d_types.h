@@ -41,6 +41,7 @@ namespace Grok3d
         MustUseComponentHandleToDeleteBehaviour = 1 << 8,
         ErrorAddingToSystem = 1 << 9,
         EngineFailureNoInitialState = 1 << 10,
+        CriticalError = 1 << 11,
     };
 
     using T = std::underlying_type_t<GRK_Result>;

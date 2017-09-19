@@ -13,7 +13,7 @@ GRK_GameLogicSystem::GRK_GameLogicSystem() : GRK_System()
 
 GRK_Result GRK_GameLogicSystem::Update(float dt)
 {
-    for (auto entity : m_trackedEntities)
+    for (const auto& entity : m_trackedEntities)
     {
         auto logicComponent = entity.GetComponent<GRK_GameLogicComponent>();
         logicComponent->Update(dt);

@@ -10,7 +10,7 @@ using namespace Grok3d::Systems;
 GRK_SystemManager::GRK_SystemManager()
 {
     //TODO initialize all the systems
-    //m_systems = {};
+    m_systems = { &m_gls };
     //TODO initialize RENDER SYSTEM which is managed seperate so simulation and render can be decoupled
 }
 
@@ -18,7 +18,7 @@ GRK_Result GRK_SystemManager::UpdateSystemEntities(GRK_EntityHandle& entity)
 {
     GRK_Result result = GRK_Result::Ok;
 
-    for(auto system : m_systems)
+    for(const auto& system : m_systems)
     {
         result |= system->UpdateSystemEntities(entity);
     }
@@ -41,7 +41,7 @@ GRK_Result GRK_SystemManager::UnregisterEntity(GRK_EntityHandle& entity)
 GRK_Result GRK_SystemManager::UpdateSystems(float dt)
 {
     GRK_Result result;
-    for(auto system : m_systems)
+    for(const auto& system : m_systems)
     {
         result |= system->Update(dt);
     }

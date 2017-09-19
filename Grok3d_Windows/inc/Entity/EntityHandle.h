@@ -35,7 +35,7 @@ namespace Grok3d { namespace Entities
         operator GRK_Entity() const;
 
         Grok3d::GRK_Result Destroy();
-        bool inline IsDestroyed();
+        bool inline IsDestroyed() const;
 
         // AddComponent
         // This function adds a component to the system and forwards to the entire world,
@@ -51,7 +51,7 @@ namespace Grok3d { namespace Entities
                 "GRK_EntityHandle::GetComponent Method type param not base of GRK_Component");
 
             RETURN_FAILURE_IF_ENTITY_DESTROYED(
-                GRK_NOSUCHENTITY,
+                Grok3d::GRK_Result::Ok,
                 return m_manager->AddComponent<ComponentType>(m_entity, component););
         }
 
@@ -64,18 +64,19 @@ namespace Grok3d { namespace Entities
         }
 
         template<class ComponentType>
-        Grok3d::Components::GRK_ComponentHandle<ComponentType> GetComponent()
+        Grok3d::Components::GRK_ComponentHandle<ComponentType> GetComponent() const
         {
             static_assert(
                 std::is_base_of<GRK_Component, ComponentType>::value,
                 "GRK_EntityHandle::GetComponent Method type param not base of GRK_Component");
 
-            RETURN_FAILURE_IF_ENTITY_DESTROYED(
-                Grok3d::Components::GRK_ComponentHandle<ComponentType>(nullptr, nullptr, -1),
-                return m_manager->GetComponent<ComponentType>(m_entity););
+            //RETURN_FAILURE_IF_ENTITY_DESTROYED(
+            //    Grok3d::Components::GRK_ComponentHandle<ComponentType>(nullptr, nullptr, -1),
+            //    return m_manager->GetComponent<ComponentType>(m_entity););
+            return m_manager->GetComponent<ComponentType>(m_entity);
         }
 
-        bool HasComponents(Grok3d::Components::GRK_ComponentBitMask componentBits);
+        bool HasComponents(Grok3d::Components::GRK_ComponentBitMask componentBits) const;
 
         bool operator==(const Grok3d::Entities::GRK_EntityHandle& rhs) const;
 

@@ -12,6 +12,8 @@ namespace Grok3d { namespace Components
     {
         public:
             //update function that takes in the change in time
+            GRK_GameLogicComponent();
+
             void Update(float dt);
 
             typedef int BehaviourHandle;
@@ -19,7 +21,7 @@ namespace Grok3d { namespace Components
             BehaviourHandle RegisterBehaviour(GRK_GameBehaviourBase* behaviour);
             void UnregisterBehaviour(BehaviourHandle handle);
 
-        private:
+        protected:
             std::vector<GRK_GameBehaviourBase*> m_behaviours;
     };
 

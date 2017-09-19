@@ -16,7 +16,6 @@ GRK_Engine::GRK_Engine()
 GRK_Engine::GRK_Engine(std::function<GRK_Result(GRK_EntityComponentManager&)> initFunction) : GRK_Engine()
 {
     m_initFunction = initFunction;
-    m_initFunction(m_entityComponentManager);
 }
 
 GRK_Result GRK_Engine::Initialize()

@@ -1,16 +1,16 @@
 #include "Component\GameLogicComponent.h"
 #include "grok3d_types.h"
 
+#include <vector>
+
 using namespace Grok3d;
 using namespace Grok3d::Entities;
 using namespace Grok3d::Components;
 
-GRK_GameBehaviourBase::GRK_GameBehaviourBase(GRK_Entity owningEntity, GRK_EntityComponentManager* entityComponentManager) :
-    m_owningEntity(owningEntity),
-    m_entityComponentManager(entityComponentManager)
+GRK_GameLogicComponent::GRK_GameLogicComponent() :
+    m_behaviours(std::vector<GRK_GameBehaviourBase*>())
 {
 }
-
 
 void GRK_GameLogicComponent::Update(float dt)
 {
@@ -32,4 +32,10 @@ void GRK_GameLogicComponent::UnregisterBehaviour(BehaviourHandle handle)
     {
         m_behaviours.erase(m_behaviours.begin() + handle);
     }
+}
+
+GRK_GameBehaviourBase::GRK_GameBehaviourBase(GRK_Entity owningEntity, GRK_EntityComponentManager* entityComponentManager) :
+    m_owningEntity(owningEntity),
+    m_entityComponentManager(entityComponentManager)
+{
 }
