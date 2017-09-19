@@ -11,6 +11,7 @@ GRK_SystemManager::GRK_SystemManager()
 {
     //TODO initialize all the systems
     //m_systems = {};
+    //TODO initialize RENDER SYSTEM which is managed seperate so simulation and render can be decoupled
 }
 
 GRK_Result GRK_SystemManager::UpdateSystemEntities(GRK_EntityHandle& entity)
@@ -46,4 +47,10 @@ GRK_Result GRK_SystemManager::UpdateSystems(float dt)
     }
 
     return result;
+}
+
+GRK_Result GRK_SystemManager::Render()
+{
+    //TODO call draw system render function
+    return GRK_Result::Ok;
 }

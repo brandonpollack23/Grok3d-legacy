@@ -2,8 +2,8 @@
 #define __ENGINE__H
 
 #include "grok3d_types.h"
-#include "EntityComponentManager.h"
 #include "System/SystemManager.h"
+#include "EntityComponentManager.h"
 
 #include <functional>
 #include <ctime>
@@ -14,11 +14,14 @@ namespace Grok3d
     {
         public:
             GRK_Engine();
+            GRK_Engine::GRK_Engine(std::function<GRK_Result(Grok3d::GRK_EntityComponentManager&)> initFunction);
 
             //TODO overload initialize based on markup file
             Grok3d::GRK_Result Initialize();
 
             void Update(float dt);
+            void Render();
+            void GarbageCollect();
 
             //function that never exits and runs update in an infinite loop until broken
             void Run();
@@ -27,7 +30,7 @@ namespace Grok3d
                     std::function<Grok3d::GRK_Result(Grok3d::GRK_EntityComponentManager&)> initFunction);
 
         private:
-            Grok3d::GRK_EntityComponentManager m_entityCompomnentManager;
+            Grok3d::GRK_EntityComponentManager m_entityComponentManager;
             Grok3d::Systems::GRK_SystemManager m_systemManager;
 
             std::function<Grok3d::GRK_Result(Grok3d::GRK_EntityComponentManager&)> m_initFunction;

@@ -10,14 +10,19 @@ using namespace Grok3d::Systems;
 GRK_Engine::GRK_Engine()
 {
     //Inject systemManager dependency so we can update the systems
-    m_entityCompomnentManager.Initialize(&m_systemManager);
+    m_entityComponentManager.Initialize(&m_systemManager);
+}
+
+GRK_Engine::GRK_Engine(std::function<GRK_Result(GRK_EntityComponentManager&)> initFunction) : GRK_Engine()
+{
+    m_initFunction = initFunction;    
 }
 
 GRK_Result GRK_Engine::Initialize()
 {
     if(m_initFunction)
     {
-        return m_initFunction(m_entityCompomnentManager);
+        return m_initFunction(m_entityComponentManager);
     }
     else
     {
@@ -30,6 +35,16 @@ void GRK_Engine::Update(float dt)
     m_systemManager.UpdateSystems(dt);
 }
 
+void GRK_Engine::Render()
+{
+    m_systemManager.Render();
+}
+
+void GRK_Engine::GarbageCollect()
+{
+    m_entityComponentManager.GarbageCollect();
+}
+
 void GRK_Engine::Run()
 {
     if(Initialize() != GRK_Result::Ok)
@@ -37,20 +52,37 @@ void GRK_Engine::Run()
         //TODO debug print error fission mailed
         exit(-1);
     }
+    
+    //TODO use CVAR to set this as tickrate
+    const time_t dt = 1 / 60.0; 
 
-    //TODO fix my timestep
-    time_t currentTime, lastTime;
-    time(&lastTime);
+    //fix my timestep referneced here: https://gafferongames.com/post/fix_your_timestep/
+    time_t currentTime, newTime;
+    time(&currentTime);
 
-    double dt = 0;
+    //t is total simulation time
+    time_t t = 0.0;
+    time_t accumulator = 0;
     
     //run until break
     while(true)
     {
-        this->Update(dt);
+        time(&newTime);
+        time_t prevFrameTime = newTime - currentTime;
+        currentTime = newTime;
 
-        time(&currentTime);
-        dt = difftime(currentTime, lastTime);
+        accumulator += prevFrameTime;
+
+        while (accumulator >= dt)
+        {
+            this->Update(dt);
+            accumulator -= dt;
+            t += dt;
+        }
+
+        this->Render();
+        
+        this->GarbageCollect();
     }
 }
 

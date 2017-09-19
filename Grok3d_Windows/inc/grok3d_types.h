@@ -11,10 +11,13 @@
 * As such there are no header guards so:
 * DO NOT INCLUDE HEADERS HERE */
 
+//configure Grok3d
+#define INITIAL_ENTITY_ARRAY_SIZE 1024
+
 //configure GLM
 #define GLM_PRECISION_HIGHP_FLOAT
 
-constexpr unsigned int IndexToMask(unsigned int index)
+constexpr unsigned int IndexToMask(size_t index)
 {
     return 1 << index;
 }

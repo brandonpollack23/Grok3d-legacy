@@ -21,6 +21,8 @@ namespace Grok3d { namespace Systems
 
         Grok3d::GRK_Result UpdateSystems(float dt);
 
+        Grok3d::GRK_Result Render();
+
     private:
             std::array<GRK_System*, 1> m_systems;
     };

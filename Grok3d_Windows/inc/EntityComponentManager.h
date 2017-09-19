@@ -6,7 +6,6 @@
 
 #define __WORLD__H
 
-#include "grok3d.h"
 #include "grok3d_types.h"
 
 #include "EntityComponentManager.h"
@@ -139,40 +138,9 @@ namespace Grok3d
                 return GRK_Result::EntityAlreadyDeleted;
             }
 
-            if ((m_entityComponentsBitMaskMap[entity] & componentMask) == componentMask)
+            if ((m_entityComponentsBitMaskMap[entity] & componentMask) > 0)
             {
-                //this is a vector of the type we are trying to remove
-                std::vector<GRK_Component*>* componentTypeVector = &m_componentsStore[ComponentType::GetComponentTypeAccessIndex()];
-
-                //this is the map of entity to components for this type
-                std::unordered_map<GRK_Entity, GRK_Component*>* entityInstanceMap = &m_entityComponentIndexMaps[GRK_Component::GetComponentTypeAccessIndex<ComponentType>()];
-
-                //check if the elment is in the map
-                //and do what we need to if it is not
-                auto it = *entityInstanceMap.find(entity);
-                if (it == *entityInstanceMap.end())
-                {
-                    return GRK_NOSUCHELEMENT;
-                }
-                else
-                {
-                    //this entity exists so we move the last element of the components vector
-                    //to the spot that this one was taking up
-                    auto indexToMoveLastStoredComponent = *entityInstanceMap[entity];
-                    auto lastElement = componentTypeVector->back();
-                    //use std::move so we cannibilize any allocated components and dont copy them
-                    *(componentTypeVector)[indexToMoveLastStoredComponent] = std::move(lastElement);
-
-                    //then remove it from the map
-                    //and shorten our vector
-                    entityInstanceMap->erase(it);
-                    componentTypeVector->pop_back();
-
-                    //remove it from bitmask
-                    *(m_entityComponentsBitMaskMap)[entity] &= ~(IndexToMask(GRK_Component::GetComponentTypeAccessIndex<ComponentType>()));
-
-                    return GRK_Result::Ok;
-                }
+                RemoveComponentHelper(entity, ComponentType::GetComponentTypeAccessIndex());
             }
             else
             {
@@ -184,7 +152,12 @@ namespace Grok3d
 
         Grok3d::GRK_Result DeleteEntity(Grok3d::Entities::GRK_Entity entity);
 
+        void GarbageCollect();
+
         std::vector<Grok3d::Entities::GRK_Entity>& GetDeletedUncleanedEntities();
+
+    private:
+        Grok3d::GRK_Result RemoveComponentHelper(Grok3d::Entities::GRK_Entity entity, size_t componentAccessIndex);
 
     private:
         bool m_isInitialized = false;

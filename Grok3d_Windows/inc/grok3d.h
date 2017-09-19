@@ -6,6 +6,8 @@
 
 #define __GROK3D__H
 
+#include "EntityComponentManager.h"
+
 #include "entity/EntityHandle.h"
 
 #include "Component/Component.h"
@@ -17,9 +19,7 @@
 #include "System/SystemManager.h"
 #include "System/GameLogicSystem.h"
 
-#include "EntityComponentManager.h"
-
-#define INITIAL_ENTITY_ARRAY_SIZE 1024
+#include "Engine.h"
 
 #endif
 

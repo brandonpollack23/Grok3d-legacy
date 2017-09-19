@@ -23,6 +23,11 @@ namespace Grok3d { namespace Components
             static const GRK_Component::ComponentTypeAccessIndex myComponentTypeAccessIndex = _offsetCounter++;
             return myComponentTypeAccessIndex;
         }
+
+        static int NumberOfComponentTypes()
+        {
+            return _offsetCounter + 1;
+        }
     private:
         //TODO multithread lock th is
         static ComponentTypeAccessIndex _offsetCounter;
