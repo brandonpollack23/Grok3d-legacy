@@ -20,6 +20,7 @@ namespace Grok3d { namespace Components
     class GRK_TransformComponent : public GRK_Component
     {
         public:
+            GRK_TransformComponent();
             //TODO as chaining lots of parents gets really big this will get slow, best to cache and have a dirty bit
             //TODO Constructors
             void SetParent(GRK_TransformComponent* newParent);
@@ -36,6 +37,9 @@ namespace Grok3d { namespace Components
 
             glm::vec3 GetLocalPosition();
             void GetLocalPosition(glm::vec3 v);
+
+            void TranslateLocal(glm::vec3 v);
+            void TranslateLocal(float x, float y, float z);
 
             glm::vec3 GetLocalScale();
             void SetLocalScale(glm::vec3 v);

@@ -32,6 +32,8 @@ namespace Grok3d { namespace Entities
     public:
         GRK_EntityHandle(Grok3d::GRK_EntityComponentManager* entityComponentManager, Grok3d::Entities::GRK_Entity entity);
 
+        operator GRK_Entity() const;
+
         Grok3d::GRK_Result Destroy();
         bool inline IsDestroyed();
 

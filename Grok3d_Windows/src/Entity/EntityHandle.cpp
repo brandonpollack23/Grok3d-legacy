@@ -16,6 +16,11 @@ GRK_EntityHandle::GRK_EntityHandle(GRK_EntityComponentManager* entityComponentMa
 {
 }
 
+GRK_EntityHandle::operator GRK_Entity() const
+{
+    return m_entity;
+}
+
 GRK_Result GRK_EntityHandle::Destroy()
 {
     RETURN_FAILURE_IF_ENTITY_DESTROYED(

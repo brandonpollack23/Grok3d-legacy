@@ -4,8 +4,18 @@
 */
 #include "Component/TransformComponent.h"
 
+#include <vector>
+
 using namespace Grok3d;
 using namespace Grok3d::Components;
+
+GRK_TransformComponent::GRK_TransformComponent() :
+    m_parent(nullptr),
+    m_children(std::vector<GRK_TransformComponent*>()),
+    m_localPosition(glm::vec3(0)),
+    m_localScale(glm::vec3(0))
+{
+}
 
 void GRK_TransformComponent::SetParent(GRK_TransformComponent* newParent)
 {
@@ -101,6 +111,17 @@ void GRK_TransformComponent::GetLocalPosition(glm::vec3 v)
     this->m_localPosition = v;
 }
 
+void GRK_TransformComponent::TranslateLocal(glm::vec3 v)
+{
+    this->TranslateLocal(v.x, v.y, v.z);
+}
+
+void GRK_TransformComponent::TranslateLocal(float x, float y, float z)
+{
+    m_localPosition.x += x;
+    m_localPosition.y += y;
+    m_localPosition.z += z;
+}
 
 glm::vec3 GRK_TransformComponent::GetLocalScale()
 {
