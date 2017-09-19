@@ -15,20 +15,20 @@ class MoveBackAndForthBehavour : public GRK_GameBehaviourBase
 
         void Update(float dt) override
         {
-            const double speed = 1 / 3.0;
+            static const double speed = 1 / 3.0;
 
-            float direction = 1;
+            static float direction = 1;
 
             float translationX = direction * speed * dt;
 
             glm::vec3 worldPosition = m_transform->GetWorldPosition();
 
+            m_transform->TranslateLocal(translationX, 0, 0);
+
             if (worldPosition.x >= 25)
             {
                 direction = -direction;
             }
-
-            m_transform->TranslateLocal(translationX, 0, 0);
         }
 
     private:
