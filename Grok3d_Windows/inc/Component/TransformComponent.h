@@ -21,6 +21,7 @@ namespace Grok3d { namespace Components
     {
         public:
             //TODO as chaining lots of parents gets really big this will get slow, best to cache and have a dirty bit
+            //TODO Constructors
             void SetParent(GRK_TransformComponent* newParent);
             void AttachChild(GRK_TransformComponent* newChild);
             bool IsChildOf(GRK_TransformComponent* possibleParent);
