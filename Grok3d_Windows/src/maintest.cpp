@@ -1,5 +1,7 @@
 #include "grok3d.h"
 
+#include <cmath>
+
 using namespace Grok3d;
 using namespace Grok3d::Entities;
 using namespace Grok3d::Components;
@@ -25,7 +27,7 @@ class MoveBackAndForthBehavour : public GRK_GameBehaviourBase
 
             m_transform->TranslateLocal(translationX, 0, 0);
 
-            if (worldPosition.x >= 25)
+            if (abs(worldPosition.x) >= 25)
             {
                 direction = -direction;
             }
