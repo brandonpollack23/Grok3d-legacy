@@ -41,6 +41,8 @@ namespace Grok3d
         template<class ComponentType>
         Grok3d::GRK_Result AddComponent(Grok3d::Entities::GRK_Entity entity, ComponentType& newComponent)
         {
+            static_assert(std::is_base_of<GRK_Component, ComponentType>::value);
+
             if (entity == 0)
             {
                 return GRK_Result::EntityAlreadyDeleted;
@@ -50,22 +52,7 @@ namespace Grok3d
             if ((m_entityComponentsBitMaskMap[entity] & IndexToMask(GRK_Component::GetComponentTypeAccessIndex<ComponentType>())) == 0)
             {
                 auto componentTypeIndex = GRK_Component::GetComponentTypeAccessIndex<ComponentType>();
-                //this is a vector of the type we are trying to add
-                // std::vector<GRK_Component>* componentTypeVector = nullptr;
-                // if (m_componentsStore.size() == componentTypeIndex + 1)
-                // {
-                //     componentTypeVector = &(m_componentsStore[componentTypeIndex]);
-                // }
-                // else if (m_componentsStore.size() == componentTypeIndex)
-                // {
-                //     m_entityComponentIndexMaps.push_back(std::unordered_map<GRK_Entity, ComponentInstance>(INITIAL_ENTITY_ARRAY_SIZE));
-                //     m_componentsStore.push_back(std::vector<GRK_Component>(INITIAL_ENTITY_ARRAY_SIZE));
-                //     componentTypeVector = &m_componentsStore.back();
-                // }
-                // else
-                // {
-                //     return Grok3d::GRK_Result::CriticalError;
-                // }
+
                 std::vector<GRK_Component> componentTypeVector = GetComponentStore<ComponentType>();
 
                 if (componentTypeVector.size() == componentTypeVector.max_size())
@@ -111,6 +98,8 @@ namespace Grok3d
         template<class ComponentType>
         Grok3d::Components::GRK_ComponentHandle<ComponentType> GetComponent(Grok3d::Entities::GRK_Entity entity)
         {
+            static_assert(std::is_base_of<GRK_Component, ComponentType>::value);
+
             GRK_ComponentBitMask componentMask =
                 static_cast<GRK_ComponentBitMask>(IndexToMask(GRK_Component::GetComponentTypeAccessIndex<ComponentType>()));
 
@@ -142,10 +131,11 @@ namespace Grok3d
         }
 
         //removes component for specified entity if it exists
-        //TODO Garbage collect this instead of deleting immediately by maintaining a list
         template<class ComponentType>
         Grok3d::GRK_Result RemoveComponent(Grok3d::Entities::GRK_Entity entity)
         {
+            static_assert(std::is_base_of<GRK_Component, ComponentType>::value);
+
             GRK_ComponentBitMask componentMask = static_cast<GRK_ComponentBitMask>(IndexToMask(GRK_Component::GetComponentTypeAccessIndex<ComponentType>()));
 
             if (entity == 0)
@@ -155,6 +145,11 @@ namespace Grok3d
 
             if ((m_entityComponentsBitMaskMap[entity] & componentMask) > 0)
             {
+                //TODO GC this as well, when you remove component you should just remove it from
+                //entity mask and store the actual component from the store's ComponentInstance in a
+                //m_deletedUncleanedComponents vector to iterate through
+                //there may be some overlap with the entity removal pass so use .find(entity) and
+                //check to be sure it is already out of the map
                 RemoveComponentHelper(entity, ComponentType::GetComponentTypeAccessIndex());
             }
             else
