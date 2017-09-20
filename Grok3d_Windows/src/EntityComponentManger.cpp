@@ -12,6 +12,8 @@
 
 #include "System/SystemManager.h"
 
+#include <stdexcept>
+
 using namespace Grok3d;
 using namespace Grok3d::Components;
 using namespace Grok3d::Entities;
@@ -20,11 +22,9 @@ using namespace Grok3d::Systems;
 GRK_EntityComponentManager::GRK_EntityComponentManager() :
     m_entityComponentsBitMaskMap(std::unordered_map<GRK_Entity, GRK_ComponentBitMask>(INITIAL_ENTITY_ARRAY_SIZE)),
     m_deletedUncleatedEntities(std::vector<GRK_Entity>(INITIAL_ENTITY_ARRAY_SIZE/4)),
-    m_entityComponentIndexMaps(std::vector<std::unordered_map<GRK_Entity, ComponentInstance>>(1)),
-    m_componentsStore(std::vector<std::vector<GRK_Component>>(1))
+    m_entityComponentIndexMaps(std::vector<std::unordered_map<GRK_Entity, ComponentInstance>>(1))
 {
     m_entityComponentIndexMaps[0] = std::unordered_map<GRK_Entity, ComponentInstance>(INITIAL_ENTITY_ARRAY_SIZE);
-    m_componentsStore[0] = std::vector<GRK_Component>(INITIAL_ENTITY_ARRAY_SIZE);
 }
 
 GRK_Result GRK_EntityComponentManager::Initialize(GRK_SystemManager* systemManager)
@@ -84,7 +84,18 @@ void GRK_EntityComponentManager::GarbageCollect()
 
             if((m_entityComponentsBitMaskMap[entity] & componentMask) > 0)
             {
-                this->RemoveComponentHelper(componentMask, entity);
+                if (i == GRK_Component::GetComponentTypeAccessIndex<GRK_TransformComponent>())
+                {
+                   this->RemoveComponentHelper<GRK_TransformComponent>(entity);
+                }
+                else if (i == GRK_Component::GetComponentTypeAccessIndex<GRK_GameLogicComponent>())
+                {
+                   this->RemoveComponentHelper<GRK_GameLogicComponent>(entity);
+                }
+                else
+                {
+                    throw std::logic_error("You must define a case for garbage collection of your component");
+                }
             }
         }
 
@@ -99,38 +110,3 @@ std::vector<GRK_Entity>& GRK_EntityComponentManager::GetDeletedUncleanedEntities
     return m_deletedUncleatedEntities;
 }
 
-GRK_Result GRK_EntityComponentManager::RemoveComponentHelper(GRK_Entity entity, size_t componentAccessIndex)
-{
-    //this is a vector of the type we are trying to remove
-    std::vector<GRK_Component>& componentTypeVector = m_componentsStore[componentAccessIndex];
-
-    //this is the map of entity to components for this type
-    std::unordered_map<GRK_Entity, ComponentInstance> entityInstanceMap = m_entityComponentIndexMaps[componentAccessIndex];
-
-    //check if the elment is in the map
-    //and do what we need to if it is not
-    auto it = entityInstanceMap.find(entity);
-    if (it == entityInstanceMap.end())
-    {
-        return GRK_Result::NoSuchElement;
-    }
-    else
-    {
-        //this entity exists so we move the last element of the components vector
-        //to the spot that this one was taking up
-        auto indexToMoveLastStoredComponent = entityInstanceMap[entity];
-        auto lastElement = componentTypeVector.back();
-        //use std::move so we cannibilize any allocated components and dont copy them
-        componentTypeVector[indexToMoveLastStoredComponent] = std::move(lastElement);
-
-        //then remove it from the map
-        //and shorten our vector
-        entityInstanceMap.erase(it);
-        componentTypeVector.pop_back();
-
-        //remove it from bitmask
-        m_entityComponentsBitMaskMap[entity] &= ~(IndexToMask(componentAccessIndex));
-
-        return GRK_Result::Ok;
-    }
-}

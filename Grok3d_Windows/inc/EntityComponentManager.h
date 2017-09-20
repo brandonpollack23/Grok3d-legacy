@@ -13,6 +13,8 @@
 
 #include "Component/Component.h"
 #include "Component/ComponentHandle.h"
+#include "Component/TransformComponent.h"
+#include "Component/GameLogicComponent.h"
 
 #include "System/SystemManager.h"
 
@@ -41,7 +43,7 @@ namespace Grok3d
         template<class ComponentType>
         Grok3d::GRK_Result AddComponent(Grok3d::Entities::GRK_Entity entity, ComponentType& newComponent)
         {
-            static_assert(std::is_base_of<GRK_Component, ComponentType>::value);
+            static_assert(std::is_base_of<GRK_Component, ComponentType>::value, "AddComponenet Function requires template parameter based on GRK_Component");
 
             if (entity == 0)
             {
@@ -53,7 +55,7 @@ namespace Grok3d
             {
                 auto componentTypeIndex = GRK_Component::GetComponentTypeAccessIndex<ComponentType>();
 
-                std::vector<GRK_Component> componentTypeVector = GetComponentStore<ComponentType>();
+                std::vector<ComponentType> componentTypeVector = GetComponentStore<ComponentType>();
 
                 if (componentTypeVector.size() == componentTypeVector.max_size())
                 {
@@ -95,10 +97,11 @@ namespace Grok3d
             }
         }
 
+        //TODO make const, what is with the initializer list error? is it a bug?
         template<class ComponentType>
         Grok3d::Components::GRK_ComponentHandle<ComponentType> GetComponent(Grok3d::Entities::GRK_Entity entity)
         {
-            static_assert(std::is_base_of<GRK_Component, ComponentType>::value);
+            static_assert(std::is_base_of<GRK_Component, ComponentType>::value, "GetComponenet Function requires template parameter based on GRK_Component");
 
             GRK_ComponentBitMask componentMask =
                 static_cast<GRK_ComponentBitMask>(IndexToMask(GRK_Component::GetComponentTypeAccessIndex<ComponentType>()));
@@ -110,7 +113,7 @@ namespace Grok3d
             else if ((m_entityComponentsBitMaskMap.at(entity) & componentMask) == componentMask)
             {
                 //this is a vector of the type we are trying to remove
-                const std::vector<ComponentType> componentTypeVector = GetComponentStore();
+                std::vector<ComponentType> componentTypeVector = GetComponentStore<ComponentType>();
                 const std::unordered_map<Entities::GRK_Entity, ComponentInstance>* entityInstanceMap =
                     &m_entityComponentIndexMaps.at(GRK_Component::GetComponentTypeAccessIndex<ComponentType>());
 
@@ -134,7 +137,7 @@ namespace Grok3d
         template<class ComponentType>
         Grok3d::GRK_Result RemoveComponent(Grok3d::Entities::GRK_Entity entity)
         {
-            static_assert(std::is_base_of<GRK_Component, ComponentType>::value);
+            static_assert(std::is_base_of<GRK_Component, ComponentType>::value, "RemoveComponenet Function requires template parameter based on GRK_Component");
 
             GRK_ComponentBitMask componentMask = static_cast<GRK_ComponentBitMask>(IndexToMask(GRK_Component::GetComponentTypeAccessIndex<ComponentType>()));
 
@@ -167,12 +170,50 @@ namespace Grok3d
         std::vector<Grok3d::Entities::GRK_Entity>& GetDeletedUncleanedEntities();
 
     private:
-        Grok3d::GRK_Result RemoveComponentHelper(Grok3d::Entities::GRK_Entity entity, size_t componentAccessIndex);
+        template<class ComponentType>
+        Grok3d::GRK_Result GRK_EntityComponentManager::RemoveComponentHelper(Grok3d::Entities::GRK_Entity entity)
+        {
+            static_assert(std::is_base_of<GRK_Component, ComponentType>::value, "RemoveComponenetHelper Function requires template parameter based on GRK_Component");
+
+            auto componentAccessIndex = Grok3d::Components::GRK_Component::GetComponentTypeAccessIndex<ComponentType>();
+            //this is a vector of the type we are trying to remove
+            std::vector<ComponentType> componentTypeVector = this->GetComponentStore<ComponentType>();
+
+            //this is the map of entity to components for this type
+            std::unordered_map<GRK_Entity, ComponentInstance> entityInstanceMap = m_entityComponentIndexMaps[componentAccessIndex];
+
+            //check if the elment is in the map
+            //and do what we need to if it is not
+            auto it = entityInstanceMap.find(entity);
+            if (it == entityInstanceMap.end())
+            {
+                return GRK_Result::NoSuchElement;
+            }
+            else
+            {
+                //this entity exists so we move the last element of the components vector
+                //to the spot that this one was taking up
+                auto indexToMoveLastStoredComponent = entityInstanceMap[entity];
+                auto lastElement = componentTypeVector.back();
+                //use std::move so we cannibilize any allocated components and dont copy them
+                componentTypeVector[indexToMoveLastStoredComponent] = std::move(lastElement);
+
+                //then remove it from the map
+                //and shorten our vector
+                entityInstanceMap.erase(it);
+                componentTypeVector.pop_back();
+
+                //remove it from bitmask
+                m_entityComponentsBitMaskMap[entity] &= ~(IndexToMask(componentAccessIndex));
+
+                return GRK_Result::Ok;
+            }
+        }
 
         template<class ComponentType>
         std::vector<ComponentType>& GetComponentStore()
         {
-            static std::vector<ComponentType> store = InitializeComponentStore();
+            static std::vector<ComponentType> store = InitializeComponentStore<ComponentType>();
             return store;
         }
 
