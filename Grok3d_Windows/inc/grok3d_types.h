@@ -72,6 +72,7 @@ namespace Grok3d
         class GRK_Component;
         class GRK_TransformComponent;
         class GRK_GameLogicComponent;
+
         class GRK_GameBehaviourBase;
 
         typedef int GRK_ComponentBitMask;
