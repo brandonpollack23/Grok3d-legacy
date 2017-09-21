@@ -222,11 +222,7 @@ namespace Grok3d
         {
             static std::vector<ComponentType> store;
             store.reserve(INITIAL_ENTITY_ARRAY_SIZE);
-            m_removeComponentHelperMap.push_back(
-                [](Grok3d::Entities::GRK_Entity entity)
-                {
-                    RemoveComponentHelper<ComponentType>(entity);
-                });
+            m_removeComponentHelperMap.push_back(&RemoveComponentHelper<ComponentType>());
 
             return store;
         }
