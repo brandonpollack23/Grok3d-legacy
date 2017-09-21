@@ -24,7 +24,8 @@ GRK_EntityComponentManager::GRK_EntityComponentManager() :
     m_componentsStore(std::vector<std::vector<GRK_Component>>(1))
 {
     m_entityComponentIndexMaps[0] = std::unordered_map<GRK_Entity, ComponentInstance>(INITIAL_ENTITY_ARRAY_SIZE);
-    m_componentsStore[0] = std::vector<GRK_Component>(INITIAL_ENTITY_ARRAY_SIZE);
+    m_componentsStore[0] = std::vector<GRK_Component>();
+    m_componentsStore[0].reserve(INITIAL_ENTITY_ARRAY_SIZE);
 }
 
 GRK_Result GRK_EntityComponentManager::Initialize(GRK_SystemManager* systemManager)

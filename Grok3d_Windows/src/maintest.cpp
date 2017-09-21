@@ -19,9 +19,9 @@ class MoveBackAndForthBehavour : public GRK_GameBehaviourBase
         {
             static const double speed = 1 / 3.0;
 
-            static float direction = 1;
+            static double direction = 1;
 
-            float translationX = direction * speed * dt;
+            double translationX = direction * speed * dt;
 
             glm::vec3 worldPosition = m_transform->GetWorldPosition();
 

@@ -186,7 +186,7 @@ namespace Grok3d
         std::vector<Grok3d::Entities::GRK_Entity> m_deletedUncleatedEntities;
 
         //index into vector for component
-        typedef int ComponentInstance;
+        typedef size_t ComponentInstance;
 
         //this is a map of entities to a bitmask of their components, used for system registration/component deletion checks etc
         std::unordered_map<Grok3d::Entities::GRK_Entity, Grok3d::Components::GRK_ComponentBitMask> m_entityComponentsBitMaskMap;
