@@ -84,18 +84,7 @@ void GRK_EntityComponentManager::GarbageCollect()
 
             if((m_entityComponentsBitMaskMap[entity] & componentMask) > 0)
             {
-                if (i == GRK_Component::GetComponentTypeAccessIndex<GRK_TransformComponent>())
-                {
-                   this->RemoveComponentHelper<GRK_TransformComponent>(entity);
-                }
-                else if (i == GRK_Component::GetComponentTypeAccessIndex<GRK_GameLogicComponent>())
-                {
-                   this->RemoveComponentHelper<GRK_GameLogicComponent>(entity);
-                }
-                else
-                {
-                    throw std::logic_error("You must define a case for garbage collection of your component");
-                }
+                m_removeComponentHelperMap[i](entity);
             }
         }
 

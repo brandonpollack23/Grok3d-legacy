@@ -222,6 +222,12 @@ namespace Grok3d
         {
             static std::vector<ComponentType> store;
             store.reserve(INITIAL_ENTITY_ARRAY_SIZE);
+            m_removeComponentHelperMap.push_back(
+                [](Grok3d::Entities::GRK_Entity entity)
+                {
+                    RemoveComponentHelper<ComponentType>(entity);
+                });
+
             return store;
         }
 
@@ -243,6 +249,8 @@ namespace Grok3d
 
         //vector of maps from entity to component index into componentStore[ComponentType::Offset]
         std::vector<std::unordered_map<Grok3d::Entities::GRK_Entity, ComponentInstance>> m_entityComponentIndexMaps;
+
+        std::vector<std::function<Grok3d::GRK_Result(Grok3d::Entities::GRK_Entity)> m_removeComponentHelperMap;
     };
 } /*Grok3d*/
 
