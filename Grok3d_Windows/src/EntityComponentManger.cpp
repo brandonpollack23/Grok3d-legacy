@@ -84,7 +84,13 @@ void GRK_EntityComponentManager::GarbageCollect()
 
             if((m_entityComponentsBitMaskMap[entity] & componentMask) > 0)
             {
-                m_removeComponentHelperMap[i](entity);
+                //I know this line looks complex, but it's just bad c++ syntax
+                //member function pointers are not as simple in the type system as function pointers
+                //This is because they need "this" which is the implicit first parameter to the function
+                //so you deref this, pass the function pointer (also stored in a vector that is a member of this, ironically) 
+                //wrap that in parens because that is our dereferenced this->func, and then pass 
+                //that function's params in another set of parens
+                (this->*m_removeComponentHelperMap[i])(entity);
             }
         }
 

@@ -20,6 +20,7 @@
 
 #include <vector>
 #include <unordered_map>
+#include <functional>
 
 namespace Grok3d
 {
@@ -180,7 +181,7 @@ namespace Grok3d
             std::vector<ComponentType> componentTypeVector = this->GetComponentStore<ComponentType>();
 
             //this is the map of entity to components for this type
-            std::unordered_map<GRK_Entity, ComponentInstance> entityInstanceMap = m_entityComponentIndexMaps[componentAccessIndex];
+            std::unordered_map<Grok3d::Entities::GRK_Entity, ComponentInstance> entityInstanceMap = m_entityComponentIndexMaps[componentAccessIndex];
 
             //check if the elment is in the map
             //and do what we need to if it is not
@@ -222,7 +223,7 @@ namespace Grok3d
         {
             static std::vector<ComponentType> store;
             store.reserve(INITIAL_ENTITY_ARRAY_SIZE);
-            m_removeComponentHelperMap.push_back(&RemoveComponentHelper<ComponentType>());
+            m_removeComponentHelperMap.push_back(&GRK_EntityComponentManager::RemoveComponentHelper<ComponentType>);
 
             return store;
         }
@@ -246,7 +247,8 @@ namespace Grok3d
         //vector of maps from entity to component index into componentStore[ComponentType::Offset]
         std::vector<std::unordered_map<Grok3d::Entities::GRK_Entity, ComponentInstance>> m_entityComponentIndexMaps;
 
-        std::vector<std::function<Grok3d::GRK_Result(Grok3d::Entities::GRK_Entity)> m_removeComponentHelperMap;
+        typedef Grok3d::GRK_Result (GRK_EntityComponentManager::*RemoveComponentMemberFunc)(Grok3d::Entities::GRK_Entity);
+        std::vector<RemoveComponentMemberFunc> m_removeComponentHelperMap;
     };
 } /*Grok3d*/
 
