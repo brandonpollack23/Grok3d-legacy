@@ -20,7 +20,7 @@ namespace Grok3d { namespace Systems
 
         Grok3d::GRK_Result UnregisterEntity(Grok3d::Entities::GRK_EntityHandle& entity);
 
-        Grok3d::GRK_Result UpdateSystems(float dt);
+        Grok3d::GRK_Result UpdateSystems(double dt);
 
         Grok3d::GRK_Result Render();
 

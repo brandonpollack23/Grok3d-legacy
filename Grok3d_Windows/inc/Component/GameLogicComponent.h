@@ -15,7 +15,7 @@ namespace Grok3d { namespace Components
             //update function that takes in the change in time
             GRK_GameLogicComponent();
 
-            void Update(float dt);
+            void Update(double dt);
 
             typedef int BehaviourHandle;
             //returns the handle of the behaviour so it can be easily removed later
@@ -33,7 +33,7 @@ namespace Grok3d { namespace Components
     public:
         GRK_GameBehaviourBase(Grok3d::Entities::GRK_EntityHandle owningEntity);
 
-        virtual void Update(float dt) = 0;
+        virtual void Update(double dt) = 0;
 
     protected:
         Grok3d::Entities::GRK_EntityHandle m_owningEntity;

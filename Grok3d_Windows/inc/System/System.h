@@ -12,7 +12,7 @@ namespace Grok3d { namespace Systems
     {
     public:
         GRK_System();
-        virtual GRK_Result Update(float dt) = 0;
+        virtual GRK_Result Update(double dt) = 0;
 
         //inside this functions, just access wahtever system's offset like you would no problem it's static so it'll work
         Grok3d::GRK_Result UpdateSystemEntities(Grok3d::Entities::GRK_EntityHandle& entity);

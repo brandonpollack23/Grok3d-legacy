@@ -19,7 +19,7 @@ namespace Grok3d
             //TODO overload initialize based on markup file
             Grok3d::GRK_Result Initialize();
 
-            void Update(float dt);
+            void Update(double dt);
             void Render();
             void GarbageCollect();
 

@@ -12,7 +12,7 @@ GRK_GameLogicComponent::GRK_GameLogicComponent() :
 {
 }
 
-void GRK_GameLogicComponent::Update(float dt)
+void GRK_GameLogicComponent::Update(double dt)
 {
     for (const auto& behaviour : m_behaviours)
     {

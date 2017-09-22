@@ -10,7 +10,7 @@ namespace Grok3d { namespace Systems
     {
         public:
             GRK_GameLogicSystem::GRK_GameLogicSystem();
-            GRK_Result Update(float dt) override;
+            GRK_Result Update(double dt) override;
         
         protected:
             Grok3d::Components::GRK_ComponentBitMask GetComponentsBitMask() override;

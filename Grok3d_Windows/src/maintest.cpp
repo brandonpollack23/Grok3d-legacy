@@ -1,6 +1,7 @@
 #include "grok3d.h"
 
 #include <cmath>
+#include <iostream>
 
 using namespace Grok3d;
 using namespace Grok3d::Entities;
@@ -15,21 +16,32 @@ class MoveBackAndForthBehavour : public GRK_GameBehaviourBase
         {
         }
 
-        void Update(float dt) override
+        void Update(double dt) override
         {
-            static const double speed = 1 / 3.0;
+            static const double speed = 1.0 / 3.0;
 
             static double direction = 1;
 
-            double translationX = direction * speed * dt;
+            float translationX = direction * speed * dt;
 
-            glm::vec3 worldPosition = m_transform->GetWorldPosition();
+            static int updateCount;
+
+            updateCount++;
 
             m_transform->TranslateLocal(translationX, 0, 0);
+
+            glm::vec3 worldPosition = m_transform->GetWorldPosition();
 
             if (abs(worldPosition.x) >= 25)
             {
                 direction = -direction;
+            }
+
+
+            if (updateCount == 72)
+            { 
+                std::cout << worldPosition.x << ", " << worldPosition.y << ", " << worldPosition.z << std::endl;
+                updateCount = 0;
             }
         }
 

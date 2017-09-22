@@ -2,7 +2,9 @@
 #include "entityComponentManager.h"
 #include "System/SystemManager.h"
 
-#include <ctime>
+#include <chrono>
+
+using namespace std::chrono_literals;
 
 using namespace Grok3d;
 using namespace Grok3d::Systems;
@@ -30,7 +32,7 @@ GRK_Result GRK_Engine::Initialize()
     }
 }
 
-void GRK_Engine::Update(float dt)
+void GRK_Engine::Update(double dt)
 {
     m_systemManager.UpdateSystems(dt);
 }
@@ -47,6 +49,9 @@ void GRK_Engine::GarbageCollect()
 
 void GRK_Engine::Run()
 {
+    using clock = std::chrono::high_resolution_clock;
+    using doubleConversion = std::chrono::duration<double>;
+
     if(Initialize() != GRK_Result::Ok)
     {
         //TODO debug print error fission mailed
@@ -54,28 +59,28 @@ void GRK_Engine::Run()
     }
     
     //TODO use CVAR to set this as tickrate
-    const time_t dt = 1000 / 60; 
+    //this is 144hz period in ns
+    const std::chrono::nanoseconds dt(6944444ns);
 
     //fix my timestep referneced here: https://gafferongames.com/post/fix_your_timestep/
-    time_t currentTime, newTime;
-    time(&currentTime);
+    auto currentTime = clock::now();
 
     //t is total simulation time
-    time_t t = 0.0;
-    time_t accumulator = 0;
+    std::chrono::nanoseconds t(0s);
+    std::chrono::nanoseconds accumulator(0s);
     
     //run until break
     while(true)
     {
-        time(&newTime);
-        time_t prevFrameTime = newTime - currentTime;
+        auto newTime = clock::now();
+        auto prevFrameTime = newTime - currentTime;
         currentTime = newTime;
 
         accumulator += prevFrameTime;
 
         while (accumulator >= dt)
         {
-            this->Update(dt);
+            this->Update(doubleConversion(dt).count());
             accumulator -= dt;
             t += dt;
         }
