@@ -54,7 +54,7 @@ void GRK_Engine::Run()
     }
     
     //TODO use CVAR to set this as tickrate
-    const time_t dt = 1 / 60.0; 
+    const time_t dt = 1000 / 60; 
 
     //fix my timestep referneced here: https://gafferongames.com/post/fix_your_timestep/
     time_t currentTime, newTime;

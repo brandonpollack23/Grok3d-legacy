@@ -5,7 +5,8 @@
 #ifndef __COMPONENTHANDLE__H
 #define __COMPONENTHANDLE__H
 
-#include "../grok3d_types.h"
+#include "grok3d_types.h"
+#include "Component/Component.h"
 
 namespace Grok3d { namespace Components
 {
@@ -29,9 +30,23 @@ namespace Grok3d { namespace Components
             return m_owner;
         }
 
+        bool IsHandleValid()
+        {
+            Grok3d::Components::GRK_ComponentBitMask thisComponentBitMask = IndexToMask(Grok3d::Components::GRK_Component::GetComponentTypeAccessIndex<ComponentType>());
+            Grok3d::Components::GRK_ComponentBitMask components = m_manager->GetEntityComponentsBitMask(m_owner);
+            return (components & thisComponentBitMask) == thisComponentBitMask;
+        }
+
         ComponentType* operator->()
         {
-            return m_component;
+            if (IsHandleValid())
+            {
+                return m_component;
+            }
+            else
+            {
+                return nullptr;
+            }
         }
 
         Grok3d::GRK_Result Destroy()

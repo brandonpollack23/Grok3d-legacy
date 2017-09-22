@@ -2,8 +2,8 @@
 #define __GAMELOGICCOMPONENT__H
 
 #include "grok3d_types.h"
-#include "Entity/EntityHandle.h"
 #include "Component/Component.h"
+#include "Entity/EntityHandle.h"
 
 #include <vector>
 
@@ -13,19 +13,32 @@ namespace Grok3d { namespace Components
     {
         public:
             //update function that takes in the change in time
-            GRK_GameLogicComponent(Grok3d::Entities::GRK_EntityHandle entity);
+            GRK_GameLogicComponent();
 
             void Update(float dt);
 
             typedef int BehaviourHandle;
             //returns the handle of the behaviour so it can be easily removed later
-            BehaviourHandle RegisterBehaviour(Grok3d::GRK_Result (*behaviour)(Grok3d::Entities::GRK_EntityHandle, float));
+            BehaviourHandle RegisterBehaviour(GRK_GameBehaviourBase* behaviour);
             void UnregisterBehaviour(BehaviourHandle handle);
 
         protected:
-            std::vector<Grok3d::GRK_Result (*)(Grok3d::Entities::GRK_EntityHandle, float)> m_behaviours;
-            Grok3d::Entities::GRK_EntityHandle m_entity;
+            std::vector<GRK_GameBehaviourBase*> m_behaviours;
     };
-} /*Components*/ } /*Grok3d*/
+
+    //this is one of the only classes heierarchies that uses dynamic dispatch (or heirarchies at all for that matter)
+    // so that it can be overloaded and classes can be made in other languages later on (LUA or python)
+    class GRK_GameBehaviourBase
+    {
+    public:
+        GRK_GameBehaviourBase(Grok3d::Entities::GRK_EntityHandle owningEntity);
+
+        virtual void Update(float dt) = 0;
+
+    protected:
+        Grok3d::Entities::GRK_EntityHandle m_owningEntity;
+    };
+} /*Components*/
+} /*Grok3d*/
 
 #endif
