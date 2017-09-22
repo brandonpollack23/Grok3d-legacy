@@ -2,19 +2,15 @@
 * Contact @ grok3d@gmail.com
 * This file is available under the MIT license included in the project
 */
-#ifndef __WORLD__H
-
-#define __WORLD__H
+#ifndef __ENTITYCOMPONENENTMANAGER__H
+#define __ENTITYCOMPONENENTMANAGER__H
 
 #include "grok3d_types.h"
 
-#include "EntityComponentManager.h"
 #include "Entity/EntityHandle.h"
 
 #include "Component/Component.h"
 #include "Component/ComponentHandle.h"
-#include "Component/TransformComponent.h"
-#include "Component/GameLogicComponent.h"
 
 #include "System/SystemManager.h"
 
@@ -56,7 +52,7 @@ namespace Grok3d
             {
                 auto componentTypeIndex = GRK_Component::GetComponentTypeAccessIndex<ComponentType>();
 
-                std::vector<ComponentType> componentTypeVector = GetComponentStore<ComponentType>();
+                std::vector<ComponentType>& componentTypeVector = GetComponentStore<ComponentType>();
 
                 if (componentTypeVector.size() == componentTypeVector.max_size())
                 {
@@ -114,7 +110,7 @@ namespace Grok3d
             else if ((m_entityComponentsBitMaskMap.at(entity) & componentMask) == componentMask)
             {
                 //this is a vector of the type we are trying to remove
-                std::vector<ComponentType> componentTypeVector = GetComponentStore<ComponentType>();
+                std::vector<ComponentType>& componentTypeVector = GetComponentStore<ComponentType>();
                 const std::unordered_map<Entities::GRK_Entity, ComponentInstance>* entityInstanceMap =
                     &m_entityComponentIndexMaps.at(GRK_Component::GetComponentTypeAccessIndex<ComponentType>());
 
@@ -178,7 +174,7 @@ namespace Grok3d
 
             auto componentAccessIndex = Grok3d::Components::GRK_Component::GetComponentTypeAccessIndex<ComponentType>();
             //this is a vector of the type we are trying to remove
-            std::vector<ComponentType> componentTypeVector = this->GetComponentStore<ComponentType>();
+            std::vector<ComponentType>& componentTypeVector = this->GetComponentStore<ComponentType>();
 
             //this is the map of entity to components for this type
             std::unordered_map<Grok3d::Entities::GRK_Entity, ComponentInstance> entityInstanceMap = m_entityComponentIndexMaps[componentAccessIndex];
@@ -214,15 +210,21 @@ namespace Grok3d
         template<class ComponentType>
         std::vector<ComponentType>& GetComponentStore()
         {
-            static std::vector<ComponentType> store = InitializeComponentStore<ComponentType>();
+            static std::vector<ComponentType>& store = InitializeComponentStore<ComponentType>();
             return store;
         }
 
         template<class ComponentType>
         std::vector<ComponentType>& InitializeComponentStore()
         {
+            //create component store vector
             static std::vector<ComponentType> store;
             store.reserve(INITIAL_ENTITY_ARRAY_SIZE);
+
+            //add entity to ComponentInstance index map for this component type
+            m_entityComponentIndexMaps.push_back(std::unordered_map<Grok3d::Entities::GRK_Entity, ComponentInstance>(INITIAL_ENTITY_ARRAY_SIZE));
+
+            //add function to removal map for GC
             m_removeComponentHelperMap.push_back(&GRK_EntityComponentManager::RemoveComponentHelper<ComponentType>);
 
             return store;

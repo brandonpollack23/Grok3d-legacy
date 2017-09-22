@@ -3,7 +3,6 @@
 * This file is available under the MIT license included in the project
 */
 #ifndef __ENTITYHANDLER__H
-
 #define __ENTITYHANDLER__H
 
 #include "grok3d_types.h"

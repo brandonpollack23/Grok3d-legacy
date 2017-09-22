@@ -1,6 +1,6 @@
 #include "System/SystemManager.h"
-#include "System/System.h"
 #include "Entity/EntityHandle.h"
+#include "System/System.h"
 
 using namespace Grok3d;
 using namespace Grok3d::Entities;
