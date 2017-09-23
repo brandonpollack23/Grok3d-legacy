@@ -32,7 +32,7 @@ class MoveBackAndForthBehavour : public GRK_GameBehaviourBase
 
             glm::vec3 worldPosition = m_transform->GetWorldPosition();
 
-            if (abs(worldPosition.x) >= 25)
+            if (abs(worldPosition.x) >= 9)
             {
                 direction = -direction;
             }

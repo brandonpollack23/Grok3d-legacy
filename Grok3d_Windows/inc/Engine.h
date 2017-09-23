@@ -34,7 +34,6 @@ namespace Grok3d
             Grok3d::Systems::GRK_SystemManager m_systemManager;
 
             std::function<Grok3d::GRK_Result(Grok3d::GRK_EntityComponentManager&)> m_initFunction;
-            //TODO add shouldContine for for loop and shouldReinitialize for Run func
     };
 } /*Grok3d*/
 

@@ -59,7 +59,7 @@ void GRK_Engine::Run()
     }
     
     //TODO use CVAR to set this as tickrate
-    //this is 144hz period in ns
+    //this is 144hz period in ns: 6944444ns
     const std::chrono::nanoseconds dt(6944444ns);
 
     //fix my timestep referneced here: https://gafferongames.com/post/fix_your_timestep/
