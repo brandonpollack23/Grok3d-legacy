@@ -52,9 +52,9 @@ namespace Grok3d
             //only add a component if one doesnt exist
             if ((m_entityComponentsBitMaskMap[entity] & IndexToMask(componentTypeIndex)) == 0)
             {
-                std::vector<ComponentType>& componentTypeVector = GetComponentStore<ComponentType>();
+                std::vector<ComponentType>* const componentTypeVector = this->GetComponentStore<ComponentType>();
 
-                if (componentTypeVector.size() == componentTypeVector.max_size())
+                if (componentTypeVector->size() == componentTypeVector->max_size())
                 {
                     return Grok3d::GRK_Result::NoSpaceRemaining;
                 }
@@ -65,19 +65,19 @@ namespace Grok3d
                     //DOCUMENTATION put the formula for scale factor of this in the docs, %scale = (1+NUM/DEN)
 
                     //resize vector if necessary
-                    auto cap = componentTypeVector.capacity();
-                    if (cap == componentTypeVector.size())
+                    const auto cap = componentTypeVector->capacity();
+                    if (cap == componentTypeVector->size())
                     {
-                        componentTypeVector.reserve(cap + cap / 10);
+                        componentTypeVector->reserve(cap + cap / 10);
                     }
 
                     //add the component to the end our vector
-                    componentTypeVector.push_back(newComponent);
+                    componentTypeVector->push_back(newComponent);
 
                     //the new size - 1 is the index of the vector the element is stored at
-                    std::unordered_map<GRK_Entity, ComponentInstance>* entityInstanceMap =
+                    std::unordered_map<GRK_Entity, ComponentInstance>* const entityInstanceMap =
                         &m_entityComponentIndexMaps[componentTypeIndex];
-                    (*entityInstanceMap)[entity] = static_cast<ComponentInstance>(componentTypeVector.size() - 1);
+                    (*entityInstanceMap)[entity] = static_cast<ComponentInstance>(componentTypeVector->size() - 1);
 
                     m_entityComponentsBitMaskMap[entity] |=
                         IndexToMask(componentTypeIndex);
@@ -100,7 +100,7 @@ namespace Grok3d
         {
             static_assert(std::is_base_of<GRK_Component, ComponentType>::value, "GetComponent Function requires template parameter based on GRK_Component");
 
-            GRK_ComponentBitMask componentMask =
+            const GRK_ComponentBitMask componentMask =
                 static_cast<GRK_ComponentBitMask>(IndexToMask(GRK_Component::GetComponentTypeAccessIndex<ComponentType>()));
 
             if (entity == 0 || (m_entityComponentsBitMaskMap.at(entity) & componentMask) == 0)
@@ -110,15 +110,15 @@ namespace Grok3d
             else if ((m_entityComponentsBitMaskMap.at(entity) & componentMask) == componentMask)
             {
                 //this is a vector of the type we are trying to remove
-                std::vector<ComponentType>& componentTypeVector = GetComponentStore<ComponentType>();
+                std::vector<ComponentType>* const componentTypeVector = this->GetComponentStore<ComponentType>();
                 const std::unordered_map<Entities::GRK_Entity, ComponentInstance>* entityInstanceMap =
                     &m_entityComponentIndexMaps.at(GRK_Component::GetComponentTypeAccessIndex<ComponentType>());
 
                 //get the instance (index in our vector) from teh entityInstanceMap
-                ComponentInstance instance = (*entityInstanceMap).at(entity);
+                const ComponentInstance instance = entityInstanceMap->at(entity);
 
                 //use the instance to index the array of that componenttype
-                ComponentType* componentPointer = &(componentTypeVector.at(instance));
+                const ComponentType* const componentPointer = &(componentTypeVector->at(instance));
 
                 //return it in a handle
                 return Grok3d::Components::GRK_ComponentHandle<ComponentType>(this, componentPointer, entity);
@@ -174,7 +174,7 @@ namespace Grok3d
 
             auto componentAccessIndex = Grok3d::Components::GRK_Component::GetComponentTypeAccessIndex<ComponentType>();
             //this is a vector of the type we are trying to remove
-            std::vector<ComponentType>& componentTypeVector = this->GetComponentStore<ComponentType>();
+            std::vector<ComponentType>* const componentTypeVector = this->GetComponentStore<ComponentType>();
 
             //this is the map of entity to components for this type
             std::unordered_map<Grok3d::Entities::GRK_Entity, ComponentInstance> entityInstanceMap = m_entityComponentIndexMaps[componentAccessIndex];
@@ -191,14 +191,14 @@ namespace Grok3d
                 //this entity exists so we move the last element of the components vector
                 //to the spot that this one was taking up
                 auto indexToMoveLastStoredComponent = entityInstanceMap[entity];
-                auto lastElement = componentTypeVector.back();
+                auto lastElement = componentTypeVector->back();
                 //use std::move so we cannibilize any allocated components and dont copy them
-                componentTypeVector[indexToMoveLastStoredComponent] = std::move(lastElement);
+                (*componentTypeVector)[indexToMoveLastStoredComponent] = std::move(lastElement);
 
                 //then remove it from the map
                 //and shorten our vector
                 entityInstanceMap.erase(it);
-                componentTypeVector.pop_back();
+                componentTypeVector->pop_back();
 
                 //remove it from bitmask
                 m_entityComponentsBitMaskMap[entity] &= ~(IndexToMask(componentAccessIndex));
@@ -208,14 +208,14 @@ namespace Grok3d
         }
 
         template<class ComponentType>
-        std::vector<ComponentType>& GetComponentStore() const
+        std::vector<ComponentType>* GetComponentStore() const
         {
-            static std::vector<ComponentType>& store = InitializeComponentStore<ComponentType>();
+            static std::vector<ComponentType>* store = this->InitializeComponentStore<ComponentType>();
             return store;
         }
 
         template<class ComponentType>
-        std::vector<ComponentType>& InitializeComponentStore() const
+        std::vector<ComponentType>* InitializeComponentStore() const
         {
             //create component store vector
             static std::vector<ComponentType> store;
@@ -227,7 +227,7 @@ namespace Grok3d
             //add function to removal map for GC
             m_removeComponentHelperMap.push_back(&GRK_EntityComponentManager::RemoveComponentHelper<ComponentType>);
 
-            return store;
+            return &store;
         }
 
     private:
