@@ -136,7 +136,7 @@ namespace Grok3d
         {
             static_assert(std::is_base_of<GRK_Component, ComponentType>::value, "RemoveComponent Function requires template parameter based on GRK_Component");
 
-            GRK_ComponentBitMask componentMask = static_cast<GRK_ComponentBitMask>(IndexToMask(GRK_Component::GetComponentTypeAccessIndex<ComponentType>()));
+            const GRK_ComponentBitMask componentMask = static_cast<GRK_ComponentBitMask>(IndexToMask(GRK_Component::GetComponentTypeAccessIndex<ComponentType>()));
 
             if (entity == 0)
             {
@@ -158,7 +158,7 @@ namespace Grok3d
             }
         }
 
-        Grok3d::Components::GRK_ComponentBitMask GetEntityComponentsBitMask(Grok3d::Entities::GRK_Entity entity) const;
+        Grok3d::Components::GRK_ComponentBitMask GetEntityComponentsBitMask(const Grok3d::Entities::GRK_Entity entity) const;
 
         Grok3d::GRK_Result DeleteEntity(Grok3d::Entities::GRK_Entity entity);
 
@@ -172,17 +172,17 @@ namespace Grok3d
         {
             static_assert(std::is_base_of<GRK_Component, ComponentType>::value, "RemoveComponentHelper Function requires template parameter based on GRK_Component");
 
-            auto componentAccessIndex = Grok3d::Components::GRK_Component::GetComponentTypeAccessIndex<ComponentType>();
+            const auto componentAccessIndex = Grok3d::Components::GRK_Component::GetComponentTypeAccessIndex<ComponentType>();
             //this is a vector of the type we are trying to remove
             std::vector<ComponentType>* const componentTypeVector = this->GetComponentStore<ComponentType>();
 
             //this is the map of entity to components for this type
-            std::unordered_map<Grok3d::Entities::GRK_Entity, ComponentInstance> entityInstanceMap = m_entityComponentIndexMaps[componentAccessIndex];
+            std::unordered_map<Grok3d::Entities::GRK_Entity, ComponentInstance>* const entityInstanceMap = &(m_entityComponentIndexMaps[componentAccessIndex]);
 
             //check if the elment is in the map
             //and do what we need to if it is not
-            auto it = entityInstanceMap.find(entity);
-            if (it == entityInstanceMap.end())
+            const auto it = entityInstanceMap->find(entity);
+            if (it == entityInstanceMap->end())
             {
                 return GRK_Result::NoSuchElement;
             }
@@ -190,14 +190,14 @@ namespace Grok3d
             {
                 //this entity exists so we move the last element of the components vector
                 //to the spot that this one was taking up
-                auto indexToMoveLastStoredComponent = entityInstanceMap[entity];
-                auto lastElement = componentTypeVector->back();
+                const auto indexToMoveLastStoredComponent = (*entityInstanceMap)[entity];
+                const auto lastElement = componentTypeVector->back();
                 //use std::move so we cannibilize any allocated components and dont copy them
                 (*componentTypeVector)[indexToMoveLastStoredComponent] = std::move(lastElement);
 
                 //then remove it from the map
                 //and shorten our vector
-                entityInstanceMap.erase(it);
+                entityInstanceMap->erase(it);
                 componentTypeVector->pop_back();
 
                 //remove it from bitmask
