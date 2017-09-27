@@ -96,7 +96,7 @@ namespace Grok3d
 
         //TODO make const, what is with the initializer list error? is it a bug?
         template<class ComponentType>
-        Grok3d::Components::GRK_ComponentHandle<ComponentType> GetComponent(Grok3d::Entities::GRK_Entity entity)
+        Grok3d::Components::GRK_ComponentHandle<ComponentType> GetComponent(Grok3d::Entities::GRK_Entity entity) const
         {
             static_assert(std::is_base_of<GRK_Component, ComponentType>::value, "GetComponent Function requires template parameter based on GRK_Component");
 
@@ -158,7 +158,7 @@ namespace Grok3d
             }
         }
 
-        Grok3d::Components::GRK_ComponentBitMask GetEntityComponentsBitMask(Grok3d::Entities::GRK_Entity entity);
+        Grok3d::Components::GRK_ComponentBitMask GetEntityComponentsBitMask(Grok3d::Entities::GRK_Entity entity) const;
 
         Grok3d::GRK_Result DeleteEntity(Grok3d::Entities::GRK_Entity entity);
 
@@ -208,14 +208,14 @@ namespace Grok3d
         }
 
         template<class ComponentType>
-        std::vector<ComponentType>& GetComponentStore()
+        std::vector<ComponentType>& GetComponentStore() const
         {
             static std::vector<ComponentType>& store = InitializeComponentStore<ComponentType>();
             return store;
         }
 
         template<class ComponentType>
-        std::vector<ComponentType>& InitializeComponentStore()
+        std::vector<ComponentType>& InitializeComponentStore() const
         {
             //create component store vector
             static std::vector<ComponentType> store;
@@ -247,10 +247,10 @@ namespace Grok3d
         std::unordered_map<Grok3d::Entities::GRK_Entity, Grok3d::Components::GRK_ComponentBitMask> m_entityComponentsBitMaskMap;
 
         //vector of maps from entity to component index into componentStore[ComponentType::Offset]
-        std::vector<std::unordered_map<Grok3d::Entities::GRK_Entity, ComponentInstance>> m_entityComponentIndexMaps;
+        mutable std::vector<std::unordered_map<Grok3d::Entities::GRK_Entity, ComponentInstance>> m_entityComponentIndexMaps;
 
         typedef Grok3d::GRK_Result (GRK_EntityComponentManager::*RemoveComponentMemberFunc)(Grok3d::Entities::GRK_Entity);
-        std::vector<RemoveComponentMemberFunc> m_removeComponentHelperMap;
+        mutable std::vector<RemoveComponentMemberFunc> m_removeComponentHelperMap;
     };
 } /*Grok3d*/
 

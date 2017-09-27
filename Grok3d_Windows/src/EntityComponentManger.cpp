@@ -47,11 +47,11 @@ GRK_EntityHandle GRK_EntityComponentManager::CreateEntity()
     return GRK_EntityHandle(this, id);
 }
 
-GRK_ComponentBitMask GRK_EntityComponentManager::GetEntityComponentsBitMask(GRK_Entity entity)
+GRK_ComponentBitMask GRK_EntityComponentManager::GetEntityComponentsBitMask(const GRK_Entity entity) const
 {
     if (entity != 0)
     {
-        return m_entityComponentsBitMaskMap[entity];
+        return m_entityComponentsBitMaskMap.at(entity);
     }
     else 
     {

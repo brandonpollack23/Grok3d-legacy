@@ -15,9 +15,9 @@ namespace Grok3d { namespace Components
     {
     public:
         GRK_ComponentHandle(
-                Grok3d::GRK_EntityComponentManager* entityComponentManager,
-                ComponentType* component,
-                Grok3d::Entities::GRK_Entity owner) :
+                const Grok3d::GRK_EntityComponentManager* entityComponentManager,
+                const ComponentType* component,
+                const Grok3d::Entities::GRK_Entity owner) :
             m_manager(entityComponentManager),
             m_component(component),
             m_owner(owner)
@@ -41,7 +41,7 @@ namespace Grok3d { namespace Components
         {
             if (IsHandleValid())
             {
-                return m_component;
+                return const_cast<ComponentType*>(m_component);
             }
             else
             {
@@ -55,9 +55,9 @@ namespace Grok3d { namespace Components
         }
 
     private:
-        Grok3d::Entities::GRK_Entity m_owner;
-        ComponentType* m_component;
-        Grok3d::GRK_EntityComponentManager* m_manager;
+        const Grok3d::Entities::GRK_Entity m_owner;
+        const ComponentType* m_component;
+        const Grok3d::GRK_EntityComponentManager* m_manager;
     };
 
     //template specialization for GRK_TransformComponent, every entity MUST have this it cannot be destroyed
