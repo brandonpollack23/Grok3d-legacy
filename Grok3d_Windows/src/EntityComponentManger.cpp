@@ -21,7 +21,7 @@ using namespace Grok3d::Systems;
 
 GRK_EntityComponentManager::GRK_EntityComponentManager() :
     m_entityComponentsBitMaskMap(std::unordered_map<GRK_Entity, GRK_ComponentBitMask>(INITIAL_ENTITY_ARRAY_SIZE)),
-    m_deletedUncleatedEntities(std::vector<GRK_Entity>(INITIAL_ENTITY_ARRAY_SIZE/4)),
+    m_deletedUncleanedEntities(std::vector<GRK_Entity>(INITIAL_ENTITY_ARRAY_SIZE/4)),
     m_entityComponentIndexMaps(std::vector<std::unordered_map<GRK_Entity, ComponentInstance>>(1))
 {
     m_entityComponentIndexMaps[0] = std::unordered_map<GRK_Entity, ComponentInstance>(INITIAL_ENTITY_ARRAY_SIZE);
@@ -64,7 +64,7 @@ GRK_Result GRK_EntityComponentManager::DeleteEntity(GRK_Entity entity)
     GRK_Result result = GRK_Result::Ok;
 
     //ComponentManager's deleting their components is handled by GarbageCollection
-    m_deletedUncleatedEntities.push_back(entity);
+    m_deletedUncleanedEntities.push_back(entity);
 
     // send a component bit mask of 0 to all Systems, no components means any system will unregister
     m_systemManager->UnregisterEntity(GRK_EntityHandle(this, entity));
@@ -75,7 +75,7 @@ GRK_Result GRK_EntityComponentManager::DeleteEntity(GRK_Entity entity)
 void GRK_EntityComponentManager::GarbageCollect()
 {
     //TODO dont always do this lets be smarter
-    for (const auto& entity : m_deletedUncleatedEntities)
+    for (const auto& entity : m_deletedUncleanedEntities)
     {
         GRK_ComponentBitMask componentBitMask = m_entityComponentsBitMaskMap[entity];
         for (int i = 0; i < GRK_Component::NumberOfComponentTypes(); i++)
@@ -97,11 +97,11 @@ void GRK_EntityComponentManager::GarbageCollect()
         m_entityComponentsBitMaskMap.erase(entity);
     }
 
-    m_deletedUncleatedEntities.clear();
+    m_deletedUncleanedEntities.clear();
 }
 
 std::vector<GRK_Entity>& GRK_EntityComponentManager::GetDeletedUncleanedEntities()
 {
-    return m_deletedUncleatedEntities;
+    return m_deletedUncleanedEntities;
 }
 

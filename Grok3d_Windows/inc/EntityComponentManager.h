@@ -30,28 +30,28 @@ namespace Grok3d
         Grok3d::Entities::GRK_EntityHandle CreateEntity();
 
         //these component functions can only be called from GRK_EntityHandle or GRK_World!!!
-        // Stretch 2: Make CompomentManager::AddComponenet only take in entity, have it construct the component as part of the array and 
+        // Stretch 2: Make CompomentManager::AddComponent only take in entity, have it construct the component as part of the array and 
         //   make the arguments of that constructor also a generic Args template and pass that in here
 
         // adds a component of generic type to this manager and associates it with an entity
-        // componenet parameter is by reference so it isn't copied twice when it is put in the array
+        // Component parameter is by reference so it isn't copied twice when it is put in the array
         // I chose to have the component constructed and then copied because it is easier than passing a factory function
         // to this generic class and calling it on AddComponent with all it's parameters wrapped in a generic args class
         template<class ComponentType>
         Grok3d::GRK_Result AddComponent(Grok3d::Entities::GRK_Entity entity, ComponentType& newComponent)
         {
-            static_assert(std::is_base_of<GRK_Component, ComponentType>::value, "AddComponenet Function requires template parameter based on GRK_Component");
+            static_assert(std::is_base_of<GRK_Component, ComponentType>::value, "AddComponent Function requires template parameter based on GRK_Component");
 
             if (entity == 0)
             {
                 return GRK_Result::EntityAlreadyDeleted;
             }
 
-            //only add a component if one doesnt exist
-            if ((m_entityComponentsBitMaskMap[entity] & IndexToMask(GRK_Component::GetComponentTypeAccessIndex<ComponentType>())) == 0)
-            {
-                auto componentTypeIndex = GRK_Component::GetComponentTypeAccessIndex<ComponentType>();
+            auto componentTypeIndex = GRK_Component::GetComponentTypeAccessIndex<ComponentType>();
 
+            //only add a component if one doesnt exist
+            if ((m_entityComponentsBitMaskMap[entity] & IndexToMask(componentTypeIndex)) == 0)
+            {
                 std::vector<ComponentType>& componentTypeVector = GetComponentStore<ComponentType>();
 
                 if (componentTypeVector.size() == componentTypeVector.max_size())
@@ -80,7 +80,7 @@ namespace Grok3d
                     (*entityInstanceMap)[entity] = static_cast<ComponentInstance>(componentTypeVector.size() - 1);
 
                     m_entityComponentsBitMaskMap[entity] |=
-                        IndexToMask(GRK_Component::GetComponentTypeAccessIndex<ComponentType>());
+                        IndexToMask(componentTypeIndex);
 
                     //inform all systems of new component added to this entity
                     m_systemManager->UpdateSystemEntities(GRK_EntityHandle(this, entity));
@@ -98,7 +98,7 @@ namespace Grok3d
         template<class ComponentType>
         Grok3d::Components::GRK_ComponentHandle<ComponentType> GetComponent(Grok3d::Entities::GRK_Entity entity)
         {
-            static_assert(std::is_base_of<GRK_Component, ComponentType>::value, "GetComponenet Function requires template parameter based on GRK_Component");
+            static_assert(std::is_base_of<GRK_Component, ComponentType>::value, "GetComponent Function requires template parameter based on GRK_Component");
 
             GRK_ComponentBitMask componentMask =
                 static_cast<GRK_ComponentBitMask>(IndexToMask(GRK_Component::GetComponentTypeAccessIndex<ComponentType>()));
@@ -134,7 +134,7 @@ namespace Grok3d
         template<class ComponentType>
         Grok3d::GRK_Result RemoveComponent(Grok3d::Entities::GRK_Entity entity)
         {
-            static_assert(std::is_base_of<GRK_Component, ComponentType>::value, "RemoveComponenet Function requires template parameter based on GRK_Component");
+            static_assert(std::is_base_of<GRK_Component, ComponentType>::value, "RemoveComponent Function requires template parameter based on GRK_Component");
 
             GRK_ComponentBitMask componentMask = static_cast<GRK_ComponentBitMask>(IndexToMask(GRK_Component::GetComponentTypeAccessIndex<ComponentType>()));
 
@@ -170,7 +170,7 @@ namespace Grok3d
         template<class ComponentType>
         Grok3d::GRK_Result GRK_EntityComponentManager::RemoveComponentHelper(Grok3d::Entities::GRK_Entity entity)
         {
-            static_assert(std::is_base_of<GRK_Component, ComponentType>::value, "RemoveComponenetHelper Function requires template parameter based on GRK_Component");
+            static_assert(std::is_base_of<GRK_Component, ComponentType>::value, "RemoveComponentHelper Function requires template parameter based on GRK_Component");
 
             auto componentAccessIndex = Grok3d::Components::GRK_Component::GetComponentTypeAccessIndex<ComponentType>();
             //this is a vector of the type we are trying to remove
@@ -238,7 +238,7 @@ namespace Grok3d
         Grok3d::Entities::GRK_Entity m_NextEntityId = 1;
 
         //list of deleted entites that need to be GC'd
-        std::vector<Grok3d::Entities::GRK_Entity> m_deletedUncleatedEntities;
+        std::vector<Grok3d::Entities::GRK_Entity> m_deletedUncleanedEntities;
 
         //index into vector for component
         typedef size_t ComponentInstance;
