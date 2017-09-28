@@ -13,7 +13,7 @@ namespace Grok3d { namespace Systems
             GRK_Result Update(double dt) override;
         
         protected:
-            Grok3d::Components::GRK_ComponentBitMask GetComponentsBitMask() override;
+            Grok3d::Components::GRK_ComponentBitMask GetComponentsBitMask() const override;
     };
 } /*Systems*/ } /*Grok3d*/
 

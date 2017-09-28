@@ -16,13 +16,13 @@ namespace Grok3d { namespace Systems
 
         //thie function does a check to see if all the bits in it's bit mask 
         //are in it's bit mask
-        Grok3d::GRK_Result UpdateSystemEntities(Grok3d::Entities::GRK_EntityHandle& entity);
+        Grok3d::GRK_Result UpdateSystemEntities(const Grok3d::Entities::GRK_EntityHandle& entity);
 
-        Grok3d::GRK_Result UnregisterEntity(Grok3d::Entities::GRK_EntityHandle& entity);
+        Grok3d::GRK_Result UnregisterEntity(const Grok3d::Entities::GRK_EntityHandle& entity);
 
         Grok3d::GRK_Result UpdateSystems(double dt);
 
-        Grok3d::GRK_Result Render();
+        Grok3d::GRK_Result Render() const;
 
     private:
             std::array<GRK_System*, 1> m_systems;

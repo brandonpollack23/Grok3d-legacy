@@ -14,7 +14,7 @@ GRK_System::GRK_System()
     m_trackedEntities = std::unordered_set<GRK_EntityHandle>(INITIAL_ENTITY_ARRAY_SIZE);
 }
 
-GRK_Result GRK_System::UpdateSystemEntities(GRK_EntityHandle& entity)
+GRK_Result GRK_System::UpdateSystemEntities(const GRK_EntityHandle& entity)
 {
     GRK_ComponentBitMask myMask = GetComponentsBitMask();
 
@@ -42,7 +42,7 @@ GRK_Result GRK_System::UpdateSystemEntities(GRK_EntityHandle& entity)
     return GRK_Result::Ok;
 }
 
-GRK_Result GRK_System::UnregisterEntity(GRK_EntityHandle& entity)
+GRK_Result GRK_System::UnregisterEntity(const GRK_EntityHandle& entity)
 {
     auto entityIt = m_trackedEntities.find(entity);
     if (entityIt != m_trackedEntities.end())

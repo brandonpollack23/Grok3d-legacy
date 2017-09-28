@@ -11,7 +11,7 @@ GRK_GameLogicSystem::GRK_GameLogicSystem() : GRK_System()
 {
 }
 
-GRK_Result GRK_GameLogicSystem::Update(double dt)
+GRK_Result GRK_GameLogicSystem::Update(const double dt)
 {
     for (const auto& entity : m_trackedEntities)
     {
@@ -22,7 +22,7 @@ GRK_Result GRK_GameLogicSystem::Update(double dt)
     return GRK_Result::Ok;
 }
 
-GRK_ComponentBitMask GRK_GameLogicSystem::GetComponentsBitMask()
+GRK_ComponentBitMask GRK_GameLogicSystem::GetComponentsBitMask() const
 {
     static GRK_ComponentBitMask mask = 
         GRK_Component::GetComponentTypeAccessIndex<GRK_GameLogicComponent>();
