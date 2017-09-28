@@ -82,7 +82,7 @@ namespace Grok3d { namespace Entities
     private:
         friend ::std::hash<GRK_EntityHandle>;
         Grok3d::Entities::GRK_Entity m_entity;
-        Grok3d::GRK_EntityComponentManager* m_manager;
+        Grok3d::GRK_EntityComponentManager* const m_manager;
     };
 } /*Entities*/ } /*Grok3d*/
 

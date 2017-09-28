@@ -34,7 +34,7 @@ bool inline GRK_EntityHandle::IsDestroyed() const
     return m_entity == 0;
 }
 
-bool GRK_EntityHandle::HasComponents(GRK_ComponentBitMask componentBits) const
+bool GRK_EntityHandle::HasComponents(const GRK_ComponentBitMask componentBits) const
 {
     RETURN_FAILURE_IF_ENTITY_DESTROYED(
         false,

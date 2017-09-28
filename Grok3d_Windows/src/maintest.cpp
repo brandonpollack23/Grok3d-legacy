@@ -18,11 +18,11 @@ class MoveBackAndForthBehavour : public GRK_GameBehaviourBase
 
         void Update(double dt) override
         {
-            static const double speed = 1.0 / 3.0;
+            static const float speed = 1.0 / 3.0;
 
             static double direction = 1;
 
-            float translationX = direction * speed * dt;
+            float translationX = static_cast<float>(direction) * speed * static_cast<float>(dt);
 
             static int updateCount;
 
