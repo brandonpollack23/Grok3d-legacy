@@ -12,7 +12,7 @@ GRK_GameLogicComponent::GRK_GameLogicComponent() :
 {
 }
 
-void GRK_GameLogicComponent::Update(double dt)
+void GRK_GameLogicComponent::Update(double dt) const
 {
     for (const auto& behaviour : m_behaviours)
     {

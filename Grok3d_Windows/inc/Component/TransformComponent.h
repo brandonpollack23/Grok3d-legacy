@@ -24,7 +24,7 @@ namespace Grok3d { namespace Components
             //TODO as chaining lots of parents gets really big this will get slow, best to cache and have a dirty bit
             void SetParent(GRK_TransformComponent* newParent);
             void AttachChild(GRK_TransformComponent* newChild);
-            bool IsChildOf(GRK_TransformComponent* possibleParent) const;
+            bool IsChildOf(const GRK_TransformComponent* const possibleParent) const;
             unsigned int GetSiblingIndex(); //use parent and iterate through the list looking for me
             int GetChildIndex(const GRK_TransformComponent* possibleChild) const;
 

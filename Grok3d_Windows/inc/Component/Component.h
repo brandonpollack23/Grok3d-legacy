@@ -18,13 +18,13 @@ namespace Grok3d { namespace Components
 
         //the definition must be in the header because that's how templated functions work, I'm afraid
         template<class ComponentType>
-        static const ComponentTypeAccessIndex GetComponentTypeAccessIndex() const
+        static const ComponentTypeAccessIndex GetComponentTypeAccessIndex()
         {
             static const GRK_Component::ComponentTypeAccessIndex myComponentTypeAccessIndex = _offsetCounter++;
             return myComponentTypeAccessIndex;
         }
 
-        static const int NumberOfComponentTypes() const
+        static const int NumberOfComponentTypes()
         {
             return _offsetCounter + 1;
         }

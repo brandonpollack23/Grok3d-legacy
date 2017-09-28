@@ -28,7 +28,7 @@ void GRK_TransformComponent::AttachChild(GRK_TransformComponent* newChild)
     this->m_children.push_back(newChild);
 }
 
-bool GRK_TransformComponent::IsChildOf(GRK_TransformComponent* possibleParent)
+bool GRK_TransformComponent::IsChildOf(const GRK_TransformComponent* const possibleParent) const
 {
     return possibleParent == m_parent;
 }
@@ -38,7 +38,7 @@ unsigned int GRK_TransformComponent::GetSiblingIndex() //use parent and iterate 
     return m_parent->GetChildIndex(this);
 }
 
-int GRK_TransformComponent::GetChildIndex(GRK_TransformComponent* possibleChild)
+int GRK_TransformComponent::GetChildIndex(const GRK_TransformComponent* const possibleChild) const
 {
     for (int i = 0; i < m_children.size(); ++i)
     {
@@ -55,7 +55,7 @@ int GRK_TransformComponent::ChildCount()
     return static_cast<int>(this->m_children.size());
 }
 
-glm::vec3 GRK_TransformComponent::GetWorldPosition()
+glm::vec3 GRK_TransformComponent::GetWorldPosition() const
 {
     //if i have no parent, my position is world position
     //otherwise my position concatonated with my parents' world position (recursive) is my actual position
@@ -83,7 +83,7 @@ void GRK_TransformComponent::SetWorldPosition(glm::vec3 v)
     }
 }
 
-void GRK_TransformComponent::SetWorldPosition(float x, float y, float z)
+void GRK_TransformComponent::SetWorldPosition(const float x, const float y, const float z)
 {
     //if no parent, setting world position is setting my position
     //otherwise it is these coordinates subtracted from my parent's position recursively
@@ -101,7 +101,7 @@ void GRK_TransformComponent::SetWorldPosition(float x, float y, float z)
     }
 }
 
-glm::vec3 GRK_TransformComponent::GetLocalPosition()
+glm::vec3 GRK_TransformComponent::GetLocalPosition() const
 {
     return m_localPosition;
 }
@@ -116,14 +116,14 @@ void GRK_TransformComponent::TranslateLocal(glm::vec3 v)
     this->TranslateLocal(v.x, v.y, v.z);
 }
 
-void GRK_TransformComponent::TranslateLocal(float x, float y, float z)
+void GRK_TransformComponent::TranslateLocal(const float x, const float y, const float z)
 {
     m_localPosition.x += x;
     m_localPosition.y += y;
     m_localPosition.z += z;
 }
 
-glm::vec3 GRK_TransformComponent::GetLocalScale()
+glm::vec3 GRK_TransformComponent::GetLocalScale() const
 {
     return m_localScale;
 }
@@ -133,7 +133,7 @@ void GRK_TransformComponent::SetLocalScale(glm::vec3 v)
     m_localScale = v;
 }
 
-void GRK_TransformComponent::SetLocalScale(float x, float y, float z)
+void GRK_TransformComponent::SetLocalScale(const float x, const float y, const float z)
 {
     m_localScale.x = x;
     m_localScale.y = y;
@@ -149,7 +149,7 @@ void GRK_TransformComponent::DetachChildren()
     m_children.clear();
 }
 
-GRK_TransformComponent* GRK_TransformComponent::GetChild(unsigned int index)
+GRK_TransformComponent* GRK_TransformComponent::GetChild(const unsigned int index) const
 {
     return (index < m_children.size() && index > 0) ? m_children[index] : nullptr;
 }
