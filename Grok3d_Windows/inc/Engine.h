@@ -20,7 +20,7 @@ namespace Grok3d
             Grok3d::GRK_Result Initialize();
 
             void Update(double dt);
-            void Render();
+            void Render() const;
             void GarbageCollect();
 
             //function that never exits and runs update in an infinite loop until broken

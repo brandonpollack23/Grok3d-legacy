@@ -37,7 +37,7 @@ void GRK_Engine::Update(double dt)
     m_systemManager.UpdateSystems(dt);
 }
 
-void GRK_Engine::Render()
+void GRK_Engine::Render() const
 {
     m_systemManager.Render();
 }
