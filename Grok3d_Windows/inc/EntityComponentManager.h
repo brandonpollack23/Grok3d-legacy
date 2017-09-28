@@ -94,7 +94,6 @@ namespace Grok3d
             }
         }
 
-        //TODO make const, what is with the initializer list error? is it a bug?
         template<class ComponentType>
         Grok3d::Components::GRK_ComponentHandle<ComponentType> GetComponent(Grok3d::Entities::GRK_Entity entity) const
         {
@@ -242,7 +241,6 @@ namespace Grok3d
 
         //index into vector for component
         typedef size_t ComponentInstance;
-
         //this is a map of entities to a bitmask of their components, used for system registration/component deletion checks etc
         std::unordered_map<Grok3d::Entities::GRK_Entity, Grok3d::Components::GRK_ComponentBitMask> m_entityComponentsBitMaskMap;
 

@@ -15,7 +15,7 @@ namespace Grok3d { namespace Components
             //update function that takes in the change in time
             GRK_GameLogicComponent();
 
-            void Update(double dt);
+            void Update(double dt) const;
 
             typedef int BehaviourHandle;
             //returns the handle of the behaviour so it can be easily removed later

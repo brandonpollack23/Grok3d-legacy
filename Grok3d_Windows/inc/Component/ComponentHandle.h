@@ -25,12 +25,12 @@ namespace Grok3d { namespace Components
             static_assert(std::is_base_of<GRK_Component, ComponentType>::value, "The ComponentType passed to class GRK_ComponentHandle was not of base GRK_Component");
         }
 
-        Grok3d::Entities::GRK_Entity GetOwningEntity()
+        const Grok3d::Entities::GRK_Entity GetOwningEntity() const
         {
             return m_owner;
         }
 
-        bool IsHandleValid()
+        bool IsHandleValid() const
         {
             Grok3d::Components::GRK_ComponentBitMask thisComponentBitMask = IndexToMask(Grok3d::Components::GRK_Component::GetComponentTypeAccessIndex<ComponentType>());
             Grok3d::Components::GRK_ComponentBitMask components = m_manager->GetEntityComponentsBitMask(m_owner);
@@ -49,7 +49,7 @@ namespace Grok3d { namespace Components
             }
         }
 
-        Grok3d::GRK_Result Destroy()
+        Grok3d::GRK_Result Destroy() const
         {
             return m_manager->RemoveComponent(m_entity);
         }

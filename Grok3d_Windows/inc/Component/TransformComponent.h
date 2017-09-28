@@ -24,29 +24,29 @@ namespace Grok3d { namespace Components
             //TODO as chaining lots of parents gets really big this will get slow, best to cache and have a dirty bit
             void SetParent(GRK_TransformComponent* newParent);
             void AttachChild(GRK_TransformComponent* newChild);
-            bool IsChildOf(GRK_TransformComponent* possibleParent);
+            bool IsChildOf(GRK_TransformComponent* possibleParent) const;
             unsigned int GetSiblingIndex(); //use parent and iterate through the list looking for me
-            int GetChildIndex(GRK_TransformComponent* possibleChild);
+            int GetChildIndex(const GRK_TransformComponent* possibleChild) const;
 
             int ChildCount();
 
-            glm::vec3 GetWorldPosition();
+            glm::vec3 GetWorldPosition() const;
             void SetWorldPosition(glm::vec3 v);
             void SetWorldPosition(float x, float y, float z);
 
-            glm::vec3 GetLocalPosition();
+            glm::vec3 GetLocalPosition() const;
             void GetLocalPosition(glm::vec3 v);
 
             void TranslateLocal(glm::vec3 v);
             void TranslateLocal(float x, float y, float z);
 
-            glm::vec3 GetLocalScale();
+            glm::vec3 GetLocalScale() const;
             void SetLocalScale(glm::vec3 v);
             void SetLocalScale(float x, float y, float z);
 
             //functionality
             void DetachChildren();
-            GRK_TransformComponent* GetChild(unsigned int index);
+            GRK_TransformComponent* GetChild(unsigned int index) const;
         private:
             GRK_TransformComponent* m_parent;
 
