@@ -19,6 +19,8 @@ using namespace Grok3d::Components;
 using namespace Grok3d::Entities;
 using namespace Grok3d::Systems;
 
+GRK_Entity GRK_EntityComponentManager::s_NextEntityId = 1;
+
 GRK_EntityComponentManager::GRK_EntityComponentManager() :
     m_entityComponentsBitMaskMap(std::unordered_map<GRK_Entity, GRK_ComponentBitMask>(INITIAL_ENTITY_ARRAY_SIZE)),
     m_deletedUncleanedEntities(std::vector<GRK_Entity>(INITIAL_ENTITY_ARRAY_SIZE/4)),
@@ -38,7 +40,7 @@ GRK_Result GRK_EntityComponentManager::Initialize(GRK_SystemManager* systemManag
 GRK_EntityHandle GRK_EntityComponentManager::CreateEntity()
 {
     //I could do a check here to see if we overflowed to 0 but that's just inconceivable that we'd have that many (2^32) entities    
-    GRK_Entity id = m_NextEntityId++;
+    GRK_Entity id = s_NextEntityId++;
 
     m_entityComponentsBitMaskMap[id] = 0;
 

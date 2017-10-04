@@ -211,6 +211,16 @@ namespace Grok3d
         std::vector<ComponentType>* GetComponentStore() const
         {
             static std::vector<ComponentType>* store = this->InitializeComponentStore<ComponentType>();
+            if (!m_isComponentStoreAccessInstanceDataInitialized)
+            {
+                //add entity to ComponentInstance index map for this component type
+                m_entityComponentIndexMaps.push_back(std::unordered_map<Grok3d::Entities::GRK_Entity, ComponentInstance>(INITIAL_ENTITY_ARRAY_SIZE));
+
+                //add function to removal map for GC
+                m_removeComponentHelperMap.push_back(&GRK_EntityComponentManager::RemoveComponentHelper<ComponentType>);
+                
+                m_isComponentStoreAccessInstanceDataInitialized = true;
+            }
             return store;
         }
 
@@ -221,22 +231,21 @@ namespace Grok3d
             static std::vector<ComponentType> store;
             store.reserve(INITIAL_ENTITY_ARRAY_SIZE);
 
-            //add entity to ComponentInstance index map for this component type
-            m_entityComponentIndexMaps.push_back(std::unordered_map<Grok3d::Entities::GRK_Entity, ComponentInstance>(INITIAL_ENTITY_ARRAY_SIZE));
-
-            //add function to removal map for GC
-            m_removeComponentHelperMap.push_back(&GRK_EntityComponentManager::RemoveComponentHelper<ComponentType>);
-
             return &store;
         }
 
     private:
         bool m_isInitialized = false;
 
+        //since all of the data stores are shared between engines (they are static), we need a bool to tell if the map of entities to index in the store 
+        //and deconstructor functions is initialized for this instance seperate from init of the store itself for the case of multiple engines
+        //branch prediction (as with the static internal bool check) should make this negligible
+        mutable bool m_isComponentStoreAccessInstanceDataInitialized = false;
+
         Grok3d::Systems::GRK_SystemManager* m_systemManager;
 
-        //entity index information
-        Grok3d::Entities::GRK_Entity m_NextEntityId = 1;
+        //entity ID
+        static Grok3d::Entities::GRK_Entity s_NextEntityId;
 
         //list of deleted entites that need to be GC'd
         std::vector<Grok3d::Entities::GRK_Entity> m_deletedUncleanedEntities;
