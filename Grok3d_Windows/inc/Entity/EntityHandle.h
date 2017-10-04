@@ -79,6 +79,9 @@ namespace Grok3d { namespace Entities
 
         bool operator==(const Grok3d::Entities::GRK_EntityHandle& rhs) const;
 
+        friend bool operator==(const int entity, const Grok3d::Entities::GRK_EntityHandle& handle);
+        friend bool operator==(const Grok3d::Entities::GRK_EntityHandle& handle, const int entity);
+
     private:
         friend ::std::hash<GRK_EntityHandle>;
         Grok3d::Entities::GRK_Entity m_entity;

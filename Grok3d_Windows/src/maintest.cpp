@@ -21,13 +21,9 @@ class MoveBackAndForthBehavour : public GRK_GameBehaviourBase
         {
             static const float speed = 1.0f / 3.0f;
 
-            static float direction = 1;
+            float translationX = m_direction * speed * static_cast<float>(dt);
 
-            float translationX = direction * speed * static_cast<float>(dt);
-
-            static int updateCount;
-
-            updateCount++;
+            m_updateCount++;
 
             m_transform->TranslateLocal(translationX, 0, 0);
 
@@ -35,30 +31,47 @@ class MoveBackAndForthBehavour : public GRK_GameBehaviourBase
 
             if (abs(worldPosition.x) >= 3)
             {
-                direction = -direction;
+                m_direction = -m_direction;
             }
 
-
-            if (updateCount == 72)
+            if (m_updateCount == 72)
             { 
-                std::cout << worldPosition.x << ", " << worldPosition.y << ", " << worldPosition.z << std::endl;
-                updateCount = 0;
+                std::cout << "Entity #" << m_owningEntity << ": " << worldPosition.x << ", " << worldPosition.y << ", " << worldPosition.z << std::endl;
+                m_updateCount = 0;
             }
         }
 
     private:
         GRK_ComponentHandle<GRK_TransformComponent> m_transform;
+        float m_direction = 1;
+        int m_updateCount = 0;
 };
+
+GRK_Result CreateAndRegisterMoveTestEntity(GRK_EntityComponentManager& ecm)
+{
+    auto pointEntity = ecm.CreateEntity();
+
+    auto moveBehaviour = std::make_unique<MoveBackAndForthBehavour>(pointEntity);
+
+    GRK_GameLogicComponent glc;
+    glc.RegisterBehaviour(std::move(moveBehaviour));
+
+    return pointEntity.AddComponent(std::move(glc));
+}
 
 int main()
 {
     auto engineInitialization = [](GRK_EntityComponentManager& ecm) -> GRK_Result
     {
-        auto pointEntity = ecm.CreateEntity();
-        auto moveBehaviour = std::make_unique<MoveBackAndForthBehavour>(pointEntity);
-        GRK_GameLogicComponent glc;
-        glc.RegisterBehaviour(std::move(moveBehaviour));
-        pointEntity.AddComponent(std::move(glc));
+        for (int i = 0; i < 5; i++)
+        {
+            auto result = CreateAndRegisterMoveTestEntity(ecm);
+            if (result != GRK_Result::Ok)
+            {
+                return result;
+            }
+        }
+
         return GRK_Result::Ok;
     };
 

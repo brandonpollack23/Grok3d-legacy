@@ -51,3 +51,13 @@ typename std::hash<GRK_EntityHandle>::result_type std::hash<GRK_EntityHandle>::o
 {
     return hash<int>{}(e.m_entity);
 }
+
+bool Grok3d::Entities::operator==(const int entity, const GRK_EntityHandle& handle)
+{
+    return entity == handle.m_entity;
+}
+
+bool Grok3d::Entities::operator==(const GRK_EntityHandle& handle, const int entity)
+{
+    return entity == handle.m_entity;
+}
