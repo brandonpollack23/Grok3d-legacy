@@ -43,7 +43,7 @@ namespace Grok3d { namespace Entities
         // saying entity.addcomponent is just more intuitive than world.getmanager().addcomponent(entity, component)
         // using templates to require GetComponentTypeAccessIndex static method
         template<class ComponentType>
-        Grok3d::GRK_Result AddComponent(ComponentType& component)
+        Grok3d::GRK_Result AddComponent(ComponentType&& component)
         {
             static_assert(
                 std::is_base_of<GRK_Component, ComponentType>::value,
@@ -51,7 +51,7 @@ namespace Grok3d { namespace Entities
 
             RETURN_FAILURE_IF_ENTITY_DESTROYED(
                 Grok3d::GRK_Result::Ok,
-                return m_manager->AddComponent<ComponentType>(m_entity, component););
+                return m_manager->AddComponent<ComponentType>(m_entity, std::move(component)););
         }
 
         template<class ComponentType>

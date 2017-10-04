@@ -2,6 +2,7 @@
 
 #include <cmath>
 #include <iostream>
+#include <memory>
 
 using namespace Grok3d;
 using namespace Grok3d::Entities;
@@ -54,10 +55,10 @@ int main()
     auto engineInitialization = [](GRK_EntityComponentManager& ecm) -> GRK_Result
     {
         auto pointEntity = ecm.CreateEntity();
-        MoveBackAndForthBehavour* moveBehaviour = new MoveBackAndForthBehavour(pointEntity);
+        auto moveBehaviour = std::make_unique<MoveBackAndForthBehavour>(pointEntity);
         GRK_GameLogicComponent glc;
-        glc.RegisterBehaviour(moveBehaviour);
-        pointEntity.AddComponent(glc);
+        glc.RegisterBehaviour(std::move(moveBehaviour));
+        pointEntity.AddComponent(std::move(glc));
         return GRK_Result::Ok;
     };
 

@@ -25,7 +25,7 @@ GRK_Result GRK_GameLogicSystem::Update(const double dt)
 GRK_ComponentBitMask GRK_GameLogicSystem::GetComponentsBitMask() const
 {
     static GRK_ComponentBitMask mask = 
-        GRK_Component::GetComponentTypeAccessIndex<GRK_GameLogicComponent>();
+        IndexToMask(GRK_Component::GetComponentTypeAccessIndex<GRK_GameLogicComponent>());
 
     return mask;
 }

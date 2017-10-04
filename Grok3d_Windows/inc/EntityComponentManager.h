@@ -38,7 +38,7 @@ namespace Grok3d
         // I chose to have the component constructed and then copied because it is easier than passing a factory function
         // to this generic class and calling it on AddComponent with all it's parameters wrapped in a generic args class
         template<class ComponentType>
-        Grok3d::GRK_Result AddComponent(Grok3d::Entities::GRK_Entity entity, ComponentType& newComponent)
+        Grok3d::GRK_Result AddComponent(Grok3d::Entities::GRK_Entity entity, ComponentType&& newComponent)
         {
             static_assert(std::is_base_of<GRK_Component, ComponentType>::value, "AddComponent Function requires template parameter based on GRK_Component");
 
@@ -72,7 +72,7 @@ namespace Grok3d
                     }
 
                     //add the component to the end our vector
-                    componentTypeVector->push_back(newComponent);
+                    componentTypeVector->push_back(std::move(newComponent));
 
                     //the new size - 1 is the index of the vector the element is stored at
                     std::unordered_map<GRK_Entity, ComponentInstance>* const entityInstanceMap =
@@ -190,7 +190,8 @@ namespace Grok3d
                 //this entity exists so we move the last element of the components vector
                 //to the spot that this one was taking up
                 const auto indexToMoveLastStoredComponent = (*entityInstanceMap)[entity];
-                const auto lastElement = componentTypeVector->back();
+                auto& lastElement = componentTypeVector->back();
+
                 //use std::move so we cannibilize any allocated components and dont copy them
                 (*componentTypeVector)[indexToMoveLastStoredComponent] = std::move(lastElement);
 
@@ -233,6 +234,7 @@ namespace Grok3d
         bool m_isInitialized = false;
 
         Grok3d::Systems::GRK_SystemManager* m_systemManager;
+
         //entity index information
         Grok3d::Entities::GRK_Entity m_NextEntityId = 1;
 

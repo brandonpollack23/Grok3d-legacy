@@ -6,6 +6,7 @@
 #include "Entity/EntityHandle.h"
 
 #include <vector>
+#include <memory>
 
 namespace Grok3d { namespace Components 
 {
@@ -15,15 +16,19 @@ namespace Grok3d { namespace Components
             //update function that takes in the change in time
             GRK_GameLogicComponent();
 
+            GRK_GameLogicComponent(GRK_GameLogicComponent&& glc);
+
+            GRK_GameLogicComponent& operator=(GRK_GameLogicComponent&& rhs);
+
             void Update(double dt) const;
 
             typedef int BehaviourHandle;
             //returns the handle of the behaviour so it can be easily removed later
-            BehaviourHandle RegisterBehaviour(GRK_GameBehaviourBase* behaviour);
+            BehaviourHandle RegisterBehaviour(std::unique_ptr<GRK_GameBehaviourBase> behaviour);
             void UnregisterBehaviour(BehaviourHandle handle);
 
         protected:
-            std::vector<GRK_GameBehaviourBase*> m_behaviours;
+            std::vector<std::unique_ptr<GRK_GameBehaviourBase>> m_behaviours;
     };
 
     //this is one of the only classes heierarchies that uses dynamic dispatch (or heirarchies at all for that matter)

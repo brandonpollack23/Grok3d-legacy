@@ -2,14 +2,26 @@
 #include "grok3d_types.h"
 
 #include <vector>
+#include <memory>
 
 using namespace Grok3d;
 using namespace Grok3d::Entities;
 using namespace Grok3d::Components;
 
 GRK_GameLogicComponent::GRK_GameLogicComponent() :
-    m_behaviours(std::vector<GRK_GameBehaviourBase*>())
+    m_behaviours(std::vector<std::unique_ptr<GRK_GameBehaviourBase>>())
 {
+}
+
+GRK_GameLogicComponent::GRK_GameLogicComponent(GRK_GameLogicComponent&& glc)
+{
+    m_behaviours = std::move(glc.m_behaviours);
+}
+
+GRK_GameLogicComponent& GRK_GameLogicComponent::operator=(GRK_GameLogicComponent&& rhs)
+{
+    m_behaviours = std::move(rhs.m_behaviours);
+    return *this;
 }
 
 void GRK_GameLogicComponent::Update(double dt) const
@@ -20,9 +32,9 @@ void GRK_GameLogicComponent::Update(double dt) const
     }
 }
 
-GRK_GameLogicComponent::BehaviourHandle GRK_GameLogicComponent::RegisterBehaviour(GRK_GameBehaviourBase* behaviour)
+GRK_GameLogicComponent::BehaviourHandle GRK_GameLogicComponent::RegisterBehaviour(std::unique_ptr<GRK_GameBehaviourBase> behaviour)
 {
-    m_behaviours.push_back(behaviour);
+    m_behaviours.push_back(std::move(behaviour));
     return static_cast<BehaviourHandle>(m_behaviours.size() - 1);
 }
 
