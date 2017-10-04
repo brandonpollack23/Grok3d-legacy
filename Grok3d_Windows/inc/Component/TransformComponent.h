@@ -30,19 +30,19 @@ namespace Grok3d { namespace Components
 
             int ChildCount();
 
-            glm::vec3 GetWorldPosition() const;
-            void SetWorldPosition(glm::vec3 v);
-            void SetWorldPosition(float x, float y, float z);
+            glm::dvec3 GetWorldPosition() const;
+            void SetWorldPosition(glm::dvec3 v);
+            void SetWorldPosition(double x, double y, double z);
 
-            glm::vec3 GetLocalPosition() const;
-            void GetLocalPosition(glm::vec3 v);
+            glm::dvec3 GetLocalPosition() const;
+            void GetLocalPosition(glm::dvec3 v);
 
-            void TranslateLocal(glm::vec3 v);
-            void TranslateLocal(float x, float y, float z);
+            void TranslateLocal(glm::dvec3 v);
+            void TranslateLocal(double x, double y, double z);
 
-            glm::vec3 GetLocalScale() const;
-            void SetLocalScale(glm::vec3 v);
-            void SetLocalScale(float x, float y, float z);
+            glm::dvec3 GetLocalScale() const;
+            void SetLocalScale(glm::dvec3 v);
+            void SetLocalScale(double x, double y, double z);
 
             //functionality
             void DetachChildren();
@@ -54,8 +54,8 @@ namespace Grok3d { namespace Components
 
             //position, rotation, and scale relative to parent
             //TODO rotation as quaternion
-            glm::vec3 m_localPosition;
-            glm::vec3 m_localScale;
+            glm::dvec3 m_localPosition;
+            glm::dvec3 m_localScale;
     };
 } /*Components*/ } /*Grok3d*/
 

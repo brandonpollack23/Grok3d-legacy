@@ -27,7 +27,7 @@ class MoveBackAndForthBehavour : public GRK_GameBehaviourBase
 
             m_transform->TranslateLocal(translationX, 0, 0);
 
-            glm::vec3 worldPosition = m_transform->GetWorldPosition();
+            glm::dvec3 worldPosition = m_transform->GetWorldPosition();
 
             if (abs(worldPosition.x) >= 3)
             {

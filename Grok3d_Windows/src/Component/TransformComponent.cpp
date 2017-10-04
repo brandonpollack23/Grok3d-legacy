@@ -12,8 +12,8 @@ using namespace Grok3d::Components;
 GRK_TransformComponent::GRK_TransformComponent() :
     m_parent(nullptr),
     m_children(std::vector<GRK_TransformComponent*>()),
-    m_localPosition(glm::vec3(0)),
-    m_localScale(glm::vec3(0))
+    m_localPosition(glm::dvec3(0)),
+    m_localScale(glm::dvec3(0))
 {
 }
 
@@ -55,7 +55,7 @@ int GRK_TransformComponent::ChildCount()
     return static_cast<int>(this->m_children.size());
 }
 
-glm::vec3 GRK_TransformComponent::GetWorldPosition() const
+glm::dvec3 GRK_TransformComponent::GetWorldPosition() const
 {
     //if i have no parent, my position is world position
     //otherwise my position concatonated with my parents' world position (recursive) is my actual position
@@ -69,7 +69,7 @@ glm::vec3 GRK_TransformComponent::GetWorldPosition() const
     }
 }
 
-void GRK_TransformComponent::SetWorldPosition(glm::vec3 v)
+void GRK_TransformComponent::SetWorldPosition(glm::dvec3 v)
 {
     //if no parent, setting world position is setting my position
     //otherwise it is these coordinates subtracted from my parent's position recursively
@@ -83,7 +83,7 @@ void GRK_TransformComponent::SetWorldPosition(glm::vec3 v)
     }
 }
 
-void GRK_TransformComponent::SetWorldPosition(const float x, const float y, const float z)
+void GRK_TransformComponent::SetWorldPosition(const double x, const double y, const double z)
 {
     //if no parent, setting world position is setting my position
     //otherwise it is these coordinates subtracted from my parent's position recursively
@@ -101,39 +101,39 @@ void GRK_TransformComponent::SetWorldPosition(const float x, const float y, cons
     }
 }
 
-glm::vec3 GRK_TransformComponent::GetLocalPosition() const
+glm::dvec3 GRK_TransformComponent::GetLocalPosition() const
 {
     return m_localPosition;
 }
 
-void GRK_TransformComponent::GetLocalPosition(glm::vec3 v)
+void GRK_TransformComponent::GetLocalPosition(glm::dvec3 v)
 {
     this->m_localPosition = v;
 }
 
-void GRK_TransformComponent::TranslateLocal(glm::vec3 v)
+void GRK_TransformComponent::TranslateLocal(glm::dvec3 v)
 {
     this->TranslateLocal(v.x, v.y, v.z);
 }
 
-void GRK_TransformComponent::TranslateLocal(const float x, const float y, const float z)
+void GRK_TransformComponent::TranslateLocal(const double x, const double y, const double z)
 {
     m_localPosition.x += x;
     m_localPosition.y += y;
     m_localPosition.z += z;
 }
 
-glm::vec3 GRK_TransformComponent::GetLocalScale() const
+glm::dvec3 GRK_TransformComponent::GetLocalScale() const
 {
     return m_localScale;
 }
 
-void GRK_TransformComponent::SetLocalScale(glm::vec3 v)
+void GRK_TransformComponent::SetLocalScale(glm::dvec3 v)
 {
     m_localScale = v;
 }
 
-void GRK_TransformComponent::SetLocalScale(const float x, const float y, const float z)
+void GRK_TransformComponent::SetLocalScale(const double x, const double y, const double z)
 {
     m_localScale.x = x;
     m_localScale.y = y;
