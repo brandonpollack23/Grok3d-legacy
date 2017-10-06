@@ -8,6 +8,8 @@ using namespace Grok3d;
 using namespace Grok3d::Entities;
 using namespace Grok3d::Components;
 
+GRK_GameLogicComponent::BehaviourHandle GRK_GameLogicComponent::s_nextHandle = 1;
+
 GRK_GameLogicComponent::GRK_GameLogicComponent() :
     m_behaviours(std::vector<std::unique_ptr<GRK_GameBehaviourBase>>())
 {
@@ -35,15 +37,18 @@ void GRK_GameLogicComponent::Update(double dt) const
 GRK_GameLogicComponent::BehaviourHandle GRK_GameLogicComponent::RegisterBehaviour(std::unique_ptr<GRK_GameBehaviourBase> behaviour)
 {
     m_behaviours.push_back(std::move(behaviour));
-    return static_cast<BehaviourHandle>(m_behaviours.size() - 1);
+    m_behaviourIndexMap[s_nextHandle] = m_behaviours.size() - 1;
+    return s_nextHandle++; 
 }
 
 void GRK_GameLogicComponent::UnregisterBehaviour(BehaviourHandle handle)
 {
-    if (handle > 0 && handle < m_behaviours.size())
-    {
-        m_behaviours.erase(m_behaviours.begin() + handle);
-    }
+    auto removeIndex = m_behaviourIndexMap[handle];
+
+    m_behaviours[removeIndex] = std::move(m_behaviours.back());
+    m_behaviours.pop_back();
+
+    m_behaviourIndexMap[handle] = removeIndex;
 }
 
 GRK_GameBehaviourBase::GRK_GameBehaviourBase(GRK_EntityHandle owningEntity) :

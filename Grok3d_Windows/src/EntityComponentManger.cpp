@@ -24,9 +24,9 @@ GRK_Entity GRK_EntityComponentManager::s_NextEntityId = 1;
 GRK_EntityComponentManager::GRK_EntityComponentManager() :
     m_entityComponentsBitMaskMap(std::unordered_map<GRK_Entity, GRK_ComponentBitMask>(INITIAL_ENTITY_ARRAY_SIZE)),
     m_deletedUncleanedEntities(std::vector<GRK_Entity>(INITIAL_ENTITY_ARRAY_SIZE/4)),
-    m_entityComponentIndexMaps(std::vector<std::unordered_map<GRK_Entity, ComponentInstance>>(1))
+    m_entityComponentIndexMaps(std::vector<std::unordered_map<GRK_Entity, std::tuple<ComponentInstance, GRK_Entity>>>(1))
 {
-    m_entityComponentIndexMaps[0] = std::unordered_map<GRK_Entity, ComponentInstance>(INITIAL_ENTITY_ARRAY_SIZE);
+    m_entityComponentIndexMaps[0] = std::unordered_map<GRK_Entity, std::tuple<ComponentInstance, GRK_Entity>>(INITIAL_ENTITY_ARRAY_SIZE);
 }
 
 GRK_Result GRK_EntityComponentManager::Initialize(GRK_SystemManager* systemManager)

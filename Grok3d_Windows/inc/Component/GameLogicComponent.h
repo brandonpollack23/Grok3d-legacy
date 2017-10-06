@@ -13,6 +13,9 @@ namespace Grok3d { namespace Components
     class GRK_GameLogicComponent : public GRK_Component
     {
         public:
+            typedef size_t BehaviourHandle;
+
+        public:
             //update function that takes in the change in time
             GRK_GameLogicComponent();
 
@@ -22,12 +25,16 @@ namespace Grok3d { namespace Components
 
             void Update(double dt) const;
 
-            typedef int BehaviourHandle;
             //returns the handle of the behaviour so it can be easily removed later
             BehaviourHandle RegisterBehaviour(std::unique_ptr<GRK_GameBehaviourBase> behaviour);
             void UnregisterBehaviour(BehaviourHandle handle);
 
         protected:
+            typedef size_t BehaviourIndex;
+
+            static BehaviourHandle s_nextHandle;
+
+            std::unordered_map<BehaviourHandle, BehaviourIndex> m_behaviourIndexMap;
             std::vector<std::unique_ptr<GRK_GameBehaviourBase>> m_behaviours;
     };
 
