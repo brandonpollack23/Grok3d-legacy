@@ -1,3 +1,6 @@
 [submodule "glm"]
 	path = glm
 	url = https://github.com/g-truc/glm
+[submodule "notstd"]
+	path = notstd
+	url = https://github.com/brandonpollack23/notstd
