@@ -19,7 +19,7 @@ class MoveBackAndForthBehavour : public GRK_GameBehaviourBase
 
         void Update(double dt) override
         {
-            static const float speed = 1.0f / 3.0f;
+            static const float speed = 1.0f;
 
             float translationX = m_direction * speed * static_cast<float>(dt);
 
@@ -29,9 +29,10 @@ class MoveBackAndForthBehavour : public GRK_GameBehaviourBase
 
             glm::dvec3 worldPosition = m_transform->GetWorldPosition();
 
-            if (abs(worldPosition.x) >= 3)
+            if (abs(worldPosition.x) > 1 * m_behaviourHandle)
             {
-                m_direction = -m_direction;
+                //m_direction = -m_direction;
+                UnregisterThisBehaviour();
             }
 
             if (m_updateCount == 72)
