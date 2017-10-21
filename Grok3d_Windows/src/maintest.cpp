@@ -33,6 +33,7 @@ class MoveBackAndForthBehavour : public GRK_GameBehaviourBase
             {
                 //m_direction = -m_direction;
                 UnregisterThisBehaviour();
+                m_owningEntity.Destroy();
             }
 
             if (m_updateCount == 72)

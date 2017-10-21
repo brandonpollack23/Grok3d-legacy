@@ -11,7 +11,7 @@ GRK_GameLogicSystem::GRK_GameLogicSystem() : GRK_System()
 {
 }
 
-GRK_Result GRK_GameLogicSystem::Update(const double dt)
+GRK_Result GRK_GameLogicSystem::UpdateInternal(const double dt)
 {
     for (const auto& entity : m_trackedEntities)
     {

@@ -23,10 +23,10 @@ GRK_Entity GRK_EntityComponentManager::s_NextEntityId = 1;
 
 GRK_EntityComponentManager::GRK_EntityComponentManager() :
     m_entityComponentsBitMaskMap(std::unordered_map<GRK_Entity, GRK_ComponentBitMask>(INITIAL_ENTITY_ARRAY_SIZE)),
-    m_deletedUncleanedEntities(std::vector<GRK_Entity>(INITIAL_ENTITY_ARRAY_SIZE/4)),
-    m_entityComponentIndexMaps(std::vector<notstd::unordered_bidir_map<GRK_Entity, ComponentInstance>>(1))
+    m_deletedUncleanedEntities(std::vector<GRK_Entity>()),
+    m_entityComponentIndexMaps(std::vector<notstd::unordered_bidir_map<GRK_Entity, ComponentInstance>>())
 {
-    m_entityComponentIndexMaps[0] = notstd::unordered_bidir_map<GRK_Entity, ComponentInstance>(INITIAL_ENTITY_ARRAY_SIZE);
+    m_deletedUncleanedEntities.reserve(INITIAL_ENTITY_ARRAY_SIZE/4);
 }
 
 GRK_Result GRK_EntityComponentManager::Initialize(GRK_SystemManager* systemManager)
@@ -79,12 +79,9 @@ void GRK_EntityComponentManager::GarbageCollect()
     //TODO dont always do this lets be smarter
     for (const auto& entity : m_deletedUncleanedEntities)
     {
-        GRK_ComponentBitMask componentBitMask = m_entityComponentsBitMaskMap[entity];
         for (int i = 0; i < GRK_Component::NumberOfComponentTypes(); i++)
         {
-            GRK_ComponentBitMask componentMask = componentBitMask & (1 << i);
-
-            if((m_entityComponentsBitMaskMap[entity] & componentMask) > 0)
+            if((m_entityComponentsBitMaskMap[entity] & IndexToMask(i)) > 0)
             {
                 //I know this line looks complex, but it's just bad c++ syntax
                 //member function pointers are not as simple in the type system as function pointers

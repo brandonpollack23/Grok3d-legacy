@@ -27,6 +27,7 @@ GRK_GameLogicComponent::GRK_GameLogicComponent(GRK_GameLogicComponent&& glc)
 GRK_GameLogicComponent& GRK_GameLogicComponent::operator=(GRK_GameLogicComponent&& rhs)
 {
     m_behaviours = std::move(rhs.m_behaviours);
+    m_behaviourIndexMap = std::move(rhs.m_behaviourIndexMap);
     return *this;
 }
 
