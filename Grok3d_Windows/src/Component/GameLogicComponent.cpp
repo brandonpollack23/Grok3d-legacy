@@ -73,9 +73,10 @@ GRK_Result GRK_GameLogicComponent::UnregisterBehaviour(const BehaviourHandle han
 
     m_behaviourIndexMap.erase(handle);
 
+    // If there is nothing in m_behaviours we just erased the last element, so no need to update map
     if (m_behaviours.size() > 0)
     {
-        m_behaviourIndexMap.reverse_erase(m_behaviours.size() - 1);
+        m_behaviourIndexMap.reverse_erase(m_behaviours.size());
         m_behaviourIndexMap.put(backHandle, removeIndex);
     }
 
