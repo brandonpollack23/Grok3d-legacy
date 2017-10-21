@@ -64,23 +64,30 @@ GRK_Result GRK_GameLogicComponent::EnqueueBehaviourRemoval(const GRK_GameLogicCo
 
 GRK_Result GRK_GameLogicComponent::UnregisterBehaviour(const BehaviourHandle handle)
 {
-    auto removeIndex = m_behaviourIndexMap.at(handle);
-
-    auto backHandle = m_behaviourIndexMap.reverse_at(m_behaviours.size() - 1);
-
-    m_behaviours[removeIndex] = std::move(m_behaviours.back());
-    m_behaviours.pop_back();
-
-    m_behaviourIndexMap.erase(handle);
-
-    // If there is nothing in m_behaviours we just erased the last element, so no need to update map
-    if (m_behaviours.size() > 0)
+    if (m_behaviourIndexMap.find(handle) == m_behaviourIndexMap.end())
     {
-        m_behaviourIndexMap.reverse_erase(m_behaviours.size());
-        m_behaviourIndexMap.put(backHandle, removeIndex);
+        return GRK_Result::NoSuchElement;
     }
+    else
+    {
+        auto removeIndex = m_behaviourIndexMap.at(handle);
 
-    return GRK_Result::Ok;
+        auto backHandle = m_behaviourIndexMap.reverse_at(m_behaviours.size() - 1);
+
+        m_behaviours[removeIndex] = std::move(m_behaviours.back());
+        m_behaviours.pop_back();
+
+        m_behaviourIndexMap.erase(handle);
+
+        // If there is nothing in m_behaviours we just erased the last element, so no need to update map
+        if (m_behaviours.size() > 0)
+        {
+            m_behaviourIndexMap.reverse_erase(m_behaviours.size());
+            m_behaviourIndexMap.put(backHandle, removeIndex);
+        }
+
+        return GRK_Result::Ok;
+    }
 }
 
 GRK_GameBehaviourBase::GRK_GameBehaviourBase(GRK_EntityHandle owningEntity) :

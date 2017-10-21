@@ -62,7 +62,7 @@ namespace Grok3d
     {
         class GRK_EntityHandle;
 
-        typedef int GRK_Entity;
+        typedef size_t GRK_Entity;
     }
 
     namespace Components

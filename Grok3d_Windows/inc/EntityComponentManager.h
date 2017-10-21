@@ -14,6 +14,8 @@
 
 #include "System/SystemManager.h"
 
+#include "bidir_map.h"
+
 #include <vector>
 #include <unordered_map>
 #include <functional>
@@ -52,6 +54,7 @@ namespace Grok3d
             //only add a component if one doesnt exist
             if ((m_entityComponentsBitMaskMap[entity] & IndexToMask(componentTypeIndex)) == 0)
             {
+                // TODO should be ref but will be updated soon
                 std::vector<ComponentType>* const componentTypeVector = this->GetComponentStore<ComponentType>();
 
                 if (componentTypeVector->size() == componentTypeVector->max_size())
@@ -74,10 +77,11 @@ namespace Grok3d
                     //add the component to the end our vector
                     componentTypeVector->push_back(std::move(newComponent));
 
+                    auto& entityInstanceMap =
+                        m_entityComponentIndexMaps[componentTypeIndex];
+
                     //the new size - 1 is the index of the vector the element is stored at
-                    std::unordered_map<GRK_Entity, ComponentInstance>* const entityInstanceMap =
-                        &m_entityComponentIndexMaps[componentTypeIndex];
-                    (*entityInstanceMap)[entity] = static_cast<ComponentInstance>(componentTypeVector->size() - 1);
+                    entityInstanceMap[entity] = static_cast<ComponentInstance>(componentTypeVector->size() - 1);
 
                     m_entityComponentsBitMaskMap[entity] |=
                         IndexToMask(componentTypeIndex);
@@ -99,8 +103,10 @@ namespace Grok3d
         {
             static_assert(std::is_base_of<GRK_Component, ComponentType>::value, "GetComponent Function requires template parameter based on GRK_Component");
 
+            auto componentTypeIndex = GRK_Component::GetComponentTypeAccessIndex<ComponentType>();
+
             const GRK_ComponentBitMask componentMask =
-                static_cast<GRK_ComponentBitMask>(IndexToMask(GRK_Component::GetComponentTypeAccessIndex<ComponentType>()));
+                static_cast<GRK_ComponentBitMask>(IndexToMask(componentTypeIndex));
 
             if (entity == 0 || (m_entityComponentsBitMaskMap.at(entity) & componentMask) == 0)
             {
@@ -109,12 +115,14 @@ namespace Grok3d
             else if ((m_entityComponentsBitMaskMap.at(entity) & componentMask) == componentMask)
             {
                 //this is a vector of the type we are trying to remove
+                // TODO should be ref but will be changed soon
                 std::vector<ComponentType>* const componentTypeVector = this->GetComponentStore<ComponentType>();
-                const std::unordered_map<Entities::GRK_Entity, ComponentInstance>* entityInstanceMap =
-                    &m_entityComponentIndexMaps.at(GRK_Component::GetComponentTypeAccessIndex<ComponentType>());
+
+                const auto& entityInstanceMap =
+                    m_entityComponentIndexMaps[componentTypeIndex];
 
                 //get the instance (index in our vector) from teh entityInstanceMap
-                const ComponentInstance instance = entityInstanceMap->at(entity);
+                const ComponentInstance instance = entityInstanceMap.at(entity);
 
                 //use the instance to index the array of that componenttype
                 const ComponentType* const componentPointer = &(componentTypeVector->at(instance));
@@ -176,12 +184,11 @@ namespace Grok3d
             std::vector<ComponentType>* const componentTypeVector = this->GetComponentStore<ComponentType>();
 
             //this is the map of entity to components for this type
-            std::unordered_map<Grok3d::Entities::GRK_Entity, ComponentInstance>* const entityInstanceMap = &(m_entityComponentIndexMaps[componentAccessIndex]);
+            auto& entityInstanceMap = m_entityComponentIndexMaps[componentAccessIndex];
 
             //check if the elment is in the map
             //and do what we need to if it is not
-            const auto it = entityInstanceMap->find(entity);
-            if (it == entityInstanceMap->end())
+            if (entityInstanceMap.find(entity) == entityInstanceMap.end())
             {
                 return GRK_Result::NoSuchElement;
             }
@@ -189,16 +196,30 @@ namespace Grok3d
             {
                 //this entity exists so we move the last element of the components vector
                 //to the spot that this one was taking up
-                const auto indexToMoveLastStoredComponent = (*entityInstanceMap)[entity];
+
+                // Index of element we are removing
+                const auto removeIndex = entityInstanceMap[entity];
+
+                // Element we are moving into it's old place
                 auto& lastElement = componentTypeVector->back();
 
+                // Instance of element we are moving
+                auto& lastElementEntity = entityInstanceMap.reverse_at(componentTypeVector->size() - 1);
+
                 //use std::move so we cannibilize any allocated components and dont copy them
-                (*componentTypeVector)[indexToMoveLastStoredComponent] = std::move(lastElement);
+                (*componentTypeVector)[removeIndex] = std::move(lastElement);
 
                 //then remove it from the map
                 //and shorten our vector
-                entityInstanceMap->erase(it);
+                entityInstanceMap.erase(entity);
                 componentTypeVector->pop_back();
+
+                // If there is nothing in componentTypeVector we just erased the last element, so no need to update map
+                if (componentTypeVector->size() > 0)
+                {
+                    entityInstanceMap.reverse_erase(componentTypeVector->size());
+                    entityInstanceMap.put(lastElementEntity, removeIndex);
+                }
 
                 //remove it from bitmask
                 m_entityComponentsBitMaskMap[entity] &= ~(IndexToMask(componentAccessIndex));
@@ -214,7 +235,7 @@ namespace Grok3d
             if (!m_isComponentStoreAccessInstanceDataInitialized)
             {
                 //add entity to ComponentInstance index map for this component type
-                m_entityComponentIndexMaps.push_back(std::unordered_map<Grok3d::Entities::GRK_Entity, ComponentInstance>(INITIAL_ENTITY_ARRAY_SIZE));
+                m_entityComponentIndexMaps.push_back(notstd::unordered_bidir_map<Grok3d::Entities::GRK_Entity, ComponentInstance>(INITIAL_ENTITY_ARRAY_SIZE));
 
                 //add function to removal map for GC
                 m_removeComponentHelperMap.push_back(&GRK_EntityComponentManager::RemoveComponentHelper<ComponentType>);
@@ -256,7 +277,7 @@ namespace Grok3d
         std::unordered_map<Grok3d::Entities::GRK_Entity, Grok3d::Components::GRK_ComponentBitMask> m_entityComponentsBitMaskMap;
 
         //vector of maps from entity to component index into componentStore[ComponentType::Offset]
-        mutable std::vector<std::unordered_map<Grok3d::Entities::GRK_Entity, ComponentInstance>> m_entityComponentIndexMaps;
+        mutable std::vector<notstd::unordered_bidir_map<Grok3d::Entities::GRK_Entity, ComponentInstance>> m_entityComponentIndexMaps;
 
         typedef Grok3d::GRK_Result (GRK_EntityComponentManager::*RemoveComponentMemberFunc)(Grok3d::Entities::GRK_Entity);
         mutable std::vector<RemoveComponentMemberFunc> m_removeComponentHelperMap;
