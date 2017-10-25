@@ -10,14 +10,12 @@
 #include <string>
 #include <vector>
 
-#include "Component.h"
-
 #include "glm/fwd.hpp"
 #include "glm/gtc/quaternion.hpp"
 
 namespace Grok3d { namespace Components 
 {
-    class GRK_TransformComponent : public GRK_Component
+    class GRK_TransformComponent
     {
         public:
             GRK_TransformComponent();

@@ -5,12 +5,12 @@
 #ifndef __ENTITYHANDLER__H
 #define __ENTITYHANDLER__H
 
-#include "grok3d_types.h"
-#include "EntityComponentManager.h"
-#include "Component/ComponentHandle.h"
-
 #include <type_traits>
 #include <functional>
+
+#include "grok3d_types.h"
+
+#include "Component/ComponentHandle.h"
 
 #define RETURN_FAILURE_IF_ENTITY_DESTROYED(error, statements) \
     do {\
@@ -26,29 +26,38 @@
 
 namespace Grok3d { namespace Entities 
 {
-    class GRK_EntityHandle
+    template<class ECM>
+    class GRK_EntityHandle__
     {
     public:
-        GRK_EntityHandle(Grok3d::GRK_EntityComponentManager* entityComponentManager, Grok3d::Entities::GRK_Entity entity);
+        GRK_EntityHandle__(ECM* entityComponentManager, GRK_Entity entity) :
+            m_manager(entityComponentManager),
+            m_entity(entity)
+        {
+        }
 
-        operator GRK_Entity() const;
+        operator GRK_Entity() const
+        {
+            return m_entity;
+        }
 
-        Grok3d::GRK_Result Destroy();
-        bool inline IsDestroyed() const;
+        GRK_Result Destroy()
+        {
+            RETURN_FAILURE_IF_ENTITY_DESTROYED(
+                GRK_Result::NoSuchEntity,
+                return m_manager->DeleteEntity(m_entity);
+            m_entity = 0;);
+        }
 
-        // AddComponent
-        // This function adds a component to the system and forwards to the entire world,
-        // including the respective component manager,
-        // which makes it registerd to the game
-        // saying entity.addcomponent is just more intuitive than world.getmanager().addcomponent(entity, component)
-        // using templates to require GetComponentTypeAccessIndex static method
+        bool inline IsDestroyed() const
+        {
+            return m_entity == 0;
+        }
+
+
         template<class ComponentType>
         Grok3d::GRK_Result AddComponent(ComponentType&& component)
         {
-            static_assert(
-                std::is_base_of<GRK_Component, ComponentType>::value,
-                "GRK_EntityHandle::GetComponent Method type param not base of GRK_Component");
-
             RETURN_FAILURE_IF_ENTITY_DESTROYED(
                 Grok3d::GRK_Result::Ok,
                 return m_manager->AddComponent<ComponentType>(m_entity, std::move(component)););
@@ -58,35 +67,57 @@ namespace Grok3d { namespace Entities
         Grok3d::GRK_Result RemoveComponent()
         {
             RETURN_FAILURE_IF_ENTITY_DESTROYED(
-                GRK_NOSUCHENTITY,
+                GRK_Result::NoSuchEntity,
                 return m_manager->RemoveComponent<ComponentType>(m_entity););
         }
 
         template<class ComponentType>
         Grok3d::Components::GRK_ComponentHandle<ComponentType> GetComponent() const
         {
-            static_assert(
-                std::is_base_of<GRK_Component, ComponentType>::value,
-                "GRK_EntityHandle::GetComponent Method type param not base of GRK_Component");
-
-            //RETURN_FAILURE_IF_ENTITY_DESTROYED(
-            //    Grok3d::Components::GRK_ComponentHandle<ComponentType>(nullptr, nullptr, -1),
-            //    return m_manager->GetComponent<ComponentType>(m_entity););
             return m_manager->GetComponent<ComponentType>(m_entity);
         }
 
-        bool HasComponents(Grok3d::Components::GRK_ComponentBitMask componentBits) const;
+        bool HasComponents(const Grok3d::Components::GRK_ComponentBitMask componentBits) const
+        {
+            RETURN_FAILURE_IF_ENTITY_DESTROYED(
+                false,
+                Components::GRK_ComponentBitMask components = m_manager->GetEntityComponentsBitMask(m_entity);
+            return ((components & componentBits) == componentBits));
+        }
 
-        bool operator==(const Grok3d::Entities::GRK_EntityHandle& rhs) const;
+        bool operator==(const Grok3d::Entities::GRK_EntityHandle& rhs) const
+        {
+            return this->m_entity == rhs.m_entity;
+        }
 
-        friend bool operator==(const int entity, const Grok3d::Entities::GRK_EntityHandle& handle);
-        friend bool operator==(const Grok3d::Entities::GRK_EntityHandle& handle, const int entity);
+        friend bool operator==(const int entity, const Grok3d::Entities::GRK_EntityHandle__<ECM>& handle);
+        friend bool operator==(const Grok3d::Entities::GRK_EntityHandle__<ECM>& handle, const int entity);
 
     private:
-        friend ::std::hash<GRK_EntityHandle>;
+        friend ::std::hash<GRK_EntityHandle__<ECM>>;
+
         Grok3d::Entities::GRK_Entity m_entity;
-        Grok3d::GRK_EntityComponentManager* const m_manager;
+        ECM* const m_manager;
     };
 } /*Entities*/ } /*Grok3d*/
+
+template<class ECM>
+typename std::hash<Grok3d::Entities::GRK_EntityHandle__<ECM>>::result_type
+    std::hash<Grok3d::Entities::GRK_EntityHandle__<ECM>>::operator()(typename std::hash<Grok3d::Entities::GRK_EntityHandle__<ECM>>::argument_type const& e) const
+{
+    return hash<size_t>{}(e.m_entity);
+}
+
+template<class ECM>
+bool operator==(const int entity, const Grok3d::Entities::GRK_EntityHandle__<ECM>& handle)
+{
+    return entity == handle.m_entity;
+}
+
+template<class ECM>
+bool operator==(const Grok3d::Entities::GRK_EntityHandle__<ECM>& handle, const int entity)
+{
+    return entity == handle.m_entity;
+}
 
 #endif

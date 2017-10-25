@@ -56,18 +56,13 @@ namespace Grok3d
         return lhs;
     }
 
-    class GRK_EntityComponentManager;
-
     namespace Entities
     {
-        class GRK_EntityHandle;
-
         typedef size_t GRK_Entity;
     }
 
     namespace Components
     {
-        template<class ComponentType> class GRK_ComponentHandle;
 
         class GRK_Component;
         class GRK_TransformComponent;
@@ -83,16 +78,30 @@ namespace Grok3d
         class GRK_System;
         class GRK_GameLogicSystem;
     }
+
+    template<class... ComponentTypes> class GRK_EntityComponentManager__;
+    // This is where you add your components to the engine, by adding to this template argument list
+    using GRK_EntityComponentManager = GRK_EntityComponentManager__<Components::GRK_TransformComponent, Components::GRK_GameLogicComponent>;
+
+    namespace Components
+    {
+        template<class ComponentType, class ECM = GRK_EntityComponentManager> class GRK_ComponentHandle;
+    }
+    namespace Entities
+    {
+        template<class ECM = GRK_EntityComponentManager> class GRK_EntityHandle__;
+        using GRK_EntityHandle = GRK_EntityHandle__<GRK_EntityComponentManager>;
+    }
 }
 
 namespace std
 {
     /*GRK_EntityHandle*/
     /*hash function for GRK_EntityHandle, just uses the entity hash*/
-    template<> 
-    struct hash<Grok3d::Entities::GRK_EntityHandle>
+    template<class ECM> 
+    struct hash<Grok3d::Entities::GRK_EntityHandle__<ECM>>
     {
-        typedef Grok3d::Entities::GRK_EntityHandle argument_type;
+        typedef Grok3d::Entities::GRK_EntityHandle__<ECM> argument_type;
         typedef size_t result_type;
         result_type operator()(argument_type const& e) const;
     };

@@ -2,7 +2,8 @@
 #define __GAMELOGICCOMPONENT__H
 
 #include "grok3d_types.h"
-#include "Component/Component.h"
+
+#include "EntityComponentManager.h"
 #include "Entity/EntityHandle.h"
 
 #include "bidir_map.h"
@@ -12,7 +13,7 @@
 
 namespace Grok3d { namespace Components 
 {
-    class GRK_GameLogicComponent : public GRK_Component
+    class GRK_GameLogicComponent
     {
         public:
             typedef size_t BehaviourHandle;

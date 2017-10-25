@@ -6,23 +6,21 @@
 #define __COMPONENTHANDLE__H
 
 #include "grok3d_types.h"
-#include "Component/Component.h"
 
 namespace Grok3d { namespace Components
 {
-    template<class ComponentType>
+    template<class ComponentType, class ECM>
     class GRK_ComponentHandle
     {
     public:
         GRK_ComponentHandle(
-                const Grok3d::GRK_EntityComponentManager* entityComponentManager,
+                const ECM* entityComponentManager,
                 const ComponentType* component,
                 const Grok3d::Entities::GRK_Entity owner) :
             m_manager(entityComponentManager),
             m_component(component),
             m_owner(owner)
         {
-            static_assert(std::is_base_of<GRK_Component, ComponentType>::value, "The ComponentType passed to class GRK_ComponentHandle was not of base GRK_Component");
         }
 
         const Grok3d::Entities::GRK_Entity GetOwningEntity() const
@@ -32,7 +30,7 @@ namespace Grok3d { namespace Components
 
         bool IsHandleValid() const
         {
-            Grok3d::Components::GRK_ComponentBitMask thisComponentBitMask = IndexToMask(Grok3d::Components::GRK_Component::GetComponentTypeAccessIndex<ComponentType>());
+            Grok3d::Components::GRK_ComponentBitMask thisComponentBitMask = IndexToMask(ECM::GetComponentTypeAccessIndex<ComponentType>());
             Grok3d::Components::GRK_ComponentBitMask components = m_manager->GetEntityComponentsBitMask(m_owner);
             return (components & thisComponentBitMask) == thisComponentBitMask;
         }
@@ -51,13 +49,13 @@ namespace Grok3d { namespace Components
 
         Grok3d::GRK_Result Destroy() const
         {
-            return m_manager->RemoveComponent(m_entity);
+            return m_manager->RemoveComponent(m_owner);
         }
 
     private:
         const Grok3d::Entities::GRK_Entity m_owner;
         const ComponentType* m_component;
-        const Grok3d::GRK_EntityComponentManager* m_manager;
+        const ECM* m_manager;
     };
 
     //template specialization for GRK_TransformComponent, every entity MUST have this it cannot be destroyed

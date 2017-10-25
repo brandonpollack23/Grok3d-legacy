@@ -2,6 +2,7 @@
 #include "Entity/EntityHandle.h"
 #include "Component/GameLogicComponent.h"
 #include "Component/ComponentHandle.h"
+#include "EntityComponentManager.h"
 
 using namespace Grok3d;
 using namespace Grok3d::Components;
@@ -25,7 +26,7 @@ GRK_Result GRK_GameLogicSystem::UpdateInternal(const double dt)
 GRK_ComponentBitMask GRK_GameLogicSystem::GetComponentsBitMask() const
 {
     static GRK_ComponentBitMask mask = 
-        IndexToMask(GRK_Component::GetComponentTypeAccessIndex<GRK_GameLogicComponent>());
+        IndexToMask(GRK_EntityComponentManager::GetComponentTypeAccessIndex<GRK_GameLogicComponent>());
 
     return mask;
 }

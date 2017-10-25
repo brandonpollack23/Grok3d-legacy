@@ -10,7 +10,6 @@
 
 #include "entity/EntityHandle.h"
 
-#include "Component/Component.h"
 #include "Component/ComponentHandle.h"
 #include "Component/TransformComponent.h"
 #include "Component/GameLogicComponent.h"

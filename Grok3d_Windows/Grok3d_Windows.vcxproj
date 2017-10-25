@@ -85,7 +85,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>$(ProjectDir/../notstd;$(ProjectDir)/../glm;$(ProjectDir)/inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <LanguageStandard>stdcpp14</LanguageStandard>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -115,7 +115,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="inc\Component\Component.h" />
     <ClInclude Include="inc\Component\ComponentHandle.h" />
     <ClInclude Include="inc\Component\GameLogicComponent.h" />
     <ClInclude Include="inc\Component\TransformComponent.h" />
@@ -129,12 +128,9 @@
     <ClInclude Include="inc\EntityComponentManager.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Component\Component.cpp" />
     <ClCompile Include="src\Component\GameLogicComponent.cpp" />
     <ClCompile Include="src\Component\TransformComponent.cpp" />
     <ClCompile Include="src\Engine.cpp" />
-    <ClCompile Include="src\Entity\EntityHandle.cpp" />
-    <ClCompile Include="src\EntityComponentManger.cpp" />
     <ClCompile Include="src\maintest.cpp" />
     <ClCompile Include="src\System\GameLogicSystem.cpp" />
     <ClCompile Include="src\System\System.cpp" />
