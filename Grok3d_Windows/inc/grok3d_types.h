@@ -6,10 +6,7 @@
 #define __GROK3d_TYPES__H
 
 #include <type_traits>
-
-/* This file forward declares all engine types so they can be used in other headers easily
-* As such there are no header guards so:
-* DO NOT INCLUDE HEADERS HERE */
+#include <functional>
 
 //configure Grok3d
 #define INITIAL_ENTITY_ARRAY_SIZE 1024
@@ -17,7 +14,7 @@
 //configure GLM
 #define GLM_PRECISION_HIGHP_FLOAT
 
-constexpr unsigned int IndexToMask(size_t index)
+constexpr unsigned int IndexToMask(std::size_t index)
 {
     return 1 << index;
 }
@@ -58,12 +55,11 @@ namespace Grok3d
 
     namespace Entities
     {
-        typedef size_t GRK_Entity;
+        typedef std::size_t GRK_Entity;
     }
 
     namespace Components
     {
-
         class GRK_Component;
         class GRK_TransformComponent;
         class GRK_GameLogicComponent;
@@ -106,6 +102,5 @@ namespace std
         result_type operator()(argument_type const& e) const;
     };
 }
-
 
 #endif
