@@ -9,7 +9,7 @@ namespace Grok3d { namespace Systems
     class GRK_GameLogicSystem : public GRK_System
     {
         public:
-            GRK_GameLogicSystem::GRK_GameLogicSystem();
+            GRK_GameLogicSystem();
             GRK_Result UpdateInternal(double dt) override;
         
         protected:

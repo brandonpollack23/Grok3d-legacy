@@ -13,7 +13,7 @@ namespace Grok3d
     {
         public:
             GRK_Engine();
-            GRK_Engine::GRK_Engine(std::function<GRK_Result(Grok3d::GRK_EntityComponentManager&)> initFunction);
+            GRK_Engine(std::function<GRK_Result(Grok3d::GRK_EntityComponentManager&)> initFunction);
 
             //TODO overload initialize based on markup file
             Grok3d::GRK_Result Initialize();

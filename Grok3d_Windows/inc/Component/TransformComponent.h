@@ -5,7 +5,7 @@
 #ifndef __TRANSLATIONCOMPONENT__H
 #define __TRANSLATIONCOMPONENT__H
 
-#include "../grok3d_types.h"
+#include "grok3d_types.h"
 
 #include <string>
 #include <vector>

@@ -8,7 +8,7 @@
 
 #include "EntityComponentManager.h"
 
-#include "entity/EntityHandle.h"
+#include "Entity/EntityHandle.h"
 
 #include "Component/ComponentHandle.h"
 #include "Component/TransformComponent.h"

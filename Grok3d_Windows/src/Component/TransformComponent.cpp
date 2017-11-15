@@ -3,6 +3,7 @@
 * This file is available under the MIT license included in the project
 */
 #include "Component/TransformComponent.h"
+#include "Component/ComponentHandle.h"
 
 #include <vector>
 
@@ -40,7 +41,7 @@ unsigned int GRK_TransformComponent::GetSiblingIndex() //use parent and iterate 
 
 int GRK_TransformComponent::GetChildIndex(const GRK_TransformComponent* const possibleChild) const
 {
-    for (int i = 0; i < m_children.size(); ++i)
+    for (size_t i = 0; i < m_children.size(); ++i)
     {
         if (m_children[i] == possibleChild) 
         {
@@ -73,7 +74,7 @@ void GRK_TransformComponent::SetWorldPosition(glm::dvec3 v)
 {
     //if no parent, setting world position is setting my position
     //otherwise it is these coordinates subtracted from my parent's position recursively
-    if (m_parent = nullptr)
+    if (m_parent == nullptr)
     {
         m_localPosition = v;
     }
@@ -87,7 +88,7 @@ void GRK_TransformComponent::SetWorldPosition(const double x, const double y, co
 {
     //if no parent, setting world position is setting my position
     //otherwise it is these coordinates subtracted from my parent's position recursively
-    if (m_parent = nullptr)
+    if (m_parent == nullptr)
     {
         m_localPosition.x = x;
         m_localPosition.y = y;
@@ -153,3 +154,13 @@ GRK_TransformComponent* GRK_TransformComponent::GetChild(const unsigned int inde
 {
     return (index < m_children.size() && index > 0) ? m_children[index] : nullptr;
 }
+
+//template specialization for GRK_TransformComponent
+//every entity MUST have this it cannot be destroyed
+template<>
+GRK_Result GRK_ComponentHandle<GRK_TransformComponent>::Destroy() const
+{
+    //TODO 20 log that this cant happen
+    return GRK_Result::Ok;
+}
+

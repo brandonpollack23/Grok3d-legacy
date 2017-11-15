@@ -17,9 +17,9 @@ namespace Grok3d { namespace Components
                 const ECM* entityComponentManager,
                 const ComponentType* component,
                 const Grok3d::Entities::GRK_Entity owner) :
-            m_manager(entityComponentManager),
+            m_owner(owner),
             m_component(component),
-            m_owner(owner)
+            m_manager(entityComponentManager)
         {
         }
 
@@ -30,7 +30,7 @@ namespace Grok3d { namespace Components
 
         bool IsHandleValid() const
         {
-            Grok3d::Components::GRK_ComponentBitMask thisComponentBitMask = IndexToMask(ECM::GetComponentTypeAccessIndex<ComponentType>());
+            Grok3d::Components::GRK_ComponentBitMask thisComponentBitMask = IndexToMask(ECM::template GetComponentTypeAccessIndex<ComponentType>());
             Grok3d::Components::GRK_ComponentBitMask components = m_manager->GetEntityComponentsBitMask(m_owner);
             return (components & thisComponentBitMask) == thisComponentBitMask;
         }
@@ -57,15 +57,6 @@ namespace Grok3d { namespace Components
         const ComponentType* m_component;
         const ECM* m_manager;
     };
-
-    //template specialization for GRK_TransformComponent, every entity MUST have this it cannot be destroyed
-    template<>
-    GRK_Result GRK_ComponentHandle<GRK_TransformComponent>::Destroy() const
-    {
-        //TODO 20 log that this cant happen
-        return GRK_Result::Ok;
-    }
-
 } /*Components*/ } /*Grok3d*/
 
 #endif

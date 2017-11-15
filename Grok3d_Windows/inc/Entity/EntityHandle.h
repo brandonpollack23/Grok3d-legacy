@@ -31,8 +31,8 @@ namespace Grok3d { namespace Entities
     {
     public:
         GRK_EntityHandle__(ECM* entityComponentManager, GRK_Entity entity) :
-            m_manager(entityComponentManager),
-            m_entity(entity)
+            m_entity(entity),
+            m_manager(entityComponentManager)
         {
         }
 
@@ -60,7 +60,7 @@ namespace Grok3d { namespace Entities
         {
             RETURN_FAILURE_IF_ENTITY_DESTROYED(
                 Grok3d::GRK_Result::Ok,
-                return m_manager->AddComponent<ComponentType>(m_entity, std::move(component)););
+                return m_manager->template AddComponent<ComponentType>(m_entity, std::move(component)););
         }
 
         template<class ComponentType>
@@ -68,13 +68,13 @@ namespace Grok3d { namespace Entities
         {
             RETURN_FAILURE_IF_ENTITY_DESTROYED(
                 GRK_Result::NoSuchEntity,
-                return m_manager->RemoveComponent<ComponentType>(m_entity););
+                return m_manager->template RemoveComponent<ComponentType>(m_entity););
         }
 
         template<class ComponentType>
         Grok3d::Components::GRK_ComponentHandle<ComponentType> GetComponent() const
         {
-            return m_manager->GetComponent<ComponentType>(m_entity);
+            return m_manager->template GetComponent<ComponentType>(m_entity);
         }
 
         bool HasComponents(const Grok3d::Components::GRK_ComponentBitMask componentBits) const
@@ -90,8 +90,8 @@ namespace Grok3d { namespace Entities
             return this->m_entity == rhs.m_entity;
         }
 
-        friend bool operator==(const int entity, const Grok3d::Entities::GRK_EntityHandle__<ECM>& handle);
-        friend bool operator==(const Grok3d::Entities::GRK_EntityHandle__<ECM>& handle, const int entity);
+        template<class EntityComponentManager> friend bool operator==(const int entity, const Grok3d::Entities::GRK_EntityHandle__<EntityComponentManager>& handle);
+        template<class EntityComponentManager> friend bool operator==(const Grok3d::Entities::GRK_EntityHandle__<EntityComponentManager>& handle, const int entity);
 
     private:
         friend ::std::hash<GRK_EntityHandle__<ECM>>;

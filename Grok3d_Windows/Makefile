@@ -1,5 +1,5 @@
 #program types and flags
-CC = clang
+CC = g++
 INCLUDEDIRS = ./inc/ ../glm/ ../notstd/
 CFLAGS = -std=c++17 -g -Wall -O2 $(addprefix -I, $(INCLUDEDIRS))
 
@@ -12,7 +12,9 @@ ARFLAGS =
 #MAKE specific stuff
 #VPATH is the search path for all prerequisites
 #searches for all cpp files, uses sed to get just the path, and uses sort to trim to unique
-VPATH = $(shell find . -name "*.cpp" | sed 's/\(.*\)\/.*\..*$$/\1/g' | sort -u)
+VPATHCPP = $(shell find . -name "*.cpp" | sed 's/\(.*\)\/.*\..*$$/\1/g' | sort -u)
+VPATHOBJ = $(patsubst ./src%, ./$(OBJDIR)%, $(VPATHCPP))
+VPATH = $(VPATHCPP) $(VPATHOBJ)
 
 #other defines
 TARGET = maintest
@@ -25,20 +27,22 @@ OBJECTS = $(patsubst ./src/%, ./$(OBJDIR)/%, $(patsubst %.cpp, %.o, $(SOURCES)))
 
 all: $(TARGET)
 
+rebuild: clean all
+
 $(TARGET): $(OBJECTS) | $(BINDIR)
-	$(LD) -o $(BINDIR)/$@ $(OBJDIR)/$^ $(LDFLAGS)
+	$(LD) -o $(BINDIR)/$@ $^ $(LDFLAGS)
 
 $(BINDIR):
 	mkdir -p $@
 
-$(OBJDIR)/%.o: %.cpp | $(OBJDIR)
+$(OBJDIR)/%.o: %.cpp | $(VPATHOBJ)
 	$(CC) -c $(CFLAGS) $< -o $@
 
-$(OBJDIR):
+$(VPATHOBJ):
 	mkdir -p $@
 
 clean:
 	rm -rf $(OBJDIR) $(BINDIR)
 
 print-%: 
-	@echo $*=$($*)
+	@echo $($*)

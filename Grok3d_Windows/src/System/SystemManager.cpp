@@ -40,7 +40,7 @@ GRK_Result GRK_SystemManager::UnregisterEntity(const GRK_EntityHandle& entity)
 
 GRK_Result GRK_SystemManager::UpdateSystems(const double dt)
 {
-    GRK_Result result;
+    GRK_Result result = GRK_Result::Ok;
     for(const auto& system : m_systems)
     {
         result |= system->Update(dt);

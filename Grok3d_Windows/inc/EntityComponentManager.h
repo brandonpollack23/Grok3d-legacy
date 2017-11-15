@@ -43,10 +43,10 @@ namespace Grok3d
 
     public:
         GRK_EntityComponentManager__() :
-            m_entityComponentsBitMaskMap(std::unordered_map<GRK_Entity, GRK_ComponentBitMask>(INITIAL_ENTITY_ARRAY_SIZE)),
             m_deletedUncleanedEntities(std::vector<GRK_Entity>()),
-            m_removeComponentHelperMap(std::vector<RemoveComponentMemberFunc>()),
-            m_entityComponentIndexMaps(std::vector<notstd::unordered_bidir_map<GRK_Entity, ComponentInstance>>())
+            m_entityComponentsBitMaskMap(std::unordered_map<GRK_Entity, GRK_ComponentBitMask>(INITIAL_ENTITY_ARRAY_SIZE)),
+            m_entityComponentIndexMaps(std::vector<notstd::unordered_bidir_map<GRK_Entity, ComponentInstance>>()),
+            m_removeComponentHelperMap(std::vector<RemoveComponentMemberFunc>())
         {
             m_deletedUncleanedEntities.reserve(INITIAL_ENTITY_ARRAY_SIZE / 4);
 
@@ -70,7 +70,7 @@ namespace Grok3d
 
             m_entityComponentsBitMaskMap[id] = 0;
 
-            this->AddComponent(id, GRK_TransformComponent());
+            this->AddComponent(id, Grok3d::Components::GRK_TransformComponent());
 
             return GRK_EntityHandle(this, id);
         }
@@ -229,7 +229,7 @@ namespace Grok3d
                 //m_deletedUncleanedComponents vector to iterate through
                 //there may be some overlap with the entity removal pass so use .find(entity) and
                 //check to be sure it is already out of the map
-                RemoveComponentHelper(entity, GetComponentTypeAccessIndex());
+                RemoveComponentHelper(entity, GetComponentTypeAccessIndex<ComponentType>());
             }
             else
             {
@@ -243,7 +243,7 @@ namespace Grok3d
             //TODO make a foreach tuple function here instead of relying on index and the removecomponenthelpermap?
             for (const auto& entity : m_deletedUncleanedEntities)
             {
-                for (int i = 0; i < sizeof...(ComponentTypes); i++)
+                for (unsigned int i = 0; i < sizeof...(ComponentTypes); i++)
                 {
                     if ((m_entityComponentsBitMaskMap[entity] & IndexToMask(i)) > 0)
                     {
@@ -323,14 +323,14 @@ namespace Grok3d
         }
 
     private:
-        template<size_t index, class... Ts>
+        template<int index, class... Ts>
         struct setup_component_stores_impl
         {
             void operator()(GRK_EntityComponentManager& ecm, std::tuple<Ts...>& t)
             {
                 auto& elem = std::get<index>(t);
                 elem.reserve(INITIAL_ENTITY_ARRAY_SIZE);
-                using value_type = notstd::get_n_param<index, ComponentTypes...>::type;
+                using value_type = typename notstd::get_n_param<index, ComponentTypes...>::type;
                 ecm.m_removeComponentHelperMap.push_back(&GRK_EntityComponentManager::RemoveComponentHelper<value_type>);
                 ecm.m_entityComponentIndexMaps.push_back(notstd::unordered_bidir_map<GRK_Entity, ComponentInstance>(INITIAL_ENTITY_ARRAY_SIZE));
                 setup_component_stores_impl<index - 1, Ts...>{}(ecm, t);
@@ -374,8 +374,6 @@ namespace Grok3d
         typedef GRK_Result(GRK_EntityComponentManager::*RemoveComponentMemberFunc)(GRK_Entity);
         mutable std::vector<RemoveComponentMemberFunc> m_removeComponentHelperMap;
     };
-
-    Grok3d::Entities::GRK_Entity Grok3d::GRK_EntityComponentManager::s_NextEntityId = 1;
 } /*Grok3d*/
 
 #endif

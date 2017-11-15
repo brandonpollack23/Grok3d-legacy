@@ -2,6 +2,8 @@
 #define __SYSTEM__H
 
 #include "grok3d_types.h"
+#include "Entity/EntityHandle.h"
+
 #include <unordered_set>
 
 namespace Grok3d { namespace Systems

@@ -1,5 +1,5 @@
 #include "grok3d.h"
-#include "System/system.h"
+#include "System/System.h"
 #include "Entity/EntityHandle.h"
 
 #include <unordered_set>
@@ -16,7 +16,7 @@ GRK_System::GRK_System()
 
 GRK_Result GRK_System::Update(double dt)
 {
-    GRK_Result result;
+    GRK_Result result = GRK_Result::Ok;
     result |= UpdateInternal(dt);
     result |= CompleteUnregisterEntities();
     return result;

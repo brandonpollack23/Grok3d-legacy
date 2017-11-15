@@ -1,4 +1,4 @@
-#include "Component\GameLogicComponent.h"
+#include "Component/GameLogicComponent.h"
 #include "grok3d_types.h"
 
 #include <vector>
