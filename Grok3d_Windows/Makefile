@@ -1,7 +1,7 @@
 #program types and flags
 CC = g++
 INCLUDEDIRS = ./inc/ ../glm/ ../notstd/
-CFLAGS = -std=c++17 -g -Wall -O2 $(addprefix -I, $(INCLUDEDIRS))
+CFLAGS = -std=c++17 -g -O2 -Wall $(addprefix -I, $(INCLUDEDIRS))
 
 LD = $(CC)
 LDFLAGS = 
@@ -23,6 +23,13 @@ OBJDIR = o
 SOURCES = $(shell find . -name "*.cpp")
 OBJECTS = $(patsubst ./src/%, ./$(OBJDIR)/%, $(patsubst %.cpp, %.o, $(SOURCES)))
 
+#dependency management
+DEPDIR := .d
+DEPDIRS = $(patsubst ./src%, ./.d%, $(VPATHCPP))
+$(shell mkdir -p $(DEPDIRS) >/dev/null)
+DEPFLAGS = -MT $@ -MMD -MP -MF $(DEPDIR)/$*.Td
+POSTCOMPILE = @mv -f $(DEPDIR)/$*.Td $(DEPDIR)/$*.d && touch $@
+
 .PHONY: all clean
 
 all: $(TARGET)
@@ -35,14 +42,20 @@ $(TARGET): $(OBJECTS) | $(BINDIR)
 $(BINDIR):
 	mkdir -p $@
 
-$(OBJDIR)/%.o: %.cpp | $(VPATHOBJ)
-	$(CC) -c $(CFLAGS) $< -o $@
+$(OBJDIR)/%.o: %.cpp $(DEPDIR)/%.d | $(VPATHOBJ)
+	$(CC) $(DEPFLAGS) -c $(CFLAGS) $< -o $@
+	$(POSTCOMPILE)
 
 $(VPATHOBJ):
 	mkdir -p $@
+
+$(DEPDIR)/%.d: ;
+.PRECIOUS: $(DEPDIR)/%.d
 
 clean:
 	rm -rf $(OBJDIR) $(BINDIR)
 
 print-%: 
 	@echo $($*)
+
+include $(wildcard $(patsubst %, $(DEPDIR)/%.d, $(basename $(SOURCES))))
