@@ -45,8 +45,7 @@ namespace Grok3d
         GRK_EntityComponentManager__() :
             m_deletedUncleanedEntities(std::vector<GRK_Entity>()),
             m_entityComponentsBitMaskMap(std::unordered_map<GRK_Entity, GRK_ComponentBitMask>(INITIAL_ENTITY_ARRAY_SIZE)),
-            m_entityComponentIndexMaps(std::vector<notstd::unordered_bidir_map<GRK_Entity, ComponentInstance>>()),
-            m_removeComponentHelperMap(std::vector<RemoveComponentMemberFunc>())
+            m_entityComponentIndexMaps(std::vector<notstd::unordered_bidir_map<GRK_Entity, ComponentInstance>>())
         {
             m_deletedUncleanedEntities.reserve(INITIAL_ENTITY_ARRAY_SIZE / 4);
 
@@ -213,7 +212,8 @@ namespace Grok3d
         template<class ComponentType>
         GRK_Result RemoveComponent(GRK_Entity entity)
         {
-            static_assert(notstd::param_pack_has_type<ComponentType, ComponentTypes...>::value, "RemoveComponent Function requires ComponentType be one of the template params of GRK_EntityComponentManager__");
+            static_assert(notstd::param_pack_has_type<ComponentType, ComponentTypes...>::value,
+                    "RemoveComponent Function requires ComponentType be one of the template params of GRK_EntityComponentManager__");
 
             const GRK_ComponentBitMask componentMask = static_cast<GRK_ComponentBitMask>(IndexToMask(GetComponentTypeAccessIndex<ComponentType>()));
 
@@ -237,30 +237,11 @@ namespace Grok3d
             }
         }
 
+        // Garbage collects deleted entities (this is Components are always directly deleted as of now)
         void GarbageCollect()
         {
             //TODO dont always do this lets be smarter
-            //TODO make a foreach tuple function here instead of relying on index and the removecomponenthelpermap?
-            for (const auto& entity : m_deletedUncleanedEntities)
-            {
-                for (unsigned int i = 0; i < sizeof...(ComponentTypes); i++)
-                {
-                    if ((m_entityComponentsBitMaskMap[entity] & IndexToMask(i)) > 0)
-                    {
-                        //I know this line looks complex, but it's just bad c++ syntax
-                        //member function pointers are not as simple in the type system as function pointers
-                        //This is because they need "this" which is the implicit first parameter to the function
-                        //so you deref this, pass the function pointer (also stored in a vector that is a member of this, ironically) 
-                        //wrap that in parens because that is our dereferenced this->func, and then pass 
-                        //that function's params in another set of parens
-                        (this->*m_removeComponentHelperMap[i])(entity);
-                    }
-                }
-
-                m_entityComponentsBitMaskMap.erase(entity);
-            }
-
-            m_deletedUncleanedEntities.clear();
+            garbage_collect_iter();
         }
 
     private:
@@ -323,6 +304,7 @@ namespace Grok3d
         }
 
     private:
+        /***Set up Component Stores***/
         template<int index, class... Ts>
         struct setup_component_stores_impl
         {
@@ -330,24 +312,50 @@ namespace Grok3d
             {
                 auto& elem = std::get<index>(t);
                 elem.reserve(INITIAL_ENTITY_ARRAY_SIZE);
-                using value_type = typename notstd::get_n_param<index, ComponentTypes...>::type;
-                ecm.m_removeComponentHelperMap.push_back(&GRK_EntityComponentManager::RemoveComponentHelper<value_type>);
                 ecm.m_entityComponentIndexMaps.push_back(notstd::unordered_bidir_map<GRK_Entity, ComponentInstance>(INITIAL_ENTITY_ARRAY_SIZE));
                 setup_component_stores_impl<index - 1, Ts...>{}(ecm, t);
             }
         };
-
         template<class... Ts>
         struct setup_component_stores_impl<-1, Ts...>
         {
             void operator()(GRK_EntityComponentManager& ecm, std::tuple<Ts...>& t) {}
         };
-
         template<class... Ts>
         void setup_component_stores(GRK_EntityComponentManager& ecm, std::tuple<Ts...>& t)
         {
             const auto size = sizeof...(Ts);
             setup_component_stores_impl<size - 1, Ts...>{}(ecm, t);
+        }
+
+        /***Garbage Collect Iterate through component types by index***/
+        template<int ComponentIndex, class... Ts>
+        struct garbage_collect_iter_impl
+        {
+            void operator()(GRK_EntityComponentManager& ecm)
+            {
+                for(auto& entity : ecm.m_deletedUncleanedEntities)
+                {
+                    using ComponentType = typename notstd::index_to_type<ComponentIndex, Ts...>::type;
+                    if((ecm.m_entityComponentsBitMaskMap[entity] & IndexToMask(ComponentIndex)) > 0)
+                    {
+                        ecm.template RemoveComponentHelper<ComponentType>(entity);
+                    }
+                }
+
+                garbage_collect_iter_impl<ComponentIndex - 1, Ts...>{}(ecm);
+            }
+        };
+        template<class... Ts>
+        struct garbage_collect_iter_impl<-1, Ts...>
+        {
+            void operator()(GRK_EntityComponentManager& ecm) {}
+        };
+        void garbage_collect_iter()
+        {
+            const auto size = sizeof...(ComponentTypes);
+            garbage_collect_iter_impl<size - 1, ComponentTypes...>{}(*this);
+            m_deletedUncleanedEntities.clear();
         }
 
     private:
@@ -370,9 +378,6 @@ namespace Grok3d
 
         //vector of maps from entity to component index into componentStore[ComponentType::Offset]
         mutable std::vector<notstd::unordered_bidir_map<GRK_Entity, ComponentInstance>> m_entityComponentIndexMaps;
-
-        typedef GRK_Result(GRK_EntityComponentManager::*RemoveComponentMemberFunc)(GRK_Entity);
-        mutable std::vector<RemoveComponentMemberFunc> m_removeComponentHelperMap;
     };
 } /*Grok3d*/
 
