@@ -17,7 +17,7 @@ class MoveBackAndForthBehavour : public GRK_GameBehaviourBase
         {
         }
 
-        void Update(double dt) override
+        auto Update(double dt) -> void override
         {
             static const float speed = 1.0f;
 
@@ -49,7 +49,7 @@ class MoveBackAndForthBehavour : public GRK_GameBehaviourBase
         int m_updateCount = 0;
 };
 
-GRK_Result CreateAndRegisterMoveTestEntity(GRK_EntityComponentManager& ecm)
+auto CreateAndRegisterMoveTestEntity(GRK_EntityComponentManager& ecm) -> GRK_Result
 {
     auto pointEntity = ecm.CreateEntity();
 
@@ -61,7 +61,7 @@ GRK_Result CreateAndRegisterMoveTestEntity(GRK_EntityComponentManager& ecm)
     return pointEntity.AddComponent(std::move(glc));
 }
 
-int main()
+auto main() -> int
 {
     auto engineInitialization = [](GRK_EntityComponentManager& ecm) -> GRK_Result
     {

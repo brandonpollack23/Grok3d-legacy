@@ -14,7 +14,7 @@ GRK_SystemManager::GRK_SystemManager()
     //TODO initialize RENDER SYSTEM which is managed seperate so simulation and render can be decoupled
 }
 
-GRK_Result GRK_SystemManager::UpdateSystemEntities(const GRK_EntityHandle& entity)
+auto GRK_SystemManager::UpdateSystemEntities(const GRK_EntityHandle& entity) -> GRK_Result
 {
     GRK_Result result = GRK_Result::Ok;
 
@@ -26,7 +26,7 @@ GRK_Result GRK_SystemManager::UpdateSystemEntities(const GRK_EntityHandle& entit
     return result;
 }
 
-GRK_Result GRK_SystemManager::UnregisterEntity(const GRK_EntityHandle& entity)
+auto GRK_SystemManager::UnregisterEntity(const GRK_EntityHandle& entity) -> GRK_Result
 {
     GRK_Result result = GRK_Result::Ok;
 
@@ -38,7 +38,7 @@ GRK_Result GRK_SystemManager::UnregisterEntity(const GRK_EntityHandle& entity)
     return result;
 }
 
-GRK_Result GRK_SystemManager::UpdateSystems(const double dt)
+auto GRK_SystemManager::UpdateSystems(const double dt) -> GRK_Result
 {
     GRK_Result result = GRK_Result::Ok;
     for(const auto& system : m_systems)
@@ -49,7 +49,7 @@ GRK_Result GRK_SystemManager::UpdateSystems(const double dt)
     return result;
 }
 
-GRK_Result GRK_SystemManager::Render() const
+auto GRK_SystemManager::Render() const -> GRK_Result
 {
     //TODO call draw system render function
     return GRK_Result::Ok;

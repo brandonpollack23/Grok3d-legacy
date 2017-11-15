@@ -20,31 +20,31 @@ namespace Grok3d { namespace Components
         public:
             GRK_TransformComponent();
             //TODO as chaining lots of parents gets really big this will get slow, best to cache and have a dirty bit
-            void SetParent(GRK_TransformComponent* newParent);
-            void AttachChild(GRK_TransformComponent* newChild);
-            bool IsChildOf(const GRK_TransformComponent* const possibleParent) const;
-            unsigned int GetSiblingIndex(); //use parent and iterate through the list looking for me
-            int GetChildIndex(const GRK_TransformComponent* possibleChild) const;
+            auto SetParent(GRK_TransformComponent* newParent) -> void;
+            auto AttachChild(GRK_TransformComponent* newChild) -> void;
+            auto IsChildOf(const GRK_TransformComponent* const possibleParent) const -> bool;
+            auto GetSiblingIndex() -> unsigned int; //use parent and iterate through the list looking for me
+            auto GetChildIndex(const GRK_TransformComponent* possibleChild) const -> int;
 
-            int ChildCount();
+            auto ChildCount() -> int;
 
-            glm::dvec3 GetWorldPosition() const;
-            void SetWorldPosition(glm::dvec3 v);
-            void SetWorldPosition(double x, double y, double z);
+            auto GetWorldPosition() const -> glm::dvec3;
+            auto SetWorldPosition(glm::dvec3 v) -> void;
+            auto SetWorldPosition(double x, double y, double z) -> void;
 
-            glm::dvec3 GetLocalPosition() const;
-            void GetLocalPosition(glm::dvec3 v);
+            auto GetLocalPosition() const -> glm::dvec3;
+            auto GetLocalPosition(glm::dvec3 v) -> void;
 
-            void TranslateLocal(glm::dvec3 v);
-            void TranslateLocal(double x, double y, double z);
+            auto TranslateLocal(glm::dvec3 v) -> void;
+            auto TranslateLocal(double x, double y, double z) -> void;
 
-            glm::dvec3 GetLocalScale() const;
-            void SetLocalScale(glm::dvec3 v);
-            void SetLocalScale(double x, double y, double z);
+            auto GetLocalScale() const -> glm::dvec3;
+            auto SetLocalScale(glm::dvec3 v) -> void;
+            auto SetLocalScale(double x, double y, double z) -> void;
 
             //functionality
-            void DetachChildren();
-            GRK_TransformComponent* GetChild(unsigned int index) const;
+            auto DetachChildren() -> void;
+            auto GetChild(unsigned int index) const -> GRK_TransformComponent*;
         private:
             GRK_TransformComponent* m_parent;
 

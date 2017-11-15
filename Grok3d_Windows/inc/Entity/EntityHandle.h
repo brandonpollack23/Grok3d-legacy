@@ -41,7 +41,7 @@ namespace Grok3d { namespace Entities
             return m_entity;
         }
 
-        GRK_Result Destroy()
+        auto Destroy() -> GRK_Result
         {
             RETURN_FAILURE_IF_ENTITY_DESTROYED(
                 GRK_Result::NoSuchEntity,
@@ -49,14 +49,13 @@ namespace Grok3d { namespace Entities
             m_entity = 0;);
         }
 
-        bool inline IsDestroyed() const
+        auto inline IsDestroyed() const -> bool
         {
             return m_entity == 0;
         }
 
-
         template<class ComponentType>
-        Grok3d::GRK_Result AddComponent(ComponentType&& component)
+        auto AddComponent(ComponentType&& component) -> Grok3d::GRK_Result
         {
             RETURN_FAILURE_IF_ENTITY_DESTROYED(
                 Grok3d::GRK_Result::Ok,
@@ -64,7 +63,7 @@ namespace Grok3d { namespace Entities
         }
 
         template<class ComponentType>
-        Grok3d::GRK_Result RemoveComponent()
+        auto RemoveComponent() -> Grok3d::GRK_Result
         {
             RETURN_FAILURE_IF_ENTITY_DESTROYED(
                 GRK_Result::NoSuchEntity,
@@ -72,12 +71,12 @@ namespace Grok3d { namespace Entities
         }
 
         template<class ComponentType>
-        Grok3d::Components::GRK_ComponentHandle<ComponentType> GetComponent() const
+        auto GetComponent() const -> Grok3d::Components::GRK_ComponentHandle<ComponentType>
         {
             return m_manager->template GetComponent<ComponentType>(m_entity);
         }
 
-        bool HasComponents(const Grok3d::Components::GRK_ComponentBitMask componentBits) const
+        auto HasComponents(const Grok3d::Components::GRK_ComponentBitMask componentBits) const -> bool
         {
             RETURN_FAILURE_IF_ENTITY_DESTROYED(
                 false,
@@ -85,13 +84,13 @@ namespace Grok3d { namespace Entities
             return ((components & componentBits) == componentBits));
         }
 
-        bool operator==(const Grok3d::Entities::GRK_EntityHandle& rhs) const
+        auto operator==(const Grok3d::Entities::GRK_EntityHandle& rhs) const -> bool
         {
             return this->m_entity == rhs.m_entity;
         }
 
-        template<class EntityComponentManager> friend bool operator==(const int entity, const Grok3d::Entities::GRK_EntityHandle__<EntityComponentManager>& handle);
-        template<class EntityComponentManager> friend bool operator==(const Grok3d::Entities::GRK_EntityHandle__<EntityComponentManager>& handle, const int entity);
+        template<class EntityComponentManager> friend auto operator==(const int entity, const Grok3d::Entities::GRK_EntityHandle__<EntityComponentManager>& handle) -> bool;
+        template<class EntityComponentManager> friend auto operator==(const Grok3d::Entities::GRK_EntityHandle__<EntityComponentManager>& handle, const int entity) -> bool;
 
     private:
         friend ::std::hash<GRK_EntityHandle__<ECM>>;
@@ -103,19 +102,19 @@ namespace Grok3d { namespace Entities
 
 template<class ECM>
 typename std::hash<Grok3d::Entities::GRK_EntityHandle__<ECM>>::result_type
-    std::hash<Grok3d::Entities::GRK_EntityHandle__<ECM>>::operator()(typename std::hash<Grok3d::Entities::GRK_EntityHandle__<ECM>>::argument_type const& e) const
+std::hash<Grok3d::Entities::GRK_EntityHandle__<ECM>>::operator()(typename std::hash<Grok3d::Entities::GRK_EntityHandle__<ECM>>::argument_type const& e) const
 {
     return hash<size_t>{}(e.m_entity);
 }
 
 template<class ECM>
-bool operator==(const int entity, const Grok3d::Entities::GRK_EntityHandle__<ECM>& handle)
+auto operator==(const int entity, const Grok3d::Entities::GRK_EntityHandle__<ECM>& handle) -> bool
 {
     return entity == handle.m_entity;
 }
 
 template<class ECM>
-bool operator==(const Grok3d::Entities::GRK_EntityHandle__<ECM>& handle, const int entity)
+auto operator==(const Grok3d::Entities::GRK_EntityHandle__<ECM>& handle, const int entity) -> bool
 {
     return entity == handle.m_entity;
 }

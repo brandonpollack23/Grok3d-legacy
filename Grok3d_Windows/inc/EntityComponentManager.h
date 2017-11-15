@@ -54,7 +54,7 @@ namespace Grok3d
             setup_component_stores(*this, m_componentStores);
         }
 
-        GRK_Result Initialize(GRK_SystemManager* systemManager)
+        auto Initialize(GRK_SystemManager* systemManager) -> GRK_Result
         {
             m_systemManager = systemManager;
             m_isInitialized = true;
@@ -62,7 +62,7 @@ namespace Grok3d
             return GRK_Result::Ok;
         }
 
-        GRK_EntityHandle CreateEntity()
+        auto CreateEntity() -> GRK_EntityHandle
         {
             //I could do a check here to see if we overflowed to 0 but that's just inconceivable that we'd have that many (2^32) entities    
             GRK_Entity id = s_NextEntityId++;
@@ -74,7 +74,7 @@ namespace Grok3d
             return GRK_EntityHandle(this, id);
         }
 
-        GRK_ComponentBitMask GetEntityComponentsBitMask(const GRK_Entity entity) const
+        auto GetEntityComponentsBitMask(const GRK_Entity entity) const -> GRK_ComponentBitMask
         {
             if (entity != 0)
             {
@@ -86,7 +86,7 @@ namespace Grok3d
             }
         }
 
-        GRK_Result DeleteEntity(GRK_Entity entity)
+        auto DeleteEntity(GRK_Entity entity) -> GRK_Result
         {
             GRK_Result result = GRK_Result::Ok;
 
@@ -99,19 +99,19 @@ namespace Grok3d
             return result;
         }
 
-        std::vector<GRK_Entity>& GetDeletedUncleanedEntities()
+        auto GetDeletedUncleanedEntities() -> std::vector<GRK_Entity>&
         {
             return m_deletedUncleanedEntities;
         }
 
         template<class ComponentType>
-        static constexpr size_t GetComponentTypeAccessIndex()
+        static constexpr auto GetComponentTypeAccessIndex() -> size_t
         {
             return notstd::type_to_index<ComponentType, ComponentTuple>::value;
         }
 
         template<class ComponentType>
-        GRK_Result AddComponent(GRK_Entity entity, ComponentType&& newComponent)
+        auto AddComponent(GRK_Entity entity, ComponentType&& newComponent) -> GRK_Result
         {
             static_assert(notstd::param_pack_has_type<ComponentType, ComponentTypes...>::value, "AddComponent Function requires ComponentType be one of the template params of GRK_EntityComponentManager__");
 
@@ -170,7 +170,7 @@ namespace Grok3d
         }
 
         template<class ComponentType>
-        GRK_ComponentHandle<ComponentType> GetComponent(GRK_Entity entity) const
+        auto GetComponent(GRK_Entity entity) const -> GRK_ComponentHandle<ComponentType>
         {
             static_assert(notstd::param_pack_has_type<ComponentType, ComponentTypes...>::value, "GetComponent Function requires ComponentType be one of the template params of GRK_EntityComponentManager__");
 
@@ -210,7 +210,7 @@ namespace Grok3d
 
         //removes component for specified entity if it exists
         template<class ComponentType>
-        GRK_Result RemoveComponent(GRK_Entity entity)
+        auto RemoveComponent(GRK_Entity entity) -> GRK_Result
         {
             static_assert(notstd::param_pack_has_type<ComponentType, ComponentTypes...>::value,
                     "RemoveComponent Function requires ComponentType be one of the template params of GRK_EntityComponentManager__");
@@ -238,7 +238,7 @@ namespace Grok3d
         }
 
         // Garbage collects deleted entities (this is Components are always directly deleted as of now)
-        void GarbageCollect()
+        auto GarbageCollect() -> void
         {
             //TODO dont always do this lets be smarter
             garbage_collect_iter();
@@ -246,7 +246,7 @@ namespace Grok3d
 
     private:
         template<class ComponentType>
-        GRK_Result RemoveComponentHelper(GRK_Entity entity)
+        auto RemoveComponentHelper(GRK_Entity entity) -> GRK_Result
         {
             static_assert(notstd::param_pack_has_type<ComponentType, ComponentTypes...>::value, "RemoveComponentHelper Function requires ComponentType be one of the template params of GRK_EntityComponentManager__");
 
@@ -308,7 +308,7 @@ namespace Grok3d
         template<int index, class... Ts>
         struct setup_component_stores_impl
         {
-            void operator()(GRK_EntityComponentManager& ecm, std::tuple<Ts...>& t)
+            auto operator()(GRK_EntityComponentManager& ecm, std::tuple<Ts...>& t) -> void
             {
                 auto& elem = std::get<index>(t);
                 elem.reserve(INITIAL_ENTITY_ARRAY_SIZE);
@@ -319,10 +319,10 @@ namespace Grok3d
         template<class... Ts>
         struct setup_component_stores_impl<-1, Ts...>
         {
-            void operator()(GRK_EntityComponentManager& ecm, std::tuple<Ts...>& t) {}
+            auto operator()(GRK_EntityComponentManager& ecm, std::tuple<Ts...>& t) -> void {}
         };
         template<class... Ts>
-        void setup_component_stores(GRK_EntityComponentManager& ecm, std::tuple<Ts...>& t)
+        auto setup_component_stores(GRK_EntityComponentManager& ecm, std::tuple<Ts...>& t) -> void
         {
             const auto size = sizeof...(Ts);
             setup_component_stores_impl<size - 1, Ts...>{}(ecm, t);
@@ -332,7 +332,7 @@ namespace Grok3d
         template<int ComponentIndex, class... Ts>
         struct garbage_collect_iter_impl
         {
-            void operator()(GRK_EntityComponentManager& ecm)
+            auto operator()(GRK_EntityComponentManager& ecm) -> void
             {
                 for(auto& entity : ecm.m_deletedUncleanedEntities)
                 {
@@ -349,9 +349,9 @@ namespace Grok3d
         template<class... Ts>
         struct garbage_collect_iter_impl<-1, Ts...>
         {
-            void operator()(GRK_EntityComponentManager& ecm) {}
+            auto operator()(GRK_EntityComponentManager& ecm) -> void {}
         };
-        void garbage_collect_iter()
+        auto garbage_collect_iter() -> void
         {
             const auto size = sizeof...(ComponentTypes);
             garbage_collect_iter_impl<size - 1, ComponentTypes...>{}(*this);

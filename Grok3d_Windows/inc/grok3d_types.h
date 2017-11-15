@@ -42,12 +42,12 @@ namespace Grok3d
     };
 
     using T = std::underlying_type_t<GRK_Result>;
-    inline GRK_Result operator | (GRK_Result lhs, GRK_Result rhs)
+    inline auto operator | (GRK_Result lhs, GRK_Result rhs) -> GRK_Result
 
     {
         return (GRK_Result)(static_cast<T>(lhs) | static_cast<T>(rhs));
     }
-    inline GRK_Result& operator |= (GRK_Result& lhs, GRK_Result rhs)
+    inline auto operator |= (GRK_Result& lhs, GRK_Result rhs) -> GRK_Result&
     {
         lhs = (GRK_Result)(static_cast<T>(lhs) | static_cast<T>(rhs));
         return lhs;
@@ -99,7 +99,7 @@ namespace std
     {
         typedef Grok3d::Entities::GRK_EntityHandle__<ECM> argument_type;
         typedef size_t result_type;
-        result_type operator()(argument_type const& e) const;
+        auto operator()(argument_type const& e) const -> result_type;
     };
 }
 

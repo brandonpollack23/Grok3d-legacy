@@ -22,7 +22,7 @@ GRK_Engine::GRK_Engine(std::function<GRK_Result(GRK_EntityComponentManager&)> in
     m_initFunction = initFunction;
 }
 
-GRK_Result GRK_Engine::Initialize()
+auto GRK_Engine::Initialize() -> GRK_Result
 {
     if(m_initFunction)
     {
@@ -34,22 +34,22 @@ GRK_Result GRK_Engine::Initialize()
     }
 }
 
-void GRK_Engine::Update(double dt)
+auto GRK_Engine::Update(double dt) -> void
 {
     m_systemManager.UpdateSystems(dt);
 }
 
-void GRK_Engine::Render() const
+auto GRK_Engine::Render() const -> void
 {
     m_systemManager.Render();
 }
 
-void GRK_Engine::GarbageCollect()
+auto GRK_Engine::GarbageCollect() -> void
 {
     m_entityComponentManager.GarbageCollect();
 }
 
-void GRK_Engine::Run()
+auto GRK_Engine::Run() -> void
 {
     using clock = std::chrono::high_resolution_clock;
     using doubleConversion = std::chrono::duration<double>;
@@ -93,8 +93,8 @@ void GRK_Engine::Run()
     }
 }
 
-GRK_Result GRK_Engine::InjectInitialization(
-        std::function<GRK_Result(GRK_EntityComponentManager&)> initFunction)
+auto GRK_Engine::InjectInitialization(
+        std::function<GRK_Result(GRK_EntityComponentManager&)> initFunction) -> GRK_Result
 {
     m_initFunction = initFunction;
 

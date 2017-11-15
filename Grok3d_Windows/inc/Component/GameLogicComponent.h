@@ -26,14 +26,14 @@ namespace Grok3d { namespace Components
 
             GRK_GameLogicComponent& operator=(GRK_GameLogicComponent&& rhs);
 
-            void Update(double dt);
+            auto Update(double dt) -> void;
 
             //returns the handle of the behaviour so it can be easily removed later
-            BehaviourHandle RegisterBehaviour(std::unique_ptr<GRK_GameBehaviourBase> behaviour);
-            Grok3d::GRK_Result EnqueueBehaviourRemoval(BehaviourHandle handle);
+            auto RegisterBehaviour(std::unique_ptr<GRK_GameBehaviourBase> behaviour) -> BehaviourHandle;
+            auto EnqueueBehaviourRemoval(BehaviourHandle handle) -> Grok3d::GRK_Result;
 
         protected:
-            Grok3d::GRK_Result UnregisterBehaviour(BehaviourHandle handle);
+            auto UnregisterBehaviour(BehaviourHandle handle) -> Grok3d::GRK_Result;
 
         protected:
             typedef size_t BehaviourIndex;

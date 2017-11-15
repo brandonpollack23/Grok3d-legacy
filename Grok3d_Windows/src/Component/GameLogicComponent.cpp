@@ -24,14 +24,14 @@ GRK_GameLogicComponent::GRK_GameLogicComponent(GRK_GameLogicComponent&& glc)
     }
 }
 
-GRK_GameLogicComponent& GRK_GameLogicComponent::operator=(GRK_GameLogicComponent&& rhs)
+auto GRK_GameLogicComponent::operator=(GRK_GameLogicComponent&& rhs) -> GRK_GameLogicComponent&
 {
     m_behaviours = std::move(rhs.m_behaviours);
     m_behaviourIndexMap = std::move(rhs.m_behaviourIndexMap);
     return *this;
 }
 
-void GRK_GameLogicComponent::Update(double dt)
+auto GRK_GameLogicComponent::Update(double dt) -> void
 {
     if (m_behavioursToRemove.size() > 0)
     {
@@ -48,7 +48,7 @@ void GRK_GameLogicComponent::Update(double dt)
     }
 }
 
-GRK_GameLogicComponent::BehaviourHandle GRK_GameLogicComponent::RegisterBehaviour(std::unique_ptr<GRK_GameBehaviourBase> behaviour)
+auto GRK_GameLogicComponent::RegisterBehaviour(std::unique_ptr<GRK_GameBehaviourBase> behaviour) -> GRK_GameLogicComponent::BehaviourHandle
 {
     behaviour->m_behaviourHandle = s_nextHandle;
     m_behaviours.push_back(std::move(behaviour));
@@ -56,14 +56,14 @@ GRK_GameLogicComponent::BehaviourHandle GRK_GameLogicComponent::RegisterBehaviou
     return s_nextHandle++; 
 }
 
-GRK_Result GRK_GameLogicComponent::EnqueueBehaviourRemoval(const GRK_GameLogicComponent::BehaviourHandle handle)
+auto GRK_GameLogicComponent::EnqueueBehaviourRemoval(const GRK_GameLogicComponent::BehaviourHandle handle) -> GRK_Result
 {
     m_behavioursToRemove.push_back(handle);
 
     return GRK_Result::Ok;
 }
 
-GRK_Result GRK_GameLogicComponent::UnregisterBehaviour(const BehaviourHandle handle)
+auto GRK_GameLogicComponent::UnregisterBehaviour(const BehaviourHandle handle) -> GRK_Result
 {
     if (m_behaviourIndexMap.find(handle) == m_behaviourIndexMap.end())
     {
@@ -96,7 +96,7 @@ GRK_GameBehaviourBase::GRK_GameBehaviourBase(GRK_EntityHandle owningEntity) :
 {
 }
 
-Grok3d::GRK_Result GRK_GameBehaviourBase::UnregisterThisBehaviour()
+auto GRK_GameBehaviourBase::UnregisterThisBehaviour() -> GRK_Result
 {
     return m_owningEntity.GetComponent<GRK_GameLogicComponent>()->EnqueueBehaviourRemoval(m_behaviourHandle);
 }

@@ -16,17 +16,17 @@ namespace Grok3d { namespace Systems
 
         //thie function does a check to see if all the bits in it's bit mask 
         //are in it's bit mask
-        Grok3d::GRK_Result UpdateSystemEntities(const Grok3d::Entities::GRK_EntityHandle& entity);
+        auto UpdateSystemEntities(const Grok3d::Entities::GRK_EntityHandle& entity) -> Grok3d::GRK_Result;
 
-        Grok3d::GRK_Result UnregisterEntity(const Grok3d::Entities::GRK_EntityHandle& entity);
+        auto UnregisterEntity(const Grok3d::Entities::GRK_EntityHandle& entity) -> Grok3d::GRK_Result;
 
-        Grok3d::GRK_Result UpdateSystems(double dt);
+        auto UpdateSystems(double dt) -> Grok3d::GRK_Result;
 
-        Grok3d::GRK_Result Render() const;
+        auto Render() const -> Grok3d::GRK_Result;
 
     private:
-            std::array<GRK_System*, 1> m_systems;
-            GRK_GameLogicSystem m_gls;
+        std::array<GRK_System*, 1> m_systems;
+        GRK_GameLogicSystem m_gls;
     };
 } /*Systems*/ } /*Grok3d*/
 

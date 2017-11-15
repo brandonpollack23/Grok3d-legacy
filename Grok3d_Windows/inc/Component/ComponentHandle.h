@@ -23,19 +23,19 @@ namespace Grok3d { namespace Components
         {
         }
 
-        const Grok3d::Entities::GRK_Entity GetOwningEntity() const
+        auto GetOwningEntity() const -> const Grok3d::Entities::GRK_Entity
         {
             return m_owner;
         }
 
-        bool IsHandleValid() const
+        auto IsHandleValid() const -> bool
         {
             Grok3d::Components::GRK_ComponentBitMask thisComponentBitMask = IndexToMask(ECM::template GetComponentTypeAccessIndex<ComponentType>());
             Grok3d::Components::GRK_ComponentBitMask components = m_manager->GetEntityComponentsBitMask(m_owner);
             return (components & thisComponentBitMask) == thisComponentBitMask;
         }
 
-        ComponentType* operator->()
+        auto operator->() -> ComponentType*
         {
             if (IsHandleValid())
             {
@@ -47,7 +47,7 @@ namespace Grok3d { namespace Components
             }
         }
 
-        Grok3d::GRK_Result Destroy() const
+        auto Destroy() const -> Grok3d::GRK_Result
         {
             return m_manager->RemoveComponent(m_owner);
         }

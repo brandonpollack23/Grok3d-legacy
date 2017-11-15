@@ -16,17 +16,17 @@ namespace Grok3d
             GRK_Engine(std::function<GRK_Result(Grok3d::GRK_EntityComponentManager&)> initFunction);
 
             //TODO overload initialize based on markup file
-            Grok3d::GRK_Result Initialize();
+            auto Initialize() -> Grok3d::GRK_Result;
 
-            void Update(double dt);
-            void Render() const;
-            void GarbageCollect();
+            auto Update(double dt) -> void;
+            auto Render() const -> void;
+            auto GarbageCollect() -> void;
 
             //function that never exits and runs update in an infinite loop until broken
-            void Run();
+            auto Run() -> void;
 
-            Grok3d::GRK_Result InjectInitialization(
-                    std::function<Grok3d::GRK_Result(Grok3d::GRK_EntityComponentManager&)> initFunction);
+            auto InjectInitialization(
+                    std::function<Grok3d::GRK_Result(Grok3d::GRK_EntityComponentManager&)> initFunction) -> Grok3d::GRK_Result;
 
         private:
             Grok3d::GRK_EntityComponentManager m_entityComponentManager;
