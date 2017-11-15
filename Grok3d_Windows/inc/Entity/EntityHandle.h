@@ -46,7 +46,7 @@ namespace Grok3d { namespace Entities
             RETURN_FAILURE_IF_ENTITY_DESTROYED(
                 GRK_Result::NoSuchEntity,
                 return m_manager->DeleteEntity(m_entity);
-            m_entity = 0;);
+                m_entity = 0;);
         }
 
         auto inline IsDestroyed() const -> bool
@@ -81,7 +81,7 @@ namespace Grok3d { namespace Entities
             RETURN_FAILURE_IF_ENTITY_DESTROYED(
                 false,
                 Components::GRK_ComponentBitMask components = m_manager->GetEntityComponentsBitMask(m_entity);
-            return ((components & componentBits) == componentBits));
+                return ((components & componentBits) == componentBits));
         }
 
         auto operator==(const Grok3d::Entities::GRK_EntityHandle& rhs) const -> bool

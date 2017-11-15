@@ -46,7 +46,7 @@ namespace Grok3d { namespace Components
             std::vector<BehaviourHandle> m_behavioursToRemove;
     };
 
-    //this is one of the only classes heierarchies that uses dynamic dispatch (or heirarchies at all for that matter)
+    // this is one of the only classes heierarchies that uses dynamic dispatch (or heirarchies at all for that matter)
     // so that it can be overloaded and classes can be made in other languages later on (LUA or python)
     class GRK_GameBehaviourBase
     {

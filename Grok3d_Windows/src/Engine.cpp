@@ -62,14 +62,14 @@ auto GRK_Engine::Run() -> void
     
     //TODO use CVAR to set this as tickrate
     //this is 144hz period in ns: 6944444ns
-    const std::chrono::nanoseconds dt(6944444ns);
+    const auto dt = std::chrono::nanoseconds(6944444ns);
 
     //fix my timestep referneced here: https://gafferongames.com/post/fix_your_timestep/
     auto currentTime = clock::now();
 
     //t is total simulation time
-    std::chrono::nanoseconds t(0s);
-    std::chrono::nanoseconds accumulator(0s);
+    auto t           = std::chrono::nanoseconds(0s);
+    auto accumulator = std::chrono::nanoseconds(0s);
     
     //run until break
     while(true)

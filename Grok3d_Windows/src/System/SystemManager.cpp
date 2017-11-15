@@ -16,7 +16,7 @@ GRK_SystemManager::GRK_SystemManager()
 
 auto GRK_SystemManager::UpdateSystemEntities(const GRK_EntityHandle& entity) -> GRK_Result
 {
-    GRK_Result result = GRK_Result::Ok;
+    auto result = GRK_Result::Ok;
 
     for(const auto& system : m_systems)
     {
@@ -28,7 +28,7 @@ auto GRK_SystemManager::UpdateSystemEntities(const GRK_EntityHandle& entity) -> 
 
 auto GRK_SystemManager::UnregisterEntity(const GRK_EntityHandle& entity) -> GRK_Result
 {
-    GRK_Result result = GRK_Result::Ok;
+    auto result = GRK_Result::Ok;
 
     for (auto system : m_systems)
     {
@@ -40,7 +40,7 @@ auto GRK_SystemManager::UnregisterEntity(const GRK_EntityHandle& entity) -> GRK_
 
 auto GRK_SystemManager::UpdateSystems(const double dt) -> GRK_Result
 {
-    GRK_Result result = GRK_Result::Ok;
+    auto result = GRK_Result::Ok;
     for(const auto& system : m_systems)
     {
         result |= system->Update(dt);

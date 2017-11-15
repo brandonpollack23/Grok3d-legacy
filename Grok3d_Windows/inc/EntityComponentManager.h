@@ -47,9 +47,9 @@ namespace Grok3d
             m_entityComponentsBitMaskMap(std::unordered_map<GRK_Entity, GRK_ComponentBitMask>(INITIAL_ENTITY_ARRAY_SIZE)),
             m_entityComponentIndexMaps(std::vector<notstd::unordered_bidir_map<GRK_Entity, ComponentInstance>>())
         {
-            m_deletedUncleanedEntities.reserve(INITIAL_ENTITY_ARRAY_SIZE / 4);
-
             static_assert(notstd::ensure_parameter_pack_unique<ComponentTypes...>::value, "The template arguments to GRK_EntityComponentManager__ must all be unique");
+
+            m_deletedUncleanedEntities.reserve(INITIAL_ENTITY_ARRAY_SIZE / 4);
 
             setup_component_stores(*this, m_componentStores);
         }
@@ -65,7 +65,7 @@ namespace Grok3d
         auto CreateEntity() -> GRK_EntityHandle
         {
             //I could do a check here to see if we overflowed to 0 but that's just inconceivable that we'd have that many (2^32) entities    
-            GRK_Entity id = s_NextEntityId++;
+            auto id = s_NextEntityId++;
 
             m_entityComponentsBitMaskMap[id] = 0;
 
@@ -88,7 +88,7 @@ namespace Grok3d
 
         auto DeleteEntity(GRK_Entity entity) -> GRK_Result
         {
-            GRK_Result result = GRK_Result::Ok;
+            auto result = GRK_Result::Ok;
 
             //ComponentManager's deleting their components is handled by GarbageCollection
             m_deletedUncleanedEntities.push_back(entity);
@@ -193,10 +193,10 @@ namespace Grok3d
                 const auto& entityInstanceMap = m_entityComponentIndexMaps.at(componentTypeIndex);
 
                 //get the instance (index in our vector) from teh entityInstanceMap
-                const ComponentInstance instance = entityInstanceMap.at(entity);
+                const auto instance = entityInstanceMap.at(entity);
 
                 //use the instance to index the array of that componenttype
-                const ComponentType* const componentPointer = &(componentTypeVector.at(instance));
+                const auto* const componentPointer = &(componentTypeVector.at(instance));
 
                 //return it in a handle
                 return GRK_ComponentHandle<ComponentType>(this, componentPointer, entity);
@@ -215,7 +215,7 @@ namespace Grok3d
             static_assert(notstd::param_pack_has_type<ComponentType, ComponentTypes...>::value,
                     "RemoveComponent Function requires ComponentType be one of the template params of GRK_EntityComponentManager__");
 
-            const GRK_ComponentBitMask componentMask = static_cast<GRK_ComponentBitMask>(IndexToMask(GetComponentTypeAccessIndex<ComponentType>()));
+            const auto componentMask = static_cast<GRK_ComponentBitMask>(IndexToMask(GetComponentTypeAccessIndex<ComponentType>()));
 
             if (entity == 0)
             {

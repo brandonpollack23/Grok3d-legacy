@@ -30,9 +30,9 @@ namespace Grok3d { namespace Components
 
         auto IsHandleValid() const -> bool
         {
-            Grok3d::Components::GRK_ComponentBitMask thisComponentBitMask = IndexToMask(ECM::template GetComponentTypeAccessIndex<ComponentType>());
-            Grok3d::Components::GRK_ComponentBitMask components = m_manager->GetEntityComponentsBitMask(m_owner);
-            return (components & thisComponentBitMask) == thisComponentBitMask;
+            auto thisComponentBitMask = IndexToMask(ECM::template GetComponentTypeAccessIndex<ComponentType>());
+            auto components = m_manager->GetEntityComponentsBitMask(m_owner);
+            return ((components & thisComponentBitMask) == thisComponentBitMask);
         }
 
         auto operator->() -> ComponentType*
