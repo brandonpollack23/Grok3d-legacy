@@ -58,4 +58,5 @@ clean:
 print-%: 
 	@echo $($*)
 
-include $(wildcard $(patsubst %, $(DEPDIR)/%.d, $(basename $(SOURCES))))
+INCLUDES = $(patsubst ./src%, $(DEPDIR)%.d, $(basename $(SOURCES)))
+include $(INCLUDES)
