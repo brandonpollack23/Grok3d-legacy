@@ -2,6 +2,13 @@
 * Contact @ grok3d@gmail.com
 * This file is available under the MIT license included in the project
 */
+
+/** @file
+ * @brief The mother file of type definitions
+ * @details
+ * this file contains all of the typedefs, forward type declarations, enums, general helper
+ * functions (having to do with types) and operators for defined types
+ */
 #ifndef __GROK3d_TYPES__H
 #define __GROK3d_TYPES__H
 
@@ -19,7 +26,7 @@ constexpr unsigned int IndexToMask(std::size_t index)
     return 1 << index;
 }
 
-//Forward declarations for headers
+/** The namespace for the project*/
 namespace Grok3d
 {
     class GRK_Engine;
@@ -53,11 +60,16 @@ namespace Grok3d
         return lhs;
     }
 
+    /** The namespace which contains all Entity related code*/
     namespace Entities
     {
+        /**
+         * @brief A unique ID that identifies an object in the game world
+         */
         typedef std::size_t GRK_Entity;
     }
 
+    /** The namespace which contains all Compoenents related code and Compoenents definitions*/
     namespace Components
     {
         class GRK_Component;
@@ -68,6 +80,7 @@ namespace Grok3d
         typedef int GRK_ComponentBitMask;
     }
 
+    /** The namespace which contains all System related code and System definitions*/
     namespace Systems
     {
         class GRK_SystemManager;
@@ -75,8 +88,14 @@ namespace Grok3d
         class GRK_GameLogicSystem;
     }
 
+    /**
+     * @brief The specialized version of GRK_EntityComponentManager__ that is used throughout the
+     * engine, it contains all of the types of components supported in a paramater pack
+     * This is where you add your components to the engine, by adding to this template argument list
+     *
+     * @see GRK_EntityComponentManager__
+     */
     template<class... ComponentTypes> class GRK_EntityComponentManager__;
-    // This is where you add your components to the engine, by adding to this template argument list
     using GRK_EntityComponentManager = GRK_EntityComponentManager__<Components::GRK_TransformComponent, Components::GRK_GameLogicComponent>;
 
     namespace Components
@@ -90,6 +109,7 @@ namespace Grok3d
     }
 }
 
+/**std namespace, added a hash function*/
 namespace std
 {
     /*GRK_EntityHandle*/

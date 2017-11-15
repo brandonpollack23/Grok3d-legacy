@@ -2,6 +2,11 @@
 * Contact @ grok3d@gmail.com
 * This file is available under the MIT license included in the project
 */
+
+/** @file
+ *  
+ */
+
 #ifndef __COMPONENTHANDLE__H
 #define __COMPONENTHANDLE__H
 
@@ -9,10 +14,29 @@
 
 namespace Grok3d { namespace Components
 {
+    /**
+     *  @brief A handle to a Component for convenient management
+     *
+     *  @details
+     *  This class template stores a reference to the creating GRK_EntityComponentManager
+     *  and makes management of the lifetime, getting related properties, and usage of a component
+     *  safer and easier to read
+     *
+     *  @tparam ComponentType The type of the component contained by the specialization
+     *  @tparam ECM The type of the GRK_EntityComponentManager__ who created the handle, this can
+     *  change depending on what components are in the template arguments list for it
+     */
     template<class ComponentType, class ECM>
     class GRK_ComponentHandle
     {
     public:
+        /**
+         * @param[in] entityComponentManager The manager which created this handle, passed in as
+         * "this" on construction
+         * @param[in] component The raw component pointer, points directly to the component's
+         * location in the GRK_EntityComponentManager__::m_componentStores tuple of vectors
+         * @param[in] owner The Grok3d::Entities::GRK_Entity to which this GRK_Component* will belong
+         */
         GRK_ComponentHandle(
                 const ECM* entityComponentManager,
                 const ComponentType* component,
@@ -23,11 +47,14 @@ namespace Grok3d { namespace Components
         {
         }
 
+        /**Returns the owning entity member*/
         auto GetOwningEntity() const -> const Grok3d::Entities::GRK_Entity
         {
             return m_owner;
         }
 
+        /**Uses ECM to find the Variadic index of this ComponentType, and affirms that the owning
+         * entity has a component of this type*/
         auto IsHandleValid() const -> bool
         {
             auto thisComponentBitMask = IndexToMask(ECM::template GetComponentTypeAccessIndex<ComponentType>());
@@ -35,6 +62,7 @@ namespace Grok3d { namespace Components
             return ((components & thisComponentBitMask) == thisComponentBitMask);
         }
 
+        /**dereferences and fowards to internal ComponentType*/
         auto operator->() -> ComponentType*
         {
             if (IsHandleValid())
@@ -47,15 +75,17 @@ namespace Grok3d { namespace Components
             }
         }
 
+        /**forwards a call to the manager to remove this component from owning entity*/
         auto Destroy() const -> Grok3d::GRK_Result
         {
-            return m_manager->RemoveComponent(m_owner);
+            return m_manager->template RemoveComponent<ComponentType>(m_owner);
         }
 
     private:
-        const Grok3d::Entities::GRK_Entity m_owner;
-        const ComponentType* m_component;
-        const ECM* m_manager;
+        const Grok3d::Entities::GRK_Entity m_owner; ///< The Grok3d::Entities::GRK_Entity to which this GRK_Component* will belong
+        const ComponentType* m_component;           /**< @brief The raw component pointer, points directly 
+                                                         to the component's location in the Grok3d::GRK_EntityComponentManager__::m_componentStores tuple of vectors*/
+        const ECM* m_manager;                       ///< The manager which created this handle, passed in as "this" on construction 
     };
 } /*Components*/ } /*Grok3d*/
 
