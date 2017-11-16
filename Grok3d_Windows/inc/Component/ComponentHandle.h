@@ -3,9 +3,7 @@
 * This file is available under the MIT license included in the project
 */
 
-/** @file
- *  
- */
+/**@file*/
 
 #ifndef __COMPONENTHANDLE__H
 #define __COMPONENTHANDLE__H
@@ -18,14 +16,13 @@ namespace Grok3d { namespace Components
      *  @brief A handle to a Component for convenient management
      *
      *  @details
-     *  This class template stores a reference to the creating GRK_EntityComponentManager
-     *  and makes management of the lifetime, getting related properties, and usage of a component
-     *  safer and easier to read
+     *  This class template stores a reference to the creating @link Grok3d::GRK_EntityComponentManager 
+     *  GRK_EntityComponentManager @endlink and makes management of the lifetime,
+     *  getting related properties, and usage of a component safer and easier to read
      *
      *  @tparam ComponentType The type of the component contained by the specialization
      *  @tparam ECM The type of the GRK_EntityComponentManager__ who created the handle, this can
-     *  change depending on what components are in the template arguments list for it
-     */
+     *  change depending on what components are in the template arguments list for it*/
     template<class ComponentType, class ECM>
     class GRK_ComponentHandle
     {
@@ -35,8 +32,7 @@ namespace Grok3d { namespace Components
          * "this" on construction
          * @param[in] component The raw component pointer, points directly to the component's
          * location in the GRK_EntityComponentManager__::m_componentStores tuple of vectors
-         * @param[in] owner The Grok3d::Entities::GRK_Entity to which this GRK_Component* will belong
-         */
+         * @param[in] owner The @link Grok3d::Entities::GRK_Entity GRK_Entity @endlink to which this GRK_Component* will belong*/
         GRK_ComponentHandle(
                 const ECM* entityComponentManager,
                 const ComponentType* component,
@@ -82,9 +78,11 @@ namespace Grok3d { namespace Components
         }
 
     private:
-        const Grok3d::Entities::GRK_Entity m_owner; ///< The Grok3d::Entities::GRK_Entity to which this GRK_Component* will belong
+        const Grok3d::Entities::GRK_Entity m_owner; ///< The @link Grok3d::Entities::GRK_Entity GRK_Entity @endlink to which this GRK_Component* will belong
         const ComponentType* m_component;           /**< @brief The raw component pointer, points directly 
-                                                         to the component's location in the Grok3d::GRK_EntityComponentManager__::m_componentStores tuple of vectors*/
+                                                         to the component's location in the 
+                                                         @link Grok3d::GRK_EntityComponentManager__::m_componentStores 
+                                                         GRK_EntityComponentManager__::m_componentStores @endlink tuple of vectors*/
         const ECM* m_manager;                       ///< The manager which created this handle, passed in as "this" on construction 
     };
 } /*Components*/ } /*Grok3d*/

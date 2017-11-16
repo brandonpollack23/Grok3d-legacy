@@ -2,6 +2,9 @@
 * Contact @ grok3d@gmail.com
 * This file is available under the MIT license included in the project
 */
+
+/**@file*/
+
 #ifndef __ENTITYCOMPONENENTMANAGER__H
 #define __ENTITYCOMPONENENTMANAGER__H
 
@@ -25,6 +28,12 @@
 
 namespace Grok3d
 {
+    /**
+     * @brief The core class of game state storage and lifetime management
+     *
+     * @details
+     *
+     * @tparam ComponentTypes */
     template<class... ComponentTypes>
     class GRK_EntityComponentManager__
     {
