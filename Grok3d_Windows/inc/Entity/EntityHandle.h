@@ -30,16 +30,15 @@
 namespace Grok3d { namespace Entities 
 {
     /**
-     * @brief the handle to an entity for convenient interaction with @link
-     * Grok3d::GRK_EntityComponentManager__ GRK_EntityComponentManager__ @endlink
+     * @brief the handle to an entity.  From a consumer outside the engine, this is used for all
+     * interaction with the and it's state
+     *
+     * @details This essentially is a bundle of the @link Grok3d::Entities::GRK_Entity GRK_Entity
+     * @endlink and pointer to the owning GRK_EntityComponentManager__.  all calls are forwarded to
+     * the owning GRK_EntityComponentManager__
      *
      * @tparam ECM The type of the GRK_EntityComponentManager__ who created the handle, this can
-     * change depending on what components are in the template arguments list for it
-     *
-     * @details
-     * This essentially is a bundle of the @link Grok3d::Entities::GRK_Entity 
-     * GRK_Entity @endlink and pointer to the owning GRK_EntityComponentManager__.
-     * all calls are forwarded to the owning GRK_EntityComponentManager__*/
+     * change depending on what components are in the template arguments list for it*/
     template<class ECM>
     class GRK_EntityHandle__
     {

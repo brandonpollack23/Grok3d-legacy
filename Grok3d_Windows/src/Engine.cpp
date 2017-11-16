@@ -100,7 +100,3 @@ auto GRK_Engine::InjectInitialization(
 
     return GRK_Result::Ok;
 }
-
-template<>
-Grok3d::Entities::GRK_Entity Grok3d::GRK_EntityComponentManager::s_NextEntityId = 1;
-
