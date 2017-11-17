@@ -76,7 +76,7 @@ namespace Grok3d
 
 
     public:
-        GRK_EntityComponentManager__() :
+        GRK_EntityComponentManager__() noexcept :
             m_nextEntityId(1),
             m_deletedUncleanedEntities(std::vector<GRK_Entity>()),
             m_entityComponentsBitMaskMap(std::unordered_map<GRK_Entity, GRK_ComponentBitMask>(c_initial_entity_array_size)),

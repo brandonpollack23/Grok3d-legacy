@@ -40,11 +40,11 @@ namespace Grok3d { namespace Components
             typedef size_t BehaviourHandle;
 
         public:
-            GRK_GameLogicComponent();
+            GRK_GameLogicComponent() noexcept;
 
-            GRK_GameLogicComponent(GRK_GameLogicComponent&& glc);
+            GRK_GameLogicComponent(GRK_GameLogicComponent&& glc) noexcept;
 
-            GRK_GameLogicComponent& operator=(GRK_GameLogicComponent&& rhs);
+            GRK_GameLogicComponent& operator=(GRK_GameLogicComponent&& rhs) noexcept;
 
             /**
              * @brief Update function which takes a change in time since the last update, this then calls all the behaviours with
@@ -113,7 +113,7 @@ namespace Grok3d { namespace Components
          * @param[in] owningEntity often enough every single gamelogic component needs to add/remove/modify
          * components, they can do that with this @link Grok3d::Entities::GRK_EntityHandle
          * GRK_EntityHandle @endlink*/
-        GRK_GameBehaviourBase(Grok3d::Entities::GRK_EntityHandle owningEntity);
+        GRK_GameBehaviourBase(Grok3d::Entities::GRK_EntityHandle owningEntity) noexcept;
 
         /**
          * @brief function you override that updates the owning entity with included behaviour

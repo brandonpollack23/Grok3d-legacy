@@ -36,7 +36,7 @@ namespace Grok3d { namespace Components
         GRK_ComponentHandle(
                 const ECM* entityComponentManager,
                 const ComponentType* component,
-                const Grok3d::Entities::GRK_Entity owner) :
+                const Grok3d::Entities::GRK_Entity owner) noexcept :
             m_owner(owner),
             m_component(component),
             m_manager(entityComponentManager)

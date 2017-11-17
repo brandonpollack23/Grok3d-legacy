@@ -17,7 +17,7 @@ namespace Grok3d { namespace Systems
     class GRK_GameLogicSystem : public GRK_System
     {
         public:
-            GRK_GameLogicSystem();
+            GRK_GameLogicSystem() noexcept;
 
             /**Overrided function that implements the iteration over all the tracked
              * entities and running update on their 

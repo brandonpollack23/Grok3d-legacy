@@ -22,7 +22,7 @@ namespace Grok3d { namespace Systems
     class GRK_System
     {
     public:
-        GRK_System();
+        GRK_System() noexcept;
 
         /**
          * @brief Runs @link Grok3d::Systems::GRK_System::UpdateInternal UpdateInternal @endlink

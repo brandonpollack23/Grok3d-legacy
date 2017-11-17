@@ -8,7 +8,7 @@ using namespace Grok3d;
 using namespace Grok3d::Components;
 using namespace Grok3d::Systems;
 
-GRK_GameLogicSystem::GRK_GameLogicSystem() : GRK_System()
+GRK_GameLogicSystem::GRK_GameLogicSystem() noexcept : GRK_System()
 {
 }
 

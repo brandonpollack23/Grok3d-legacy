@@ -34,7 +34,7 @@ namespace Grok3d { namespace Components
     class GRK_TransformComponent
     {
         public:
-            GRK_TransformComponent();
+            GRK_TransformComponent() noexcept;
 
             //Functions related to children and other relatives
 

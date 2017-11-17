@@ -29,14 +29,14 @@ namespace Grok3d
     class GRK_Engine
     {
         public:
-            GRK_Engine();
+            GRK_Engine() noexcept;
             /**Construct and Initialize the engine in the same step
              *
              * @details
              * This works the same as calling the default constructor and subsequently calling 
              * @link Grok3d::GRK_Engine::InjectInitialization InjectInitialization @endlink and 
              * @link Grok3d::GRK_Engine::Initialize Initialize @endlink*/
-            GRK_Engine(std::function<GRK_Result(Grok3d::GRK_EntityComponentManager&)> initFunction);
+            GRK_Engine(std::function<GRK_Result(Grok3d::GRK_EntityComponentManager&)> initFunction) noexcept;
 
             //TODO overload initialize based on markup file
             /**Run the internally function inserted with 

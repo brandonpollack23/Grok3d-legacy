@@ -9,7 +9,7 @@ using namespace Grok3d::Entities;
 using namespace Grok3d::Components;
 using namespace Grok3d::Systems;
 
-GRK_System::GRK_System()
+GRK_System::GRK_System() noexcept
 {
     m_trackedEntities = std::unordered_set<GRK_EntityHandle>(c_initial_entity_array_size);
 }
@@ -29,14 +29,7 @@ auto GRK_System::UpdateSystemEntities(const GRK_EntityHandle& entity) -> GRK_Res
     //if mask has all components I need
     if (entity.HasComponents(myMask))
     {
-        try
-        {
-            m_trackedEntities.insert(entity);
-        }
-        catch(...)
-        {
-            return GRK_Result::ErrorAddingToSystem;
-        }
+        m_trackedEntities.insert(entity);
     }
     else
     {

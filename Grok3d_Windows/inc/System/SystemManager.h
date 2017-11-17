@@ -18,7 +18,7 @@ namespace Grok3d { namespace Systems
     class GRK_SystemManager
     {
     public:
-        GRK_SystemManager();
+        GRK_SystemManager() noexcept;
 
         /**Forward the entity to all systems, they check if the bit mask of that entity mask that of
          * the system's requirments, if so they are added to the queue to be updated every frame*/

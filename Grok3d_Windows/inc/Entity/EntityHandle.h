@@ -43,7 +43,7 @@ namespace Grok3d { namespace Entities
     class GRK_EntityHandle__
     {
     public:
-        GRK_EntityHandle__(ECM* entityComponentManager, GRK_Entity entity) :
+        GRK_EntityHandle__(ECM* entityComponentManager, GRK_Entity entity) noexcept :
             m_entity(entity),
             m_manager(entityComponentManager)
         {

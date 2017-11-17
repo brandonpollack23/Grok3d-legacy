@@ -1,7 +1,7 @@
 #program types and flags
 CC = g++
 INCLUDEDIRS = ./inc/ ../glm/ ../notstd/
-CFLAGS = -std=c++17 -g -O2 -Wall $(addprefix -I, $(INCLUDEDIRS))
+CFLAGS = -std=c++17 -g -O2 -Wall -fno-exceptions $(addprefix -I, $(INCLUDEDIRS))
 
 LD = $(CC)
 LDFLAGS = 

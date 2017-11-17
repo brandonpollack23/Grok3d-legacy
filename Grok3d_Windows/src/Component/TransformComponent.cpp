@@ -10,7 +10,7 @@
 using namespace Grok3d;
 using namespace Grok3d::Components;
 
-GRK_TransformComponent::GRK_TransformComponent() :
+GRK_TransformComponent::GRK_TransformComponent() noexcept :
     m_parent(nullptr),
     m_children(std::vector<GRK_TransformComponent*>()),
     m_localPosition(glm::dvec3(0)),

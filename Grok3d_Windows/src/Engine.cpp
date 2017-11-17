@@ -11,13 +11,13 @@ using namespace std::chrono_literals;
 using namespace Grok3d;
 using namespace Grok3d::Systems;
 
-GRK_Engine::GRK_Engine()
+GRK_Engine::GRK_Engine() noexcept
 {
     //Inject systemManager dependency so we can update the systems
     m_entityComponentManager.Initialize(&m_systemManager);
 }
 
-GRK_Engine::GRK_Engine(std::function<GRK_Result(GRK_EntityComponentManager&)> initFunction) : GRK_Engine()
+GRK_Engine::GRK_Engine(std::function<GRK_Result(GRK_EntityComponentManager&)> initFunction) noexcept : GRK_Engine()
 {
     m_initFunction = initFunction;
 }

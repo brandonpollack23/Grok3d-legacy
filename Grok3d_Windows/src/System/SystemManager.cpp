@@ -7,7 +7,7 @@ using namespace Grok3d::Entities;
 using namespace Grok3d::Components;
 using namespace Grok3d::Systems;
 
-GRK_SystemManager::GRK_SystemManager()
+GRK_SystemManager::GRK_SystemManager() noexcept
 {
     //TODO initialize all the systems
     m_systems = { &m_gls };
