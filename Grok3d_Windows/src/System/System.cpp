@@ -11,7 +11,7 @@ using namespace Grok3d::Systems;
 
 GRK_System::GRK_System()
 {
-    m_trackedEntities = std::unordered_set<GRK_EntityHandle>(INITIAL_ENTITY_ARRAY_SIZE);
+    m_trackedEntities = std::unordered_set<GRK_EntityHandle>(c_initial_entity_array_size);
 }
 
 auto GRK_System::Update(double dt) -> GRK_Result
@@ -59,6 +59,7 @@ auto GRK_System::UnregisterEntity(const GRK_EntityHandle& entity) -> GRK_Result
 
 auto GRK_System::CompleteUnregisterEntities() -> Grok3d::GRK_Result
 {
+    //TODO move from end to make more efficent
     GRK_Result result = GRK_Result::Ok;
     for (auto& entity : m_entitiesToUnregister)
     {
@@ -72,6 +73,8 @@ auto GRK_System::CompleteUnregisterEntities() -> Grok3d::GRK_Result
             result = GRK_Result::NoSuchEntity;
         }
     }
+
+    m_entitiesToUnregister.clear();
 
     return result;
 }

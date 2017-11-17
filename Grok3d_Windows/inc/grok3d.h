@@ -2,8 +2,10 @@
 * Contact @ grok3d@gmail.com
 * This file is available under the MIT license included in the project
 */
-#ifndef __GROK3D__H
 
+/**@file convenience header that includes the entire engine*/
+
+#ifndef __GROK3D__H
 #define __GROK3D__H
 
 #include "EntityComponentManager.h"

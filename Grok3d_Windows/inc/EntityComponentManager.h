@@ -79,12 +79,12 @@ namespace Grok3d
         GRK_EntityComponentManager__() :
             m_nextEntityId(1),
             m_deletedUncleanedEntities(std::vector<GRK_Entity>()),
-            m_entityComponentsBitMaskMap(std::unordered_map<GRK_Entity, GRK_ComponentBitMask>(INITIAL_ENTITY_ARRAY_SIZE)),
+            m_entityComponentsBitMaskMap(std::unordered_map<GRK_Entity, GRK_ComponentBitMask>(c_initial_entity_array_size)),
             m_entityComponentIndexMaps(std::vector<notstd::unordered_bidir_map<GRK_Entity, ComponentInstance>>())
         {
             static_assert(notstd::ensure_parameter_pack_unique<ComponentTypes...>::value, "The template arguments to GRK_EntityComponentManager__ must all be unique");
 
-            m_deletedUncleanedEntities.reserve(INITIAL_ENTITY_ARRAY_SIZE / 4);
+            m_deletedUncleanedEntities.reserve(c_initial_entity_array_size / 4);
 
             setup_component_stores(*this, m_componentStores);
         }
@@ -472,8 +472,8 @@ namespace Grok3d
             auto operator()(GRK_EntityComponentManager& ecm, std::tuple<Ts...>& t) -> void
             {
                 auto& elem = std::get<index>(t);
-                elem.reserve(INITIAL_ENTITY_ARRAY_SIZE);
-                ecm.m_entityComponentIndexMaps.push_back(notstd::unordered_bidir_map<GRK_Entity, ComponentInstance>(INITIAL_ENTITY_ARRAY_SIZE));
+                elem.reserve(c_initial_entity_array_size);
+                ecm.m_entityComponentIndexMaps.push_back(notstd::unordered_bidir_map<GRK_Entity, ComponentInstance>(c_initial_entity_array_size));
                 setup_component_stores_impl<index - 1, Ts...>{}(ecm, t);
             }
         };
@@ -541,21 +541,20 @@ namespace Grok3d
         }
 
     private:
-        bool m_isInitialized = false; ///< Simple bool t be sure we have a valid m_systemManager
+        bool m_isInitialized = false;                       ///< Simple bool t be sure we have a valid m_systemManager
 
-        GRK_SystemManager* m_systemManager; ///< The system manager that handles updating the state stored here
+        GRK_SystemManager* m_systemManager;                 ///< The system manager that handles updating the state stored here
 
-        ComponentStoreTuple m_componentStores; ///< The tuple of vectors which store each component type
+        ComponentStoreTuple m_componentStores;              ///< The tuple of vectors which store each component type
 
-        GRK_Entity m_nextEntityId; ///< The next entity ID that is incremened each time an entity is made
+        GRK_Entity m_nextEntityId;                          ///< The next entity ID that is incremened each time an entity is made
 
         std::vector<GRK_Entity> m_deletedUncleanedEntities; ///< list of deleted entites that need to be Garbage Collected
         
-        typedef size_t ComponentInstance; ///< index into vector for component
+        typedef size_t ComponentInstance;                   ///< index into vector for component
         
         ///this is a map of entities to a bitmask of their components, used for system registration/component deletion checks etc
         std::unordered_map<GRK_Entity, GRK_ComponentBitMask> m_entityComponentsBitMaskMap;
-
         ///vector of bidirectional maps from entity to component index into std::get<ComponetIndex>(m_componentStores)[]
         mutable std::vector<notstd::unordered_bidir_map<GRK_Entity, ComponentInstance>> m_entityComponentIndexMaps;
     };

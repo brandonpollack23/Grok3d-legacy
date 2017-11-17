@@ -15,12 +15,13 @@
 #include <type_traits>
 #include <functional>
 
-//configure Grok3d
-#define INITIAL_ENTITY_ARRAY_SIZE 1024
+/**constant (for now, future to make CVAR) that controls initial size of stores*/
+constexpr auto c_initial_entity_array_size = 1024;
 
 //configure GLM
 #define GLM_PRECISION_HIGHP_FLOAT
 
+/**converts a number to that bit set from least significant bit, for constructing bitmasks*/
 constexpr unsigned int IndexToMask(std::size_t index)
 {
     return 1 << index;
@@ -31,32 +32,30 @@ namespace Grok3d
 {
     class GRK_Engine;
 
-    enum class GRK_Result : unsigned int
+    /**all the possible result statuses*/
+    enum class GRK_Result : std::size_t
     {
-        Ok = 0,
-        NoSuchElement = 1,
-        NoSpaceRemaining = 1 << 1,
-        NoSuchEntity = 1 << 2,
-        EntityAlreadyDeleted = 1 << 3,
-        EntityAlreadyHasComponent = 1 << 4,
-        NoSuchComponentManager = 1 << 5,
-        ComponentAlreadyAdded = 1 << 6,
-        NoSuchComponentIdentity = 1 << 7,
-        MustUseComponentHandleToDeleteBehaviour = 1 << 8,
-        ErrorAddingToSystem = 1 << 9,
-        EngineFailureNoInitialState = 1 << 10,
-        CriticalError = 1 << 11,
+        Ok = 0,                                ///< No problems
+        NoSuchElement = 1,                     ///< Returned when there is no Component or entity queried about
+        NoSpaceRemaining = 1 << 1,             ///< Uh oh, no more space, how did you even manage?
+        NoSuchEntity = 1 << 2,                 ///< Returned when that entity does not exist (anymore)
+        EntityAlreadyDeleted = 1 << 3,         ///< Returned when it is certain the entity existed but is now gone
+        EntityAlreadyHasComponent = 1 << 4,    ///< Only one of each component on an entity allowed
+        ComponentAlreadyAdded = 1 << 6,        ///< Returned when entity has already added this component type
+        ErrorAddingToSystem = 1 << 9,          ///< returned when there is some sort of system registration error
+        EngineFailureNoInitialState = 1 << 10, ///< Engine must be initialized before use
+        CriticalError = 1 << 11,               ///< Wow...I blame you >_>
     };
 
-    using T = std::underlying_type_t<GRK_Result>;
+    using UT_GRK_Result = std::underlying_type_t<GRK_Result>;
     inline auto operator | (GRK_Result lhs, GRK_Result rhs) -> GRK_Result
 
     {
-        return (GRK_Result)(static_cast<T>(lhs) | static_cast<T>(rhs));
+        return (GRK_Result)(static_cast<UT_GRK_Result>(lhs) | static_cast<UT_GRK_Result>(rhs));
     }
     inline auto operator |= (GRK_Result& lhs, GRK_Result rhs) -> GRK_Result&
     {
-        lhs = (GRK_Result)(static_cast<T>(lhs) | static_cast<T>(rhs));
+        lhs = (GRK_Result)(static_cast<UT_GRK_Result>(lhs) | static_cast<UT_GRK_Result>(rhs));
         return lhs;
     }
 
@@ -89,7 +88,7 @@ namespace Grok3d
     }
 
     /**
-     * @brief The specialized version of GRK_EntityComponentManager__ that is used throughout the
+     * @brief The specialized version of @link Grok3d::GRK_EntityComponentManager__ GRK_EntityComponentManager__ @endlink that is used throughout the
      * engine, it contains all of the types of components supported in a paramater pack
      * This is where you add your components to the engine, by adding to this template argument list
      *
@@ -104,6 +103,9 @@ namespace Grok3d
     }
     namespace Entities
     {
+        /**Specialized version of 
+         * @link Grok3d::Entities::GRK_EntityHandle__ GRK_EntityHandle__ @endlink with
+         * the specialized version of @link Grok3d::GRK_EntityComponentManager__ GRK_EntityComponentManager__ @endlink*/
         template<class ECM = GRK_EntityComponentManager> class GRK_EntityHandle__;
         using GRK_EntityHandle = GRK_EntityHandle__<GRK_EntityComponentManager>;
     }
