@@ -61,14 +61,14 @@ namespace Grok3d { namespace Components
             auto IsChildOf(const GRK_TransformComponent* const possibleParent) const -> bool;
 
             /**Find the index you are in the parents pool of children*/
-            auto GetSiblingIndex() -> unsigned int; //use parent and iterate through the list looking for me
+            auto GetSiblingIndex() -> std::size_t; //use parent and iterate through the list looking for me
 
             /**
              * @brief get the index in your pool of children for the child
              * @param[in] possibleChild the child your are indexing, possible that it is not a child
              * at all
              * @return the index of the child from 0, -1 if it is not a child*/
-            auto GetChildIndex(const GRK_TransformComponent* possibleChild) const -> int;
+            auto GetChildIndex(const GRK_TransformComponent* possibleChild) const -> std::size_t;
 
             /**Returns number of children who are positioned relative to this*/
             auto ChildCount() -> int;
