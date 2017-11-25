@@ -16,7 +16,7 @@
 #include "EntityComponentManager.h"
 #include "Entity/EntityHandle.h"
 
-#include "bidir_map.h"
+#include "notstd/bidir_map.h"
 
 #include <vector>
 #include <memory>

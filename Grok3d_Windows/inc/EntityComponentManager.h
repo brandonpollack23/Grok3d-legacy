@@ -18,8 +18,8 @@
 
 #include "System/SystemManager.h"
 
-#include "bidir_map.h"
-#include "tupleextensions.h"
+#include "notstd/bidir_map.h"
+#include "notstd/tupleextensions.h"
 
 #include <vector>
 #include <tuple>
