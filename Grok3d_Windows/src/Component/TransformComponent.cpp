@@ -34,12 +34,12 @@ auto GRK_TransformComponent::IsChildOf(const GRK_TransformComponent* const possi
     return possibleParent == m_parent;
 }
 
-auto GRK_TransformComponent::GetSiblingIndex() -> unsigned int //use parent and iterate through the list looking for me
+auto GRK_TransformComponent::GetSiblingIndex() -> std::size_t //use parent and iterate through the list looking for me
 {
     return m_parent->GetChildIndex(this);
 }
 
-auto GRK_TransformComponent::GetChildIndex(const GRK_TransformComponent* const possibleChild) const -> int
+auto GRK_TransformComponent::GetChildIndex(const GRK_TransformComponent* const possibleChild) const -> std::size_t
 {
     for (size_t i = 0; i < m_children.size(); ++i)
     {
