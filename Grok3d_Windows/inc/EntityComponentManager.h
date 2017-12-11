@@ -332,7 +332,20 @@ namespace Grok3d
             {
                 return GRK_ComponentHandle<ComponentType>(nullptr, nullptr, -1);
             }
+        }
 
+        /**
+         * @brief get the entire component store vector reference
+         *
+         * @details 
+         * this is useful in systems like rendersystem that need to go through all of a certain
+         * component type
+         *
+         * @tparam ComponentType the type of component store vector you'd like to get a refernce of*/ 
+        template<class ComponentType>
+        auto GetComponentStore() const ->  const std::vector<ComponentType>*
+        {
+            return &std::get<std::vector<ComponentType>>(m_componentStores);
         }
 
         /**

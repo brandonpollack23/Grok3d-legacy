@@ -3,4 +3,5 @@
 	url = https://github.com/g-truc/glm
 [submodule "notstd"]
 	path = notstd
-	url = https://github.com/brandonpollack23/notstd
+	url = git@gitub.com:brandonpollack23/notstd.git
+
