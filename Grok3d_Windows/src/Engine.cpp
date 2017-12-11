@@ -2,6 +2,7 @@
 * Contact @ grok3d@gmail.com
 * This file is available under the MIT license included in the project
 */
+
 #include "grok3d_types.h"
 
 #include "Engine.h"
@@ -17,8 +18,9 @@ using namespace Grok3d::Systems;
 
 GRK_Engine::GRK_Engine() noexcept
 {
-    //Inject systemManager dependency so we can update the systems
+    //Inject dependency references so we can update the systems from ECM and set up systems with ECM
     m_entityComponentManager.Initialize(&m_systemManager);
+    m_systemManager.Initialize(&m_entityComponentManager);
 }
 
 GRK_Engine::GRK_Engine(std::function<GRK_Result(GRK_EntityComponentManager&)> initFunction) noexcept : GRK_Engine()

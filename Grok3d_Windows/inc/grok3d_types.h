@@ -45,6 +45,7 @@ namespace Grok3d
         ErrorAddingToSystem = 1 << 9,          ///< returned when there is some sort of system registration error
         EngineFailureNoInitialState = 1 << 10, ///< Engine must be initialized before use
         CriticalError = 1 << 11,               ///< Wow...I blame you >_>
+        RenderingTerminated = 1 << 12,               ///< Wow...I blame you >_>
     };
 
     using UT_GRK_Result = std::underlying_type_t<GRK_Result>;
@@ -75,6 +76,7 @@ namespace Grok3d
         class GRK_TransformComponent;
         class GRK_GameLogicComponent;
         class GRK_GameBehaviourBase;
+        class GRK_RenderComponent;
 
         typedef int GRK_ComponentBitMask;
     }
@@ -95,7 +97,7 @@ namespace Grok3d
      * @see GRK_EntityComponentManager__
      */
     template<class... ComponentTypes> class GRK_EntityComponentManager__;
-    using GRK_EntityComponentManager = GRK_EntityComponentManager__<Components::GRK_TransformComponent, Components::GRK_GameLogicComponent>;
+    using GRK_EntityComponentManager = GRK_EntityComponentManager__<Components::GRK_TransformComponent, Components::GRK_GameLogicComponent, Components::GRK_RenderComponent>;
 
     namespace Components
     {

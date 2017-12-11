@@ -11,11 +11,27 @@ using namespace Grok3d::Entities;
 using namespace Grok3d::Components;
 using namespace Grok3d::Systems;
 
-GRK_SystemManager::GRK_SystemManager() noexcept
+GRK_SystemManager::GRK_SystemManager() noexcept :
+    m_isInitialized(false),
+    m_ecm(nullptr),
+    m_gls(GRK_GameLogicSystem()),
+    m_rs(GRK_RenderSystem())
 {
-    //TODO initialize all the systems
     m_systems = { &m_gls };
-    //TODO initialize RENDER SYSTEM which is managed seperate so simulation and render can be decoupled
+}
+
+//TODO fail if not initialized?
+auto GRK_SystemManager::Initialize(GRK_EntityComponentManager* ecm) -> GRK_Result
+{
+    //save reference to ecm
+    m_ecm = ecm;
+
+    //initialize render system
+    m_rs.Initialize(m_ecm);
+
+    m_isInitialized = true;
+
+    return GRK_Result::Ok;
 }
 
 auto GRK_SystemManager::UpdateSystemEntities(const GRK_EntityHandle& entity) -> GRK_Result
@@ -55,6 +71,5 @@ auto GRK_SystemManager::UpdateSystems(const double dt) -> GRK_Result
 
 auto GRK_SystemManager::Render() const -> GRK_Result
 {
-    //TODO call draw system render function
-    return GRK_Result::Ok;
+    return m_rs.Render();
 }

@@ -1,10 +1,15 @@
 #program types and flags
 CC = g++
-INCLUDEDIRS = ./inc/ ../glm/ ../notstd/
-CFLAGS = -std=c++17 -g -O2 -Wall -fno-exceptions $(addprefix -I, $(INCLUDEDIRS))
+#inc is grok3d includes
+#../include is external includes like glad
+#submodules: glm, notstd
+INCLUDEDIRS = ./inc/ ../glm/ ../notstd/ ../include
+#libdl is required by glad
+CFLAGS = -std=c++17 -g -O2 -Wall -fno-exceptions $(GLFAGS) $(addprefix -I, $(INCLUDEDIRS))
 
 LD = $(CC)
-LDFLAGS = 
+GL_LD_FLAGS = -lglfw -lGL -ldl
+LDFLAGS = $(GL_LD_FLAGS)
 
 AR = ar
 ARFLAGS = 
@@ -20,8 +25,8 @@ VPATH = $(VPATHCPP) $(VPATHOBJ)
 TARGET = maintest
 BINDIR = bin
 OBJDIR = o
-SOURCES = $(shell find . -name "*.cpp")
-OBJECTS = $(patsubst ./src/%, ./$(OBJDIR)/%, $(patsubst %.cpp, %.o, $(SOURCES)))
+SOURCES = $(shell find . -name "*.cpp" -o -name "*.c")
+OBJECTS = $(patsubst ./src/%, ./$(OBJDIR)/%, $(patsubst %.c, %.o, $(patsubst %.cpp, %.o, $(SOURCES))))
 
 #dependency management
 DEPDIR := .d

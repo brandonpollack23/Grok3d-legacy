@@ -47,16 +47,10 @@ as for the code documentation it's pretty easy
 
 ### All Platforms: Dependencies
 
-sdl2 needs to be installed, install the libraries and headers from here and set it up for your
-platform here:
-
-https://www.libsdl.org/download-2.0.php
-
-on linux this is as simple (usually) as using your package manager to install it.
-I have done most of my development on Arch Linux so sudo pacman -S sdl2 will install it from the
-extra repository, insert your package manager here.
-
-On windows this is just an executable and the solution should already be set up for it.
+1. GLFW
+on linux just install GLFW from your package manager,
+windows you have to get it compile it and add it to the libraries and headers in the solution file
+wherever you put it
 
 ### Linux
 
