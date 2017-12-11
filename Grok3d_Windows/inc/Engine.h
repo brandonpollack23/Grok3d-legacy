@@ -52,7 +52,7 @@ namespace Grok3d
             auto Update(double dt) -> void;
 
             /**Draw the scene*/
-            auto Render() const -> void;
+            auto Render() const -> GRK_Result;
 
             /**Clean up deleted components*/
             auto GarbageCollect() -> void;

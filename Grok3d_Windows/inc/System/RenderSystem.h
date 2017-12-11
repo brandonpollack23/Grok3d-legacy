@@ -27,14 +27,21 @@ namespace Grok3d::Systems
         public:
             GRK_RenderSystem() noexcept;
 
+            /**Have do all rendering work and have GLFW swap buffers*/
             auto Render() const -> Grok3d::GRK_Result;
 
+            /**initialize m_renderComponents with the store of all render components from the @link
+             * Grok3d::GRK_EntityComponentManager GRK_EntityComponentManager @endlink*/
             auto Initialize(GRK_EntityComponentManager* ecm) -> GRK_Result;
 
         private:
-            bool m_isInitialized;
-            const std::vector<Grok3d::Components::GRK_RenderComponent>* m_renderComponents;
-            GLFWwindow* m_window;
+            //TODO move this to input system
+            auto processInput() const -> void;
+
+        private:
+            bool m_isInitialized; ///< Keeps track if class is initialized
+            const std::vector<Grok3d::Components::GRK_RenderComponent>* m_renderComponents; ///< The store of all rendercomponents for quick iterating
+            GLFWwindow* m_window; ///< GLFW window context
     };
 }
 

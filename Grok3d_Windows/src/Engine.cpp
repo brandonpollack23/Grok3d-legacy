@@ -45,9 +45,9 @@ auto GRK_Engine::Update(double dt) -> void
     m_systemManager.UpdateSystems(dt);
 }
 
-auto GRK_Engine::Render() const -> void
+auto GRK_Engine::Render() const -> GRK_Result
 {
-    m_systemManager.Render();
+    return m_systemManager.Render();
 }
 
 auto GRK_Engine::GarbageCollect() -> void
@@ -93,7 +93,12 @@ auto GRK_Engine::Run() -> void
             t += dt;
         }
 
-        this->Render();
+        //TODO change this, shouldnt exit game engine should just not render until GLFW reinits
+        //rendering terminated so we should exit the engine
+        if(this->Render() == GRK_Result::RenderingTerminated)
+        {
+            break;
+        }
         
         this->GarbageCollect();
     }

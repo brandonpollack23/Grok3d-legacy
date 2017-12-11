@@ -87,15 +87,30 @@ auto GRK_RenderSystem::Render() const -> GRK_Result
 {
     //TODO check if initialized
     //TODO actually render all the components
-    //TODO glfw poll events on user input system
+    //TODO move glfw poll events and process input on user input system
+
     if(!glfwWindowShouldClose(m_window))
     {
+        processInput();
+
+        //Render Commands
+        glClear(GL_COLOR_BUFFER_BIT);
+
         glfwSwapBuffers(m_window);
+        glfwPollEvents();
         return GRK_Result::Ok;
     }
     else
     {
         glfwTerminate();
         return GRK_Result::RenderingTerminated;
+    }
+}
+
+auto GRK_RenderSystem::processInput() const -> void
+{
+    if(glfwGetKey(m_window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+    {
+        glfwSetWindowShouldClose(m_window, true);
     }
 }
