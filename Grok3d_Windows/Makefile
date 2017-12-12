@@ -7,12 +7,8 @@ INCLUDEDIRS = ./inc/ ../glm/ ../notstd/ ../include
 #libdl is required by glad
 CFLAGS = -std=c++17 -g -O2 -Wall -fno-exceptions $(GLFAGS) $(addprefix -I, $(INCLUDEDIRS))
 
-LD = $(CC)
-GL_LD_FLAGS = -lglfw -lGL -ldl
-LDFLAGS = $(GL_LD_FLAGS)
-
 AR = ar
-ARFLAGS = 
+ARFLAGS = rcs
 
 #MAKE specific stuff
 #VPATH is the search path for all prerequisites
@@ -22,7 +18,7 @@ VPATHOBJ = $(patsubst ./src%, ./$(OBJDIR)%, $(VPATHCPP))
 VPATH = $(VPATHCPP) $(VPATHOBJ)
 
 #other defines
-TARGET = maintest
+TARGET = libgrok3d.a
 BINDIR = bin
 OBJDIR = o
 SOURCES = $(shell find . -name "*.cpp" -o -name "*.c")
@@ -41,11 +37,8 @@ all: $(TARGET)
 
 rebuild: clean all
 
-$(TARGET): $(OBJECTS) | $(BINDIR)
-	$(LD) -o $(BINDIR)/$@ $^ $(LDFLAGS)
-
-$(BINDIR):
-	mkdir -p $@
+$(TARGET): $(OBJECTS)
+	$(AR) $(ARFLAGS) $(OBJDIR)/$@ $^
 
 $(OBJDIR)/%.o: %.cpp $(DEPDIR)/%.d | $(VPATHOBJ)
 	$(CC) $(DEPFLAGS) -c $(CFLAGS) $< -o $@
@@ -58,7 +51,7 @@ $(DEPDIR)/%.d: ;
 .PRECIOUS: $(DEPDIR)/%.d
 
 clean:
-	rm -rf $(OBJDIR) $(BINDIR)
+	rm -rf $(OBJDIR)
 
 print-%: 
 	@echo $($*)
