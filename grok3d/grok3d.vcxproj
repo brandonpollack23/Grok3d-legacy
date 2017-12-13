@@ -73,6 +73,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IncludePath>$(ProjectDir)/../notstd;$(ProjectDir)/../glm;$(ProjectDir)/inc;$(ProjectDir)/../../glfw-3.2.1/include;$(IncludePath)</IncludePath>
     <LibraryPath>C:\Users\brandon\Documents\Programming\glfw-3.2.1\build\src\Debug;$(LibraryPath)</LibraryPath>
+    <TargetName>libgrok3d</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
