@@ -39,7 +39,7 @@
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
@@ -70,7 +70,8 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(ProjectDir)/../notstd;$(ProjectDir)/../glm;$(ProjectDir)/inc;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)/../notstd;$(ProjectDir)/../glm;$(ProjectDir)/inc;$(ProjectDir)/../../glfw-3.2.1/include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\brandon\Documents\Programming\glfw-3.2.1\build\src\Debug;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -85,7 +86,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>$(ProjectDir/../notstd;$(ProjectDir)/../glm;$(ProjectDir)/inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <LanguageStandard>stdcpp14</LanguageStandard>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -131,7 +132,6 @@
     <ClCompile Include="src\Component\GameLogicComponent.cpp" />
     <ClCompile Include="src\Component\TransformComponent.cpp" />
     <ClCompile Include="src\Engine.cpp" />
-    <ClCompile Include="src\maintest.cpp" />
     <ClCompile Include="src\System\GameLogicSystem.cpp" />
     <ClCompile Include="src\System\System.cpp" />
     <ClCompile Include="src\System\SystemManager.cpp" />
