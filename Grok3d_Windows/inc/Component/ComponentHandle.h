@@ -10,7 +10,7 @@
 
 #include "grok3d_types.h"
 
-namespace Grok3d { namespace Components
+namespace Grok3d::Components
 {
     /**
      *  @brief A handle to a Component for convenient management
@@ -85,6 +85,6 @@ namespace Grok3d { namespace Components
                                                          GRK_EntityComponentManager__::m_componentStores @endlink tuple of vectors*/
         const ECM* m_manager;                       ///< The manager which created this handle, passed in as "this" on construction 
     };
-} /*Components*/ } /*Grok3d*/
+}
 
 #endif

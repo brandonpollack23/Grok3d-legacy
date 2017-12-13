@@ -13,7 +13,7 @@
 
 #include <unordered_set>
 
-namespace Grok3d { namespace Systems
+namespace Grok3d::Systems
 {
     /**
      * @brief Base class for a system
@@ -68,6 +68,6 @@ namespace Grok3d { namespace Systems
         std::unordered_set<Grok3d::Entities::GRK_EntityHandle> m_trackedEntities; ///< entities this system will update
         std::vector<Grok3d::Entities::GRK_EntityHandle> m_entitiesToUnregister;   ///< entities that will be removed after updating
     };
-} /*Systems*/ } /*Grok3d*/
+}
 
 #endif

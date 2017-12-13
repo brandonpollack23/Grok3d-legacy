@@ -14,7 +14,7 @@
 
 #include <array>
 
-namespace Grok3d { namespace Systems
+namespace Grok3d::Systems
 {
     /**
      * @brief the manager for all systems to generalize interaction and act as a location for
@@ -41,6 +41,6 @@ namespace Grok3d { namespace Systems
         std::array<GRK_System*, 1> m_systems; ///< an array for easy iteration of all systems, initialized on construction
         GRK_GameLogicSystem m_gls; ///< the game logic system
     };
-} /*Systems*/ } /*Grok3d*/
+}
 
 #endif

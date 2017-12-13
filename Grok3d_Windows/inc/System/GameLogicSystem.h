@@ -11,7 +11,7 @@
 #include "grok3d_types.h"
 #include "System/System.h"
 
-namespace Grok3d { namespace Systems
+namespace Grok3d::Systems
 {
     /**
      * @brief the game logic system which handles updating of scripts
@@ -33,6 +33,6 @@ namespace Grok3d { namespace Systems
              * GRK_System::GetComponentsBitMask @endlink*/
             auto GetComponentsBitMask() const -> Grok3d::Components::GRK_ComponentBitMask override;
     };
-} /*Systems*/ } /*Grok3d*/
+}
 
 #endif

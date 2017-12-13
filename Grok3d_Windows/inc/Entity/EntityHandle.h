@@ -27,7 +27,7 @@
         } \
     } while(0)
 
-namespace Grok3d { namespace Entities 
+namespace Grok3d::Entities 
 {
     /**
      * @brief the handle to an entity.  From a consumer outside the engine, this is used for all
@@ -139,7 +139,7 @@ namespace Grok3d { namespace Entities
         ECM* const m_manager;                  ///< the manager who created this handle
                                                ///< (@link Grok3d::GRK_EntityComponentManager__ GRK_EntityComponentManager__ @endlink)
     };
-} /*Entities*/ } /*Grok3d*/
+}
 
 /**A hash algorithm for @link Grok3d::Entities::GRK_EntityHandle__ GRK_EntityHandle__ @endlink
  *
