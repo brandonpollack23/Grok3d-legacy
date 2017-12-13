@@ -88,6 +88,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Grok3d.licenseheader" />
+    <None Include="grok3d.licenseheader" />
   </ItemGroup>
 </Project>
