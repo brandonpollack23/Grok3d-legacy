@@ -16,7 +16,7 @@
 #include "glm/fwd.hpp"
 #include "glm/gtc/quaternion.hpp"
 
-namespace Grok3d { namespace Components 
+namespace Grok3d::Components 
 {
     /**
      * @brief The component that all entities have that determines their position in the game world.
@@ -119,6 +119,6 @@ namespace Grok3d { namespace Components
             glm::dvec3 m_localPosition;                      ///< Position relative to parent TransformComponent
             glm::dvec3 m_localScale;                         ///< Scale relative to parent TransformComponent
     };
-} /*Components*/ } /*Grok3d*/
+}
 
 #endif

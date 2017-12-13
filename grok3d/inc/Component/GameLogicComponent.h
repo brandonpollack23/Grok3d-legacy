@@ -21,7 +21,7 @@
 #include <vector>
 #include <memory>
 
-namespace Grok3d { namespace Components 
+namespace Grok3d::Components 
 {
     /**
      * @brief
@@ -143,6 +143,6 @@ namespace Grok3d { namespace Components
                                                                     * used by @link Grok3d::Components::GRK_GameBehaviourBase::UnregisterThisBehaviour
                                                                     * UnregisterThisBehaviour @endlink*/
     };
-} /*Components*/ } /*Grok3d*/
+}
 
 #endif

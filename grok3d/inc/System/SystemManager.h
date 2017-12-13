@@ -15,7 +15,7 @@
 
 #include <array>
 
-namespace Grok3d { namespace Systems
+namespace Grok3d::Systems
 {
     /**
      * @brief the manager for all systems to generalize interaction and act as a location for
@@ -51,6 +51,6 @@ namespace Grok3d { namespace Systems
         GRK_GameLogicSystem m_gls; ///< the game logic system
         GRK_RenderSystem m_rs; ///< the rendering system
     };
-} /*Systems*/ } /*Grok3d*/
+}
 
 #endif

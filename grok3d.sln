@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26403.7
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Grok3d_Windows", "Grok3d_Windows\Grok3d_Windows.vcxproj", "{B1F2DAC2-08FF-416B-87CB-6F0D8494022B}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "grok3d", "grok3d\grok3d.vcxproj", "{B1F2DAC2-08FF-416B-87CB-6F0D8494022B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
