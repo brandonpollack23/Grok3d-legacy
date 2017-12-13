@@ -2,7 +2,6 @@
 * Contact @ grok3d@gmail.com
 * This file is available under the MIT license included in the project
 */
-
 #include "grok3d_types.h"
 
 #include "Engine.h"
