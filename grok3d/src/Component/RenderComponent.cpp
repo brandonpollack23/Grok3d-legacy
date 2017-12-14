@@ -19,11 +19,20 @@ GRK_RenderComponent::GRK_RenderComponent(
         float* vertexes,
         std::size_t vertexCount,
         std::size_t vertexSize, //eg sizeof(float)
+        GRK_PrimitiveType indexType,
+        void* indices,
+        std::size_t indexCount,
         GRK_OpenGLPrimitive primitive,
-        GRK_ShaderProgramID shaderProgram) :
+        GRK_ShaderProgramID shaderProgram) noexcept :
     m_vertexes(vertexes),
     m_VBOOffset(0),
     m_vertexCount(vertexCount),
+    m_indexType(indexType),
+    m_indices(indices),
+    m_indexCount(indexCount),
+    m_EBO(0), //overwrite later in constructor if necessary
+    m_EBOOffset(0),
+    m_drawFunction(GRK_DrawFunction::DrawArrays),
     m_primitive(primitive),
     m_shaderProgram(shaderProgram)
 {
@@ -39,6 +48,7 @@ GRK_RenderComponent::GRK_RenderComponent(
     //bound type, size in bytes to copy (3 data per vertex X bytes per data), buffer to copy, data access pattern
     glBufferData(GL_ARRAY_BUFFER, m_vertexCount * vertexSize * c_dimensions, m_vertexes, GL_STATIC_DRAW); // Copy it over
 
+    //TODO make this configurable
     //Set up vertex attributes for the 0 vertex
     // Configure 0 vertex attribute
     // size is 3
@@ -46,8 +56,23 @@ GRK_RenderComponent::GRK_RenderComponent(
     // do not normalize 
     // stride is 3 floats between each vertex
     // offset of buffer where vertex data is is 0
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), static_cast<void*>(0));
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, c_dimensions * sizeof(float), static_cast<void*>(0));
     glEnableVertexAttribArray(0);
+
+    //lastly, if we passed any indices we need to set up an Element Buffer Object
+    //in order to tell OGL what order to draw the vertexes in to make triangles (this saves
+    //repeating vertexes in every triangle)
+    if(m_indices != nullptr && m_indexCount > 3 && IndexTypeIsValid())
+    {
+        //create EBO
+        glGenBuffers(1, &m_EBO);
+
+        //bind to context and copy index data
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_EBO);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_indexCount * SizeOfIndexType(), m_indices, GL_STATIC_DRAW);
+        
+        m_drawFunction = GRK_DrawFunction::DrawElements;
+    }
 
     //we can unbind from array_buffer since the correct buffer is now stored in the VAO
     glBindBuffer(GL_ARRAY_BUFFER, 0);

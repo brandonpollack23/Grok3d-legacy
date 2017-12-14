@@ -108,10 +108,24 @@ auto GRK_RenderSystem::Render() const -> GRK_Result
             glBindVertexArray(renderComponent.GetVAO());
 
             //draw
-            glDrawArrays(
-                    renderComponent.GetPrimitive(),
-                    renderComponent.GetVBOOffsett(),
-                    renderComponent.GetVertexCount());
+            switch(renderComponent.GetDrawFunction())
+            {
+            case GRK_DrawFunction::DrawArrays:
+                glDrawArrays(
+                        renderComponent.GetPrimitive(),
+                        renderComponent.GetVBOOffsett(),
+                        renderComponent.GetVertexCount());
+                break;
+            case GRK_DrawFunction::DrawElements:
+                glDrawElements(
+                        renderComponent.GetPrimitive(),
+                        renderComponent.GetIndexCount(),
+                        static_cast<GLenum>(renderComponent.GetIndexType()),
+                        renderComponent.GetEBOOffsett());
+                break;
+            default:
+                break;
+            }
         }
 
         glfwSwapBuffers(m_window);

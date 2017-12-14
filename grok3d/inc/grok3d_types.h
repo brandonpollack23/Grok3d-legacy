@@ -12,6 +12,8 @@
 #ifndef __GROK3d_TYPES__H
 #define __GROK3d_TYPES__H
 
+#include "glad/glad.h"
+
 #include <type_traits>
 #include <functional>
 
@@ -61,6 +63,13 @@ namespace Grok3d
         return lhs;
     }
 
+    enum class GRK_PrimitiveType : GLenum
+    {
+        Unsigned_Int = GL_UNSIGNED_INT,
+        Unsigned_Byte = GL_UNSIGNED_BYTE,
+        Unsigned_Short = GL_UNSIGNED_SHORT
+    };
+
     /** The namespace which contains all Entity related code*/
     namespace Entities
     {
@@ -78,8 +87,9 @@ namespace Grok3d
         class GRK_GameLogicComponent;
             class GRK_GameBehaviourBase;
         class GRK_RenderComponent;
-            using GRK_VertexBufferObject = unsigned int;
-            using GRK_VertexArrayObject = unsigned int;
+            using GRK_VertexBufferObject  = unsigned int;
+            using GRK_VertexArrayObject   = unsigned int;
+            using GRK_ElementBufferObject = unsigned int;
 
         typedef int GRK_ComponentBitMask;
     }
@@ -132,7 +142,8 @@ namespace std
     struct hash<Grok3d::Entities::GRK_EntityHandle__<ECM>>
     {
         typedef Grok3d::Entities::GRK_EntityHandle__<ECM> argument_type;
-        typedef size_t result_type;
+        typedef size_t                                    result_type;
+
         auto operator()(argument_type const& e) const -> result_type;
     };
 }
