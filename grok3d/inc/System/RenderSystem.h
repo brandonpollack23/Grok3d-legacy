@@ -8,6 +8,7 @@
 #ifndef __RENDERSYSTEM__H
 #define __RENDERSYSTEM__H
 
+#include "glad/glad.h"
 #include "GLFW/glfw3.h"
 
 #include "grok3d_types.h"
@@ -25,6 +26,7 @@ namespace Grok3d::Systems
     class GRK_RenderSystem
     {
         public:
+            using GRK_VertexArrayObject = unsigned int;
             GRK_RenderSystem() noexcept;
 
             /**Have do all rendering work and have GLFW swap buffers*/

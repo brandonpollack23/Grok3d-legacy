@@ -86,7 +86,6 @@ auto GRK_RenderSystem::Initialize(GRK_EntityComponentManager* ecm) -> GRK_Result
 auto GRK_RenderSystem::Render() const -> GRK_Result
 {
     //TODO check if initialized
-    //TODO actually render all the components
     //TODO move glfw poll events and process input on user input system
 
     if(!glfwWindowShouldClose(m_window))
@@ -96,8 +95,24 @@ auto GRK_RenderSystem::Render() const -> GRK_Result
         //Render Commands
         glClear(GL_COLOR_BUFFER_BIT);
 
+        for(auto& renderComponent : *m_renderComponents)
+        {
+            //specify shader program
+            glUseProgram(renderComponent.GetShaderProgram());
+
+            //Bind VAO (rules for how this vertex shader data is formatted)
+            glBindVertexArray(renderComponent.GetVAO());
+
+            //draw
+            glDrawArrays(
+                    renderComponent.GetPrimitive(),
+                    renderComponent.GetVBOOffsett(),
+                    renderComponent.GetVertexCount());
+        }
+
         glfwSwapBuffers(m_window);
         glfwPollEvents();
+
         return GRK_Result::Ok;
     }
     else

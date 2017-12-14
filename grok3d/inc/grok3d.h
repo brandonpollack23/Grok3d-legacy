@@ -15,10 +15,14 @@
 #include "Component/ComponentHandle.h"
 #include "Component/TransformComponent.h"
 #include "Component/GameLogicComponent.h"
+#include "Component/RenderComponent.h"
 
 #include "System/System.h"
 #include "System/SystemManager.h"
 #include "System/GameLogicSystem.h"
+#include "System/RenderSystem.h"
+
+#include "utilities/ShaderManager.h"
 
 #include "Engine.h"
 

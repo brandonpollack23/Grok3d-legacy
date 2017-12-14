@@ -5,7 +5,7 @@ CC = g++
 #submodules: glm, notstd
 INCLUDEDIRS = ./inc/ ../glm/ ../notstd/ ../include
 #libdl is required by glad
-CFLAGS = -std=c++17 -g -O2 -Wall -fno-exceptions $(GLFAGS) $(addprefix -I, $(INCLUDEDIRS))
+CFLAGS = -std=c++17 -g -O0 -Wall -fno-exceptions $(GLFAGS) $(addprefix -I, $(INCLUDEDIRS))
 
 AR = ar
 ARFLAGS = rcs
