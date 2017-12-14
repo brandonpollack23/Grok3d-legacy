@@ -8,6 +8,8 @@
 #ifndef __GROK3D__H
 #define __GROK3D__H
 
+#include "grok3d_types.h"
+
 #include "EntityComponentManager.h"
 
 #include "Entity/EntityHandle.h"
