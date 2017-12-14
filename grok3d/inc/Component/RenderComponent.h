@@ -32,6 +32,7 @@ namespace Grok3d::Components
             GRK_RenderComponent(
                     float* vertexes,
                     std::size_t vertexCount,
+                    std::size_t vertexSize,
                     GRK_OpenGLPrimitive primitive,
                     Grok3d::Utilities::ShaderManager::GRK_ShaderProgramID shaderProgram) noexcept;
 

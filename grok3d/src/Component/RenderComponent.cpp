@@ -13,9 +13,12 @@ using namespace Grok3d;
 using namespace Grok3d::Components;
 using namespace Grok3d::Utilities::ShaderManager;
 
+static constexpr unsigned int c_dimensions = 3;
+
 GRK_RenderComponent::GRK_RenderComponent(
         float* vertexes,
         std::size_t vertexCount,
+        std::size_t vertexSize, //eg sizeof(float)
         GRK_OpenGLPrimitive primitive,
         GRK_ShaderProgramID shaderProgram) :
     m_vertexes(vertexes),
@@ -28,12 +31,13 @@ GRK_RenderComponent::GRK_RenderComponent(
 
     //Set up OGL VertexArrayObject and bind it to context
     glGenVertexArrays(1, &m_VAO);
+    glGenBuffers(1, &m_VBO); // Create OGL buffer to store vertex data
     glBindVertexArray(m_VAO);
 
-    // Create OGL buffer to store vertex data
-    glGenBuffers(1, &m_VBO);
     glBindBuffer(GL_ARRAY_BUFFER, m_VBO); // Bind current VBO to context Array Buffer
-    glBufferData(GL_ARRAY_BUFFER, m_vertexCount, m_vertexes, GL_STATIC_DRAW); // Copy it over
+
+    //bound type, size in bytes to copy (3 data per vertex X bytes per data), buffer to copy, data access pattern
+    glBufferData(GL_ARRAY_BUFFER, m_vertexCount * vertexSize * c_dimensions, m_vertexes, GL_STATIC_DRAW); // Copy it over
 
     //Set up vertex attributes for the 0 vertex
     // Configure 0 vertex attribute

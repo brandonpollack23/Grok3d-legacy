@@ -17,7 +17,7 @@ namespace Grok3d::Utilities::ShaderManager
 {
     auto GRK_LoadShader(const char* const shaderSource, ShaderType type) -> GRK_ShaderID
     {
-        auto id = GRK_ShaderID{glCreateShader(static_cast<GLenum>(type))};
+        auto id = glCreateShader(static_cast<GLenum>(type));
 
         glShaderSource(id, 1, &shaderSource, nullptr);
         glCompileShader(id);

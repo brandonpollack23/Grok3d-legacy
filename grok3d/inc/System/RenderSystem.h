@@ -38,7 +38,7 @@ namespace Grok3d::Systems
 
         private:
             //TODO move this to input system
-            auto processInput() const -> void;
+            auto ProcessInput() const -> void;
 
         private:
             bool m_isInitialized; ///< Keeps track if class is initialized

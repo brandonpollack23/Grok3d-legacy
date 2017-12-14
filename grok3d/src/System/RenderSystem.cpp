@@ -48,7 +48,10 @@ auto GRK_RenderSystem::Initialize(GRK_EntityComponentManager* ecm) -> GRK_Result
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    //glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE); //needed for OS X
+
+#ifdef __APPLE__
+    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+#endif
 
     //GLFW window creation
     //second to last param is NULL, this is for monitor, we need this when we do fullscreen
@@ -90,9 +93,10 @@ auto GRK_RenderSystem::Render() const -> GRK_Result
 
     if(!glfwWindowShouldClose(m_window))
     {
-        processInput();
+        ProcessInput();
 
         //Render Commands
+        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
         for(auto& renderComponent : *m_renderComponents)
@@ -122,7 +126,7 @@ auto GRK_RenderSystem::Render() const -> GRK_Result
     }
 }
 
-auto GRK_RenderSystem::processInput() const -> void
+auto GRK_RenderSystem::ProcessInput() const -> void
 {
     if(glfwGetKey(m_window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
     {
