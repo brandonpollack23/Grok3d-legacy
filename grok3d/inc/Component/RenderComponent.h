@@ -51,7 +51,7 @@ namespace Grok3d::Components {
 
     auto GetIndexCount() const { return m_indexCount; }
 
-    auto GetEBOOffsett() const {
+    auto GetEBOOffset() const {
       return reinterpret_cast<void *>(SizeOfIndexType() * m_EBOOffset);
     }
 
