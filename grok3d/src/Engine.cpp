@@ -48,19 +48,24 @@ auto GRK_Engine::Run() -> void {
   RunGameLoop();
 }
 
+auto GRK_Engine::EnsureInitialized() -> void {
+  if (Initialize() != GRK_Result::Ok) {
+    //TODO debug print error fission mailed
+    std::exit(-1);
+  }
+};
+
 auto GRK_Engine::RunGameLoop() -> void {
   using clock = std::chrono::high_resolution_clock;
-  using doubleConversion = std::chrono::duration<double>;
 
   // TODO use CVAR to set this as tickrate
   // This is 144hz period in ns: 6944444ns
   const auto tickPeriod = std::chrono::nanoseconds(6944444ns);
 
   // Fix my timestep referneced here: https://gafferongames.com/post/fix_your_timestep/
-  auto currentTime = std::chrono::_V2::system_clock::now();
+  auto currentTime = std::chrono::system_clock::now();
 
-  auto simulationTime = std::chrono::nanoseconds(0ns);
-  auto accumulator = std::chrono::nanoseconds(0ns);
+  auto simulationTimeValues = SimulationTimeValues(0ns, 0ns);
 
   // Run until break.
   while (true) {
@@ -68,18 +73,14 @@ auto GRK_Engine::RunGameLoop() -> void {
     auto prevFrameTime = newTime - currentTime;
     currentTime = newTime;
 
-    accumulator += prevFrameTime;
+    simulationTimeValues.accumulator += prevFrameTime;
 
-    // Ticks should be simulated, run time while accumulated time is more than one Tick period.
-    while (accumulator >= tickPeriod) {
-      Update(doubleConversion(tickPeriod).count());
-      accumulator -= tickPeriod;
-      simulationTime += tickPeriod;
-    }
+    RunTicks(simulationTimeValues, tickPeriod);
+    auto renderStatus = Render();
 
     // TODO change this, shouldnt exit game engine should just not render until GLFW reinits
     // Rendering terminated so we should exit the engine.
-    if (Render() == GRK_Result::RenderingTerminated) {
+    if (renderStatus == GRK_Result::RenderingTerminated) {
       break;
     }
 
@@ -87,12 +88,18 @@ auto GRK_Engine::RunGameLoop() -> void {
   }
 }
 
-auto GRK_Engine::EnsureInitialized() -> void {
-  if (Initialize() != GRK_Result::Ok) {
-    //TODO debug print error fission mailed
-    std::exit(-1);
+auto GRK_Engine::RunTicks(
+  SimulationTimeValues& simulationTimeValues,
+  std::chrono::nanoseconds tickPeriod) -> void {
+  using doubleConversion = std::chrono::duration<double>;
+
+  // Ticks should be simulated, run time while accumulated time is more than one Tick period.
+  while (simulationTimeValues.accumulator >= tickPeriod) {
+    Update(doubleConversion(tickPeriod).count());
+    simulationTimeValues.accumulator -= tickPeriod;
+    simulationTimeValues.simulationTime += tickPeriod;
   }
-};
+}
 
 auto GRK_Engine::InjectInitialization(
   std::function<GRK_Result(GRK_EntityComponentManager &)> initFunction) -> GRK_Result {

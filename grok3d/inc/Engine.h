@@ -13,8 +13,17 @@
 #include "EntityComponentManager.h"
 
 #include <functional>
+#include <chrono>
 
 namespace Grok3d {
+  struct SimulationTimeValues {
+    SimulationTimeValues(std::chrono::nanoseconds simulationTime, std::chrono::nanoseconds accumulator)
+      : simulationTime(simulationTime), accumulator(accumulator) {}
+
+    std::chrono::nanoseconds simulationTime;
+    std::chrono::nanoseconds accumulator;
+  };
+
   /**
    * @brief The game engine and main entry point to use Grok3d
    *
@@ -39,7 +48,7 @@ namespace Grok3d {
      * This works the same as calling the default constructor and subsequently calling
      * @link Grok3d::GRK_Engine::InjectInitialization InjectInitialization @endlink and
      * @link Grok3d::GRK_Engine::Initialize Initialize @endlink*/
-    GRK_Engine(std::function<GRK_Result(Grok3d::GRK_EntityComponentManager &)> initFunction) noexcept;
+    explicit GRK_Engine(std::function<GRK_Result(Grok3d::GRK_EntityComponentManager &)> initFunction) noexcept;
 
     //TODO overload initialize based on markup file
     /**Run the internally function inserted with
@@ -74,7 +83,9 @@ namespace Grok3d {
 
     auto EnsureInitialized() -> void;
 
-    void RunGameLoop();
+    auto RunGameLoop() -> void;
+
+    auto RunTicks(SimulationTimeValues& simulationTimeValues, std::chrono::nanoseconds tickPeriod) -> void;
   };
 } /*Grok3d*/
 
