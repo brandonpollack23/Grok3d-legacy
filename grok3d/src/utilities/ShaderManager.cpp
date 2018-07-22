@@ -13,6 +13,7 @@
 
 using namespace Grok3d;
 
+// TODO make this a static class with helper functions and clean up.
 namespace Grok3d::Utilities::ShaderManager
 {
     auto GRK_LoadShader(const char* const shaderSource, ShaderType type) -> GRK_ShaderID
@@ -23,7 +24,7 @@ namespace Grok3d::Utilities::ShaderManager
         glCompileShader(id);
 
         //check if shader compilation is successfull, handle if not
-        std::array<char, 512> infoLog;
+        std::array<char, 512> infoLog{};
         auto success = 0;
         glGetShaderiv(id, GL_COMPILE_STATUS, &success);
         if(!success)
@@ -43,21 +44,12 @@ namespace Grok3d::Utilities::ShaderManager
     {
         //open the file
         auto fs = std::ifstream(shaderFile);
+        if (!fs.is_open()) {
+            std::cout << "No such shader file: " << shaderFile << ".  Exiting...";
+            std::exit(-1);
+        }
 
-        //get file size
-        fs.seekg(0, std::ios::end);
-        auto size = fs.tellg();
-
-        //TODO check for a max file size?
-
-        //create an appropriately sized string
-        std::string shaderSource;
-        shaderSource.reserve(size);
-
-        //seek to the beginning of the file
-        fs.seekg(0);
-
-        fs.read(&shaderSource[0], size);
+        auto shaderSource = std::string(std::istreambuf_iterator<char>(fs), std::istreambuf_iterator<char>());
 
         return GRK_LoadShader(shaderSource.c_str(), type);
     }
