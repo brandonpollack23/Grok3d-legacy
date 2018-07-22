@@ -19,7 +19,7 @@ using namespace Grok3d;
 using namespace Grok3d::Systems;
 using namespace Grok3d::Components;
 
-GRK_RenderSystem::GRK_RenderSystem() :
+GRK_RenderSystem::GRK_RenderSystem() noexcept :
     m_isInitialized(false)
 {
 }
