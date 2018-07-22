@@ -71,6 +71,10 @@ namespace Grok3d {
      * using the @link Grok3d::GRK_EntityComponentManager GRK_EntityComponentManager @endlink
      * for an initial state*/
     std::function<Grok3d::GRK_Result(Grok3d::GRK_EntityComponentManager &)> m_initFunction;
+
+    auto EnsureInitialized() -> void;
+
+    void RunGameLoop();
   };
 } /*Grok3d*/
 

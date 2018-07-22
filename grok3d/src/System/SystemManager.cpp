@@ -22,7 +22,7 @@ auto GRK_SystemManager::Initialize(GRK_EntityComponentManager *ecm) -> GRK_Resul
   //save reference to ecm
   m_ecm = ecm;
 
-  //initialize render system
+  // Render system.
   m_rs.Initialize(m_ecm);
 
   m_isInitialized = true;

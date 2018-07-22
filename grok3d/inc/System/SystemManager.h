@@ -45,9 +45,9 @@ namespace Grok3d::Systems {
 
     Grok3d::GRK_EntityComponentManager *m_ecm;
 
-    std::array<GRK_System *, 1> m_systems; ///< an array for easy iteration of all systems, initialized on construction
-    GRK_GameLogicSystem m_gls; ///< the game logic system
-    GRK_RenderSystem m_rs; ///< the rendering system
+    std::array<GRK_System *, 1> m_systems; ///< An array for easy iteration of all systems, initialized on construction.
+    GRK_GameLogicSystem m_gls; ///< The game logic system.
+    GRK_RenderSystem m_rs; ///< The rendering system.
   };
 }
 
