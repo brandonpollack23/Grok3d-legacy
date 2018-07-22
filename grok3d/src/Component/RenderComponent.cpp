@@ -7,8 +7,6 @@
 
 #include "Component/RenderComponent.h"
 
-#include <vector>
-
 using namespace Grok3d;
 using namespace Grok3d::Components;
 using namespace Grok3d::Utilities::ShaderManager;
@@ -16,68 +14,66 @@ using namespace Grok3d::Utilities::ShaderManager;
 static constexpr unsigned int c_dimensions = 3;
 
 GRK_RenderComponent::GRK_RenderComponent(
-        float* vertexes,
-        std::size_t vertexCount,
-        std::size_t vertexSize, //eg sizeof(float)
-        GRK_GL_PrimitiveType indexType,
-        void* indices,
-        std::size_t indexCount,
-        GRK_OpenGLPrimitive primitive,
-        GRK_ShaderProgramID shaderProgram) noexcept :
-    m_vertexes(vertexes),
-    m_VBOOffset(0),
-    m_vertexCount(vertexCount),
-    m_indexType(indexType),
-    m_indices(indices),
-    m_indexCount(indexCount),
-    m_EBO(0), //overwrite later in constructor if necessary
-    m_EBOOffset(0),
-    m_drawFunction(GRK_DrawFunction::DrawArrays),
-    m_primitive(primitive),
-    m_shaderProgram(shaderProgram)
-{
-    //First bind Vertex Array Object, then bind and set vertex buffers, then configure vertex attributes
+  float *vertexes,
+  std::size_t vertexCount,
+  std::size_t vertexSize, //eg sizeof(float)
+  GRK_GL_PrimitiveType indexType,
+  void *indices,
+  std::size_t indexCount,
+  GRK_OpenGLPrimitive primitive,
+  GRK_ShaderProgramID shaderProgram) noexcept :
+  m_vertexes(vertexes),
+  m_VBOOffset(0),
+  m_vertexCount(vertexCount),
+  m_indexType(indexType),
+  m_indices(indices),
+  m_indexCount(indexCount),
+  m_EBO(0), //overwrite later in constructor if necessary
+  m_EBOOffset(0),
+  m_drawFunction(GRK_DrawFunction::DrawArrays),
+  m_primitive(primitive),
+  m_shaderProgram(shaderProgram) {
+  //First bind Vertex Array Object, then bind and set vertex buffers, then configure vertex attributes
 
-    //Set up OGL VertexArrayObject and bind it to context
-    glGenVertexArrays(1, &m_VAO);
-    glGenBuffers(1, &m_VBO); // Create OGL buffer to store vertex data
-    glBindVertexArray(m_VAO);
+  //Set up OGL VertexArrayObject and bind it to context
+  glGenVertexArrays(1, &m_VAO);
+  glGenBuffers(1, &m_VBO); // Create OGL buffer to store vertex data
+  glBindVertexArray(m_VAO);
 
-    glBindBuffer(GL_ARRAY_BUFFER, m_VBO); // Bind current VBO to context Array Buffer
+  glBindBuffer(GL_ARRAY_BUFFER, m_VBO); // Bind current VBO to context Array Buffer
 
-    //bound type, size in bytes to copy (3 data per vertex X bytes per data), buffer to copy, data access pattern
-    glBufferData(GL_ARRAY_BUFFER, m_vertexCount * vertexSize * c_dimensions, m_vertexes, GL_STATIC_DRAW); // Copy it over
+  //bound type, size in bytes to copy (3 data per vertex X bytes per data), buffer to copy, data access pattern
+  glBufferData(GL_ARRAY_BUFFER, m_vertexCount * vertexSize * c_dimensions, m_vertexes, GL_STATIC_DRAW); // Copy it over
 
-    //if we passed any indices we need to set up an Element Buffer Object
-    //in order to tell OGL what order to draw the vertexes in to make triangles (this saves
-    //repeating vertexes in every triangle)
-    if(m_indices != nullptr && m_indexCount > 3 && IndexTypeIsValid())
-    {
-        //create EBO
-        glGenBuffers(1, &m_EBO);
+  //if we passed any indices we need to set up an Element Buffer Object
+  //in order to tell OGL what order to draw the vertexes in to make triangles (this saves
+  //repeating vertexes in every triangle)
+  if (m_indices != nullptr && m_indexCount > 3 && IndexTypeIsValid()) {
+    //create EBO
+    glGenBuffers(1, &m_EBO);
 
-        //bind to context and copy index data
-        //DO NOT unbind this while an VAO is bound, it is stored in that object
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_EBO);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_indexCount * SizeOfIndexType(), m_indices, GL_STATIC_DRAW);
-        
-        m_drawFunction = GRK_DrawFunction::DrawElements;
-    }
+    //bind to context and copy index data
+    //DO NOT unbind this while an VAO is bound, it is stored in that object
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_EBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_indexCount * SizeOfIndexType(), m_indices, GL_STATIC_DRAW);
 
-    //TODO make this configurable
-    //Set up vertex attributes for the 0 vertex
-    // Configure 0 vertex attribute
-    // size is 3
-    // they are floats
-    // do not normalize 
-    // stride is 3 floats between each vertex
-    // offset of buffer where vertex data is is 0
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, c_dimensions * sizeof(float), static_cast<void*>(0));
-    glEnableVertexAttribArray(0);
+    m_drawFunction = GRK_DrawFunction::DrawElements;
+  }
 
-    //we can unbind from array_buffer since the correct buffer is now stored in the VAO
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
+  //TODO make this configurable
+  //Set up vertex attributes for the 0 vertex
+  // Configure 0 vertex attribute
+  // size is 3
+  // they are floats
+  // do not normalize
+  // stride is 3 floats between each vertex
+  // offset of buffer where vertex data is is 0
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, c_dimensions * sizeof(float), static_cast<void *>(0));
+  glEnableVertexAttribArray(0);
 
-    //unbind VAO just be safe and not change it somewhere later
-    glBindVertexArray(0);
+  //we can unbind from array_buffer since the correct buffer is now stored in the VAO
+  glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+  //unbind VAO just be safe and not change it somewhere later
+  glBindVertexArray(0);
 }
