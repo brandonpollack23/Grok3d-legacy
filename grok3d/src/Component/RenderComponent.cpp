@@ -19,7 +19,7 @@ GRK_RenderComponent::GRK_RenderComponent(
         float* vertexes,
         std::size_t vertexCount,
         std::size_t vertexSize, //eg sizeof(float)
-        GRK_PrimitiveType indexType,
+        GRK_GL_PrimitiveType indexType,
         void* indices,
         std::size_t indexCount,
         GRK_OpenGLPrimitive primitive,

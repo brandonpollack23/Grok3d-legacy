@@ -13,7 +13,8 @@
 
 using namespace Grok3d;
 
-// TODO make this a static class with helper functions and clean up.
+// TODO make this a class with helper functions and clean up.
+// TODO then go ahead and make it a real class that returns shared_ptr, destructor for shared ptr unloads the shader
 namespace Grok3d::Utilities::ShaderManager
 {
     auto GRK_LoadShader(const char* const shaderSource, ShaderType type) -> GRK_ShaderID
@@ -23,13 +24,13 @@ namespace Grok3d::Utilities::ShaderManager
         glShaderSource(id, 1, &shaderSource, nullptr);
         glCompileShader(id);
 
-        //check if shader compilation is successfull, handle if not
+        //check if shader compilation is successful, handle if not
         std::array<char, 512> infoLog{};
         auto success = 0;
         glGetShaderiv(id, GL_COMPILE_STATUS, &success);
         if(!success)
         {
-            glGetShaderInfoLog(id, 512, NULL, infoLog.data());
+            glGetShaderInfoLog(id, 512, nullptr, infoLog.data());
             std::cerr << "Error occurred, failed to load shader\n\t" << infoLog.data() << std::endl;
 
             glDeleteShader(id); // Don't leak the shader.

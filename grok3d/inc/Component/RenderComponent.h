@@ -39,7 +39,7 @@ namespace Grok3d::Components
                     float* vertexes,
                     std::size_t vertexCount,
                     std::size_t vertexSize,
-                    GRK_PrimitiveType indexType,
+                    GRK_GL_PrimitiveType indexType,
                     void* indices,
                     std::size_t indexCount,
                     GRK_OpenGLPrimitive primitive,
@@ -62,27 +62,21 @@ namespace Grok3d::Components
             {
                 switch(m_indexType)
                 {
-                case GRK_PrimitiveType::Unsigned_Int:
+                case GRK_GL_PrimitiveType::Unsigned_Int:
                     return sizeof(unsigned int);
-                    break;
-                case GRK_PrimitiveType::Unsigned_Byte:
+                case GRK_GL_PrimitiveType::Unsigned_Byte:
                     return sizeof(unsigned char);
-                    break;
-                case GRK_PrimitiveType::Unsigned_Short:
+                case GRK_GL_PrimitiveType::Unsigned_Short:
                     return sizeof(unsigned short);
-                    break;
-                default:
-                    return 0;
-                    break;
                 }
             }
 
         private:
             auto IndexTypeIsValid() const -> bool
             {
-                return m_indexType == GRK_PrimitiveType::Unsigned_Int  ||
-                       m_indexType == GRK_PrimitiveType::Unsigned_Byte ||
-                       m_indexType == GRK_PrimitiveType::Unsigned_Short;
+                return m_indexType == GRK_GL_PrimitiveType::Unsigned_Int  ||
+                       m_indexType == GRK_GL_PrimitiveType::Unsigned_Byte ||
+                       m_indexType == GRK_GL_PrimitiveType::Unsigned_Short;
             }
 
         private:
@@ -90,7 +84,7 @@ namespace Grok3d::Components
             std::size_t m_VBOOffset;
             std::size_t m_vertexCount;
 
-            GRK_PrimitiveType m_indexType;
+            GRK_GL_PrimitiveType m_indexType;
             void* m_indices;
             std::size_t m_indexCount;
 

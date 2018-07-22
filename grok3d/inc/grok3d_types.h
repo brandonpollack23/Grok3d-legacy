@@ -63,7 +63,7 @@ namespace Grok3d
         return lhs;
     }
 
-    enum class GRK_PrimitiveType : GLenum
+    enum class GRK_GL_PrimitiveType : GLenum
     {
         Unsigned_Int = GL_UNSIGNED_INT,
         Unsigned_Byte = GL_UNSIGNED_BYTE,
