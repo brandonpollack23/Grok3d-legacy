@@ -73,6 +73,13 @@ namespace Grok3d {
       std::function<Grok3d::GRK_Result(Grok3d::GRK_EntityComponentManager &)> initFunction) -> Grok3d::GRK_Result;
 
   private:
+    auto EnsureInitialized() -> void;
+
+    auto RunGameLoop() -> void;
+
+    auto RunTicks(SimulationTimeValues& simulationTimeValues, std::chrono::nanoseconds tickPeriod) -> void;
+
+  private:
     Grok3d::GRK_EntityComponentManager m_entityComponentManager;
     Grok3d::Systems::GRK_SystemManager m_systemManager;
 
@@ -80,12 +87,6 @@ namespace Grok3d {
      * using the @link Grok3d::GRK_EntityComponentManager GRK_EntityComponentManager @endlink
      * for an initial state*/
     std::function<Grok3d::GRK_Result(Grok3d::GRK_EntityComponentManager &)> m_initFunction;
-
-    auto EnsureInitialized() -> void;
-
-    auto RunGameLoop() -> void;
-
-    auto RunTicks(SimulationTimeValues& simulationTimeValues, std::chrono::nanoseconds tickPeriod) -> void;
   };
 } /*Grok3d*/
 

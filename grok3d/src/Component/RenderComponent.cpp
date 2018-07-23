@@ -35,14 +35,12 @@ GRK_RenderComponent::GRK_RenderComponent(
   m_shaderProgram(shaderProgram) {
   //First bind Vertex Array Object, then bind and set vertex buffers, then configure vertex attributes
 
-  //Set up OGL VertexArrayObject and bind it to context
-  glGenVertexArrays(1, &m_VAO);
-  glGenBuffers(1, &m_VBO); // Create OGL buffer to store vertex data
-  glBindVertexArray(m_VAO);
+  glGenVertexArrays(1, &m_VAO); // Create Vertex Array Object.
+  glGenBuffers(1, &m_VBO); // Create OGL buffer to store vertex data.
+  glBindVertexArray(m_VAO); // Bind this Vertex Array Object to the context.
+  glBindBuffer(GL_ARRAY_BUFFER, m_VBO); // Bind current Vertex Buffer Object to context's Array Buffer attribute.
 
-  glBindBuffer(GL_ARRAY_BUFFER, m_VBO); // Bind current VBO to context Array Buffer
-
-  //bound type, size in bytes to copy (3 data per vertex X bytes per data), buffer to copy, data access pattern
+  // Bound type, size in bytes to copy (3 data per vertex X bytes per data), buffer to copy, data access pattern
   glBufferData(GL_ARRAY_BUFFER, m_vertexCount * vertexSize * c_dimensions, m_vertexes, GL_STATIC_DRAW); // Copy it over
 
   //if we passed any indices we need to set up an Element Buffer Object

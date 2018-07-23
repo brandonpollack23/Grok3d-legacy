@@ -43,6 +43,7 @@ auto GRK_RenderSystem::InitializeGLWindow() -> void {
 //TODO read a config file for resolution, fullscreen, game name, etc and
 auto GRK_RenderSystem::InitializeGLFW() const -> void {
   SetGLFWErrorCallback();
+
   if (!glfwInit()) {
     std::cerr << "Failed to initialize glfw" << std::endl;
     std::exit(-1);
@@ -69,6 +70,7 @@ auto GRK_RenderSystem::SetGLFWWindowHints() const -> void {
 }
 
 auto GRK_RenderSystem::CreateGLFWWindow() -> void {
+  // TODO CVAR configure width/height/name/fullscreen/etc.
   // Second to last param is nullptr, this is for monitor, we need this when we do fullscreen.
   m_window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Grok3d Game", nullptr, nullptr);
   if (m_window == nullptr) {
@@ -99,52 +101,65 @@ auto GRK_RenderSystem::Render() const -> GRK_Result {
   //TODO check if initialized
   //TODO move glfw poll events and process input on user input system
 
-  if (!glfwWindowShouldClose(m_window)) {
+  if (!ShouldCloseWindow()) {
     ProcessInput();
-
-    //Render Commands
-    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT);
-
-    for (auto &renderComponent : *m_renderComponents) {
-      //specify shader program
-      glUseProgram(renderComponent.GetShaderProgram());
-
-      //Bind VAO (rules for how this vertex shader data is formatted)
-      glBindVertexArray(renderComponent.GetVAO());
-
-      //draw
-      switch (renderComponent.GetDrawFunction()) {
-        case GRK_DrawFunction::DrawArrays:
-          glDrawArrays(
-            renderComponent.GetPrimitive(),
-            renderComponent.GetVBOOffsett(),
-            renderComponent.GetVertexCount());
-          break;
-        case GRK_DrawFunction::DrawElements:
-          glDrawElements(
-            renderComponent.GetPrimitive(),
-            renderComponent.GetIndexCount(),
-            static_cast<GLenum>(renderComponent.GetIndexType()),
-            renderComponent.GetEBOOffset());
-          break;
-        default:
-          break;
-      }
-    }
-
-    glfwSwapBuffers(m_window);
-    glfwPollEvents();
-
+    ClearBuffer();
+    RenderComponents();
+    Swap();
+    PollWindowEvents();
     return GRK_Result::Ok;
   } else {
-    glfwTerminate();
-    return GRK_Result::RenderingTerminated;
+    return CloseRenderingWindow();
   }
 }
+
+auto GRK_RenderSystem::ShouldCloseWindow() const -> int { return glfwWindowShouldClose(m_window); }
 
 auto GRK_RenderSystem::ProcessInput() const -> void {
   if (glfwGetKey(m_window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
     glfwSetWindowShouldClose(m_window, true);
   }
+}
+
+auto GRK_RenderSystem::ClearBuffer() const -> void {
+  glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+  glClear(GL_COLOR_BUFFER_BIT);
+}
+
+auto GRK_RenderSystem::RenderComponents() const -> void {
+  for (auto &renderComponent : *m_renderComponents) {
+    //specify shader program
+    glUseProgram(renderComponent.GetShaderProgram());
+
+    //Bind VAO (rules for how this vertex shader data is formatted)
+    glBindVertexArray(renderComponent.GetVAO());
+
+    //draw
+    switch (renderComponent.GetDrawFunction()) {
+      case GRK_DrawFunction::DrawArrays:
+        glDrawArrays(
+          renderComponent.GetPrimitive(),
+          renderComponent.GetVBOOffsett(),
+          renderComponent.GetVertexCount());
+        break;
+      case GRK_DrawFunction::DrawElements:
+        glDrawElements(
+          renderComponent.GetPrimitive(),
+          renderComponent.GetIndexCount(),
+          static_cast<GLenum>(renderComponent.GetIndexType()),
+          renderComponent.GetEBOOffset());
+        break;
+      default:
+        break;
+    }
+  }
+}
+
+auto GRK_RenderSystem::Swap() const -> void { glfwSwapBuffers(m_window); }
+
+auto GRK_RenderSystem::PollWindowEvents() const -> void { glfwPollEvents(); }
+
+auto GRK_RenderSystem::CloseRenderingWindow() const -> GRK_Result {
+  glfwTerminate();
+  return GRK_Result::RenderingTerminated;
 }
