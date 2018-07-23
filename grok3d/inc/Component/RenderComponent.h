@@ -32,18 +32,18 @@ namespace Grok3d::Components {
   class GRK_RenderComponent {
   public:
     GRK_RenderComponent(
-      float *vertexes,
+      std::unique_ptr<float> vertexes,
       std::size_t vertexCount,
       std::size_t vertexSize,
       GRK_GL_PrimitiveType indexType,
-      void *indices,
+      void* indices,
       std::size_t indexCount,
       GRK_OpenGLPrimitive primitive,
       Grok3d::Utilities::ShaderManager::GRK_ShaderProgramID shaderProgram) noexcept;
 
     auto GetVAO() const { return m_VAO; }
 
-    auto GetVBOOffsett() const { return m_VBOOffset; }
+    auto GetVBOOffset() const { return m_VBOOffset; }
 
     auto GetVertexCount() const { return m_vertexCount; }
 
@@ -80,7 +80,7 @@ namespace Grok3d::Components {
     }
 
   private:
-    float *m_vertexes;
+    std::unique_ptr<float> m_vertexes;
     std::size_t m_VBOOffset;
     std::size_t m_vertexCount;
 

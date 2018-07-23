@@ -139,7 +139,7 @@ auto GRK_RenderSystem::RenderComponents() const -> void {
       case GRK_DrawFunction::DrawArrays:
         glDrawArrays(
           renderComponent.GetPrimitive(),
-          renderComponent.GetVBOOffsett(),
+          renderComponent.GetVBOOffset(),
           renderComponent.GetVertexCount());
         break;
       case GRK_DrawFunction::DrawElements:
