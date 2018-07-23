@@ -40,9 +40,19 @@ namespace Grok3d::Systems {
     auto ProcessInput() const -> void;
 
   private:
-    bool m_isInitialized; ///< Keeps track if class is initialized
-    const std::vector<Grok3d::Components::GRK_RenderComponent> *m_renderComponents; ///< The store of all rendercomponents for quick iterating
-    GLFWwindow *m_window; ///< GLFW window context
+    bool m_isInitialized; ///< Keeps track if class is initialized.
+    const std::vector<Grok3d::Components::GRK_RenderComponent>* m_renderComponents; ///< The store of all rendercomponents for quick iterating
+    GLFWwindow *m_window; ///< GLFW window context.
+
+    auto InitializeGLWindow() -> void;
+
+    auto SetGLFWWindowHints() const -> void;
+
+    auto InitializeGLFW() const -> void;
+
+    auto SetGLFWErrorCallback() const -> void;
+
+    auto CreateGLFWWindow() -> void;
   };
 }
 
