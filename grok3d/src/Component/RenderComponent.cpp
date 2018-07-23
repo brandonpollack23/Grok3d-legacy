@@ -34,24 +34,23 @@ GRK_RenderComponent::GRK_RenderComponent(
   m_primitive(primitive),
   m_shaderProgram(shaderProgram) {
   //First bind Vertex Array Object, then bind and set vertex buffers, then configure vertex attributes
-
   glGenVertexArrays(1, &m_VAO); // Create Vertex Array Object.
   glGenBuffers(1, &m_VBO); // Create OGL buffer to store vertex data.
   glBindVertexArray(m_VAO); // Bind this Vertex Array Object to the context.
   glBindBuffer(GL_ARRAY_BUFFER, m_VBO); // Bind current Vertex Buffer Object to context's Array Buffer attribute.
 
   // Bound type, size in bytes to copy (3 data per vertex X bytes per data), buffer to copy, data access pattern
-  glBufferData(GL_ARRAY_BUFFER, m_vertexCount * vertexSize * c_dimensions, m_vertexes.get(), GL_STATIC_DRAW); // Copy it over
+  glBufferData(GL_ARRAY_BUFFER, m_vertexCount * vertexSize * c_dimensions, m_vertexes.get(), GL_STATIC_DRAW);
 
-  //if we passed any indices we need to set up an Element Buffer Object
-  //in order to tell OGL what order to draw the vertexes in to make triangles (this saves
-  //repeating vertexes in every triangle)
+  // If we passed any indices we need to set up an Element Buffer Object
+  // in order to tell OGL what order to draw the vertexes in to make triangles (this saves
+  // repeating vertexes in every triangle)
   if (m_indices != nullptr && m_indexCount > 3 && IndexTypeIsValid()) {
     //create EBO
     glGenBuffers(1, &m_EBO);
 
-    //bind to context and copy index data
-    //DO NOT unbind this while an VAO is bound, it is stored in that object
+    // Bind to context and copy index data
+    // DO NOT unbind this while an VAO is bound, it is stored in that object
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_EBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_indexCount * SizeOfIndexType(), m_indices, GL_STATIC_DRAW);
 
@@ -66,7 +65,7 @@ GRK_RenderComponent::GRK_RenderComponent(
   // do not normalize
   // stride is 3 floats between each vertex
   // offset of buffer where vertex data is is 0
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, c_dimensions * sizeof(float), static_cast<void *>(0));
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, c_dimensions * sizeof(float), static_cast<void *>(nullptr));
   glEnableVertexAttribArray(0);
 
   //we can unbind from array_buffer since the correct buffer is now stored in the VAO

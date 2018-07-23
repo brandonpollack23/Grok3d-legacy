@@ -87,10 +87,10 @@ namespace Grok3d::Utilities::ShaderManager {
       std::exit(-1);
     }
 
-    std::array<char, 512> infoLog;
+    std::array<char, 512> infoLog{};
     glGetProgramiv(id, GL_LINK_STATUS, reinterpret_cast<GLint *>(&status));
     if (!status) {
-      glGetProgramInfoLog(id, 512, NULL, infoLog.data());
+      glGetProgramInfoLog(id, 512, nullptr, infoLog.data());
 
       std::cerr << "Error occurred failed to link program\n\t" << infoLog.data() << std::endl;
 
