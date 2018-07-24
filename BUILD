@@ -13,7 +13,22 @@ cc_library(
     srcs = CPP_FILES + HEADER_FILES,
     copts = [
         "-std=c++17",
+        "-g",
         "-O0",
+        "-Wall",
+        "-fno-exceptions",
+    ],
+    includes = ["include"],
+    strip_include_prefix = "include",
+    deps = EXTERNAL_DEPENDENCIES,
+)
+
+cc_library(
+    name = "grok3d",
+    srcs = CPP_FILES + HEADER_FILES,
+    copts = [
+        "-std=c++17",
+        "-O3",
         "-Wall",
         "-fno-exceptions",
     ],
