@@ -1,18 +1,37 @@
 licenses = ["notice"]
 
+# TODO filegroup?
 EXTERNAL_DEPENDENCIES = [
     "@notstd//:notstd",
     "@glm//:glm",
     "@glfw3//:glfw3",
 ]
 
-CPP_FILES = glob(["src/**/*.cpp"])
+filegroup(
+    name = "grok3d_source_files",
+    srcs = glob(["src/**/*.cpp"]),
+)
 
-HEADER_FILES = glob(["include/**/*.h"])
+filegroup(
+    name = "grok3d_headers",
+    srcs = glob(["include/**/*.h"]),
+)
+
+filegroup(
+    name = "visible_headers",
+    srcs = [
+        "include/grok3d.h",
+        "include/grok3d_types.h",
+    ],
+)
 
 cc_library(
     name = "grok3d_debug",
-    srcs = CPP_FILES + HEADER_FILES,
+    srcs = [
+        "grok3d_source_files",
+        ":grok3d_headers",
+    ],
+    hdrs = [":visible_headers"],
     copts = [
         "-std=c++17",
         "-g",
@@ -28,7 +47,11 @@ cc_library(
 
 cc_library(
     name = "grok3d",
-    srcs = CPP_FILES + HEADER_FILES,
+    srcs = [
+        ":grok3d_headers",
+        ":grok3d_source_files",
+    ],
+    hdrs = [":visible_headers"],
     copts = [
         "-std=c++17",
         "-O3",
