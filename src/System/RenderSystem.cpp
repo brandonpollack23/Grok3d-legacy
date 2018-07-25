@@ -21,7 +21,7 @@ constexpr int WINDOW_HEIGHT = 600;
 constexpr int WINDOW_WIDTH = 800;
 
 GRK_RenderSystem::GRK_RenderSystem() noexcept :
-  m_isInitialized(false) {
+    m_isInitialized(false) {
 }
 
 auto GRK_RenderSystem::Initialize(GRK_EntityComponentManager *ecm) -> GRK_Result {
@@ -52,11 +52,11 @@ auto GRK_RenderSystem::InitializeGLFW() const -> void {
 
 auto GRK_RenderSystem::SetGLFWErrorCallback() const -> void {
   glfwSetErrorCallback(
-    [](int error, const char *description) {
-      std::cerr << "GLFW error 0x" << std::hex << error << " occured\n";
-      std::cerr << description << std::endl;
-      std::exit(-1);
-    });
+      [](int error, const char *description) {
+        std::cerr << "GLFW error 0x" << std::hex << error << " occured\n";
+        std::cerr << description << std::endl;
+        std::exit(-1);
+      });
 }
 
 auto GRK_RenderSystem::SetGLFWWindowHints() const -> void {
@@ -138,19 +138,18 @@ auto GRK_RenderSystem::RenderComponents() const -> void {
     switch (renderComponent.GetDrawFunction()) {
       case GRK_DrawFunction::DrawArrays:
         glDrawArrays(
-          renderComponent.GetPrimitive(),
-          renderComponent.GetVBOOffset(),
-          renderComponent.GetVertexCount());
+            renderComponent.GetPrimitive(),
+            renderComponent.GetVBOOffset(),
+            renderComponent.GetVertexCount());
         break;
       case GRK_DrawFunction::DrawElements:
         glDrawElements(
-          renderComponent.GetPrimitive(),
-          renderComponent.GetIndexCount(),
-          static_cast<GLenum>(renderComponent.GetIndexType()),
-          renderComponent.GetEBOOffset());
+            renderComponent.GetPrimitive(),
+            renderComponent.GetIndexCount(),
+            static_cast<GLenum>(renderComponent.GetIndexType()),
+            renderComponent.GetEBOOffset());
         break;
-      default:
-        break;
+      default:break;
     }
   }
 }

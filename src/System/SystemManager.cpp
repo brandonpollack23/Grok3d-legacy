@@ -10,10 +10,10 @@ using namespace Grok3d::Components;
 using namespace Grok3d::Systems;
 
 GRK_SystemManager::GRK_SystemManager() noexcept :
-  m_isInitialized(false),
-  m_ecm(nullptr),
-  m_gls(GRK_GameLogicSystem()),
-  m_rs(GRK_RenderSystem()) {
+    m_isInitialized(false),
+    m_ecm(nullptr),
+    m_gls(GRK_GameLogicSystem()),
+    m_rs(GRK_RenderSystem()) {
   m_systems = {&m_gls};
 }
 

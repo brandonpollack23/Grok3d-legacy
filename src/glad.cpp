@@ -55,50 +55,50 @@ void close_gl(void) {
 
 #else
 #include <dlfcn.h>
-static void* libGL;
+static void *libGL;
 
 #ifndef __APPLE__
-typedef void* (APIENTRYP PFNGLXGETPROCADDRESSPROC_PRIVATE)(const char*);
+typedef void *(APIENTRYP PFNGLXGETPROCADDRESSPROC_PRIVATE)(const char *);
 static PFNGLXGETPROCADDRESSPROC_PRIVATE gladGetProcAddressPtr;
 #endif
 
 static
 int open_gl(void) {
 #ifdef __APPLE__
-    static const char *NAMES[] = {
-        "../Frameworks/OpenGL.framework/OpenGL",
-        "/Library/Frameworks/OpenGL.framework/OpenGL",
-        "/System/Library/Frameworks/OpenGL.framework/OpenGL",
-        "/System/Library/Frameworks/OpenGL.framework/Versions/Current/OpenGL"
-    };
+  static const char *NAMES[] = {
+      "../Frameworks/OpenGL.framework/OpenGL",
+      "/Library/Frameworks/OpenGL.framework/OpenGL",
+      "/System/Library/Frameworks/OpenGL.framework/OpenGL",
+      "/System/Library/Frameworks/OpenGL.framework/Versions/Current/OpenGL"
+  };
 #else
-    static const char *NAMES[] = {"libGL.so.1", "libGL.so"};
+  static const char *NAMES[] = {"libGL.so.1", "libGL.so"};
 #endif
 
-    unsigned int index = 0;
-    for(index = 0; index < (sizeof(NAMES) / sizeof(NAMES[0])); index++) {
-        libGL = dlopen(NAMES[index], RTLD_NOW | RTLD_GLOBAL);
+  unsigned int index = 0;
+  for (index = 0; index < (sizeof(NAMES) / sizeof(NAMES[0])); index++) {
+    libGL = dlopen(NAMES[index], RTLD_NOW | RTLD_GLOBAL);
 
-        if(libGL != NULL) {
+    if (libGL != NULL) {
 #ifdef __APPLE__
-            return 1;
+      return 1;
 #else
-            gladGetProcAddressPtr = (PFNGLXGETPROCADDRESSPROC_PRIVATE)dlsym(libGL,
-                "glXGetProcAddressARB");
-            return gladGetProcAddressPtr != NULL;
+      gladGetProcAddressPtr = (PFNGLXGETPROCADDRESSPROC_PRIVATE) dlsym(libGL,
+                                                                       "glXGetProcAddressARB");
+      return gladGetProcAddressPtr != NULL;
 #endif
-        }
     }
+  }
 
-    return 0;
+  return 0;
 }
 
 static
 void close_gl(void) {
-    if(libGL != NULL) {
-        dlclose(libGL);
-        libGL = NULL;
-    }
+  if (libGL != NULL) {
+    dlclose(libGL);
+    libGL = NULL;
+  }
 }
 #endif
 
@@ -934,11 +934,11 @@ static void load_GL_VERSION_3_0(GLADloadproc load) {
   glad_glFramebufferTexture3D = (PFNGLFRAMEBUFFERTEXTURE3DPROC) load("glFramebufferTexture3D");
   glad_glFramebufferRenderbuffer = (PFNGLFRAMEBUFFERRENDERBUFFERPROC) load("glFramebufferRenderbuffer");
   glad_glGetFramebufferAttachmentParameteriv = (PFNGLGETFRAMEBUFFERATTACHMENTPARAMETERIVPROC) load(
-    "glGetFramebufferAttachmentParameteriv");
+      "glGetFramebufferAttachmentParameteriv");
   glad_glGenerateMipmap = (PFNGLGENERATEMIPMAPPROC) load("glGenerateMipmap");
   glad_glBlitFramebuffer = (PFNGLBLITFRAMEBUFFERPROC) load("glBlitFramebuffer");
   glad_glRenderbufferStorageMultisample = (PFNGLRENDERBUFFERSTORAGEMULTISAMPLEPROC) load(
-    "glRenderbufferStorageMultisample");
+      "glRenderbufferStorageMultisample");
   glad_glFramebufferTextureLayer = (PFNGLFRAMEBUFFERTEXTURELAYERPROC) load("glFramebufferTextureLayer");
   glad_glMapBufferRange = (PFNGLMAPBUFFERRANGEPROC) load("glMapBufferRange");
   glad_glFlushMappedBufferRange = (PFNGLFLUSHMAPPEDBUFFERRANGEPROC) load("glFlushMappedBufferRange");
@@ -972,7 +972,7 @@ static void load_GL_VERSION_3_2(GLADloadproc load) {
   glad_glDrawElementsBaseVertex = (PFNGLDRAWELEMENTSBASEVERTEXPROC) load("glDrawElementsBaseVertex");
   glad_glDrawRangeElementsBaseVertex = (PFNGLDRAWRANGEELEMENTSBASEVERTEXPROC) load("glDrawRangeElementsBaseVertex");
   glad_glDrawElementsInstancedBaseVertex = (PFNGLDRAWELEMENTSINSTANCEDBASEVERTEXPROC) load(
-    "glDrawElementsInstancedBaseVertex");
+      "glDrawElementsInstancedBaseVertex");
   glad_glMultiDrawElementsBaseVertex = (PFNGLMULTIDRAWELEMENTSBASEVERTEXPROC) load("glMultiDrawElementsBaseVertex");
   glad_glProvokingVertex = (PFNGLPROVOKINGVERTEXPROC) load("glProvokingVertex");
   glad_glFenceSync = (PFNGLFENCESYNCPROC) load("glFenceSync");
@@ -1070,10 +1070,10 @@ static void find_coreGL(void) {
 
   const char *version;
   const char *prefixes[] = {
-    "OpenGL ES-CM ",
-    "OpenGL ES-CL ",
-    "OpenGL ES ",
-    NULL
+      "OpenGL ES-CM ",
+      "OpenGL ES-CL ",
+      "OpenGL ES ",
+      NULL
   };
 
   version = (const char *) glGetString(GL_VERSION);

@@ -17,111 +17,112 @@
 #include "glm/gtc/quaternion.hpp"
 
 namespace Grok3d::Components {
+/**
+ * @brief The component that all entities have that determines their position in the game world.
+ *
+ * @details
+ * All entities are required to have a Grok3d::Components::GRK_TransformComponent.  It is
+ * created for an entity when the entity is created, and removing it is not allowed.
+ * Semantically, it doesn't make sense to not have a position in a world, and you should not be
+ * a game entity if you do not.  There will be other means to run worldwide scripts and keep
+ * track of worldwide state in the future.
+ *
+ * Each TransformComponent has a parent they are relative to to facilitate chaining and relative
+ * position, or creation of complex objects composed of multiple entities (such as a giant boss
+ * with independent rotating turrets...or a boring old tank with a rotating cannon)*/
+class GRK_TransformComponent {
+ public:
+  GRK_TransformComponent() noexcept;
+
+  //Functions related to children and other relatives
+
+  //TODO as chaining lots of parents gets really big this will get slow, best to cache and have a dirty bit
   /**
-   * @brief The component that all entities have that determines their position in the game world.
-   *
+   * @brief Attaches this TransformComponent to a new parent to be relative to.
    * @details
-   * All entities are required to have a Grok3d::Components::GRK_TransformComponent.  It is
-   * created for an entity when the entity is created, and removing it is not allowed.
-   * Semantically, it doesn't make sense to not have a position in a world, and you should not be
-   * a game entity if you do not.  There will be other means to run worldwide scripts and keep
-   * track of worldwide state in the future.
+   * calls @link Grok3d::Components::GRK_TransformComponent::AttachChild AttachChild @endlink
+   * on the new parent
    *
-   * Each TransformComponent has a parent they are relative to to facilitate chaining and relative
-   * position, or creation of complex objects composed of multiple entities (such as a giant boss
-   * with independent rotating turrets...or a boring old tank with a rotating cannon)*/
-  class GRK_TransformComponent {
-  public:
-    GRK_TransformComponent() noexcept;
+   * @param[in] newParent the parent that AttachChild will be called on*/
+  auto SetParent(GRK_TransformComponent *newParent) -> void;
 
-    //Functions related to children and other relatives
+  /**
+   * @brief Attaches a child to this parent
+   *
+   * @param[in] newChild the child that will become relative to this parent*/
+  auto AttachChild(GRK_TransformComponent *newChild) -> void;
 
-    //TODO as chaining lots of parents gets really big this will get slow, best to cache and have a dirty bit
-    /**
-     * @brief Attaches this TransformComponent to a new parent to be relative to.
-     * @details
-     * calls @link Grok3d::Components::GRK_TransformComponent::AttachChild AttachChild @endlink
-     * on the new parent
-     *
-     * @param[in] newParent the parent that AttachChild will be called on*/
-    auto SetParent(GRK_TransformComponent *newParent) -> void;
+  /**
+   * @brief tests if this class is the child of another TransformComponent
+   *
+   * param[in] possibleParent The TransformComponent to test if we are the child of*/
+  auto IsChildOf(const GRK_TransformComponent *const possibleParent) const -> bool;
 
-    /**
-     * @brief Attaches a child to this parent
-     *
-     * @param[in] newChild the child that will become relative to this parent*/
-    auto AttachChild(GRK_TransformComponent *newChild) -> void;
+  /**Find the index you are in the parents pool of children*/
+  auto GetSiblingIndex() -> std::size_t; //use parent and iterate through the list looking for me
 
-    /**
-     * @brief tests if this class is the child of another TransformComponent
-     *
-     * param[in] possibleParent The TransformComponent to test if we are the child of*/
-    auto IsChildOf(const GRK_TransformComponent *const possibleParent) const -> bool;
+  /**
+   * @brief get the index in your pool of children for the child
+   * @param[in] possibleChild the child your are indexing, possible that it is not a child
+   * at all
+   * @return the index of the child from 0, -1 if it is not a child*/
+  auto GetChildIndex(const GRK_TransformComponent *possibleChild) const -> std::size_t;
 
-    /**Find the index you are in the parents pool of children*/
-    auto GetSiblingIndex() -> std::size_t; //use parent and iterate through the list looking for me
+  /**Returns number of children who are positioned relative to this*/
+  auto ChildCount() -> int;
 
-    /**
-     * @brief get the index in your pool of children for the child
-     * @param[in] possibleChild the child your are indexing, possible that it is not a child
-     * at all
-     * @return the index of the child from 0, -1 if it is not a child*/
-    auto GetChildIndex(const GRK_TransformComponent *possibleChild) const -> std::size_t;
+  //Functions related to position
 
-    /**Returns number of children who are positioned relative to this*/
-    auto ChildCount() -> int;
+  /**Get the position relative to the origin of the scene*/
+  auto GetWorldPosition() const -> glm::dvec3;
 
-    //Functions related to position
+  /**Set the position relative to the origin of the scene*/
+  auto SetWorldPosition(glm::dvec3 v) -> void;
 
-    /**Get the position relative to the origin of the scene*/
-    auto GetWorldPosition() const -> glm::dvec3;
+  /**@overload*/
+  auto SetWorldPosition(double x, double y, double z) -> void;
 
-    /**Set the position relative to the origin of the scene*/
-    auto SetWorldPosition(glm::dvec3 v) -> void;
+  /**Get the position relative to the parent*/
+  auto GetLocalPosition() const -> glm::dvec3;
 
-    /**@overload*/
-    auto SetWorldPosition(double x, double y, double z) -> void;
+  /**@overload*/
+  auto GetLocalPosition(glm::dvec3 v) -> void;
 
-    /**Get the position relative to the parent*/
-    auto GetLocalPosition() const -> glm::dvec3;
+  /**Change position relative to current position*/
+  auto TranslateLocal(glm::dvec3 v) -> void;
 
-    /**@overload*/
-    auto GetLocalPosition(glm::dvec3 v) -> void;
+  /**@overload*/
+  auto TranslateLocal(double x, double y, double z) -> void;
 
-    /**Change position relative to current position*/
-    auto TranslateLocal(glm::dvec3 v) -> void;
+  //Functions related to scale
 
-    /**@overload*/
-    auto TranslateLocal(double x, double y, double z) -> void;
+  /**Get scale of object relative to parent*/
+  auto GetLocalScale() const -> glm::dvec3;
 
-    //Functions related to scale
+  /**Set scale of object relative to parent*/
+  auto SetLocalScale(glm::dvec3 v) -> void;
 
-    /**Get scale of object relative to parent*/
-    auto GetLocalScale() const -> glm::dvec3;
+  /**@overload*/
+  auto SetLocalScale(double x, double y, double z) -> void;
 
-    /**Set scale of object relative to parent*/
-    auto SetLocalScale(glm::dvec3 v) -> void;
+  //functionality
 
-    /**@overload*/
-    auto SetLocalScale(double x, double y, double z) -> void;
+  /**Detach all of the children from this parent*/
+  auto DetachChildren() -> void;
 
-    //functionality
+  /**Get a child by index*/
+  auto GetChild(unsigned int index) const -> GRK_TransformComponent *;
 
-    /**Detach all of the children from this parent*/
-    auto DetachChildren() -> void;
+ private:
+  GRK_TransformComponent *m_parent;                ///< The parent of this TransformComponent
 
-    /**Get a child by index*/
-    auto GetChild(unsigned int index) const -> GRK_TransformComponent *;
+  std::vector<GRK_TransformComponent *>
+      m_children; ///< The vector of children who are positioned relative to this TransformComponent
 
-  private:
-    GRK_TransformComponent *m_parent;                ///< The parent of this TransformComponent
-
-    std::vector<GRK_TransformComponent *> m_children; ///< The vector of children who are positioned relative to this TransformComponent
-
-    //TODO rotation as quaternion
-    glm::dvec3 m_localPosition;                      ///< Position relative to parent TransformComponent
-    glm::dvec3 m_localScale;                         ///< Scale relative to parent TransformComponent
-  };
+  //TODO rotation as quaternion
+  glm::dvec3 m_localPosition;                      ///< Position relative to parent TransformComponent
+  glm::dvec3 m_localScale;                         ///< Scale relative to parent TransformComponent
+};
 }
 
 #endif

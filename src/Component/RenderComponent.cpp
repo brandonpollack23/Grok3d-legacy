@@ -14,25 +14,25 @@ using namespace Grok3d::Utilities::ShaderManager;
 static constexpr unsigned int c_dimensions = 3;
 
 GRK_RenderComponent::GRK_RenderComponent(
-  std::unique_ptr<float> vertexes,
-  std::size_t vertexCount,
-  std::size_t vertexSize, //eg sizeof(float)
-  GRK_GL_PrimitiveType indexType,
-  void* indices,
-  std::size_t indexCount,
-  GRK_OpenGLPrimitive primitive,
-  GRK_ShaderProgramID shaderProgram) noexcept :
-  m_vertexes(std::move(vertexes)), // TODO don't store these in cpu memory, only copy to GPU VBO?
-  m_VBOOffset(0),
-  m_vertexCount(vertexCount),
-  m_indexType(indexType),
-  m_indices(indices),
-  m_indexCount(indexCount),
-  m_EBO(0), //overwrite later in constructor if necessary
-  m_EBOOffset(0),
-  m_drawFunction(GRK_DrawFunction::DrawArrays),
-  m_primitive(primitive),
-  m_shaderProgram(shaderProgram) {
+    std::unique_ptr<float> vertexes,
+    std::size_t vertexCount,
+    std::size_t vertexSize, //eg sizeof(float)
+    GRK_GL_PrimitiveType indexType,
+    void *indices,
+    std::size_t indexCount,
+    GRK_OpenGLPrimitive primitive,
+    GRK_ShaderProgramID shaderProgram) noexcept :
+    m_vertexes(std::move(vertexes)), // TODO don't store these in cpu memory, only copy to GPU VBO?
+    m_VBOOffset(0),
+    m_vertexCount(vertexCount),
+    m_indexType(indexType),
+    m_indices(indices),
+    m_indexCount(indexCount),
+    m_EBO(0), //overwrite later in constructor if necessary
+    m_EBOOffset(0),
+    m_drawFunction(GRK_DrawFunction::DrawArrays),
+    m_primitive(primitive),
+    m_shaderProgram(shaderProgram) {
   //First bind Vertex Array Object, then bind and set vertex buffers, then configure vertex attributes
   glGenVertexArrays(1, &m_VAO); // Create Vertex Array Object.
   glGenBuffers(1, &m_VBO); // Create OGL buffer to store vertex data.

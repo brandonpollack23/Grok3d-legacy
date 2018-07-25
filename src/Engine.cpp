@@ -93,8 +93,8 @@ auto GRK_Engine::RunGameLoop() -> void {
 }
 
 auto GRK_Engine::RunTicks(
-  SimulationTimeValues& simulationTimeValues,
-  std::chrono::nanoseconds tickPeriod) -> void {
+    SimulationTimeValues &simulationTimeValues,
+    std::chrono::nanoseconds tickPeriod) -> void {
   using doubleConversion = std::chrono::duration<double>;
 
   // Ticks should be simulated, run time while accumulated time is more than one Tick period.
@@ -106,7 +106,7 @@ auto GRK_Engine::RunTicks(
 }
 
 auto GRK_Engine::InjectInitialization(
-  std::function<GRK_Result(GRK_EntityComponentManager &)> initFunction) -> GRK_Result {
+    std::function<GRK_Result(GRK_EntityComponentManager &)> initFunction) -> GRK_Result {
   m_initFunction = std::move(initFunction);
 
   return GRK_Result::Ok;

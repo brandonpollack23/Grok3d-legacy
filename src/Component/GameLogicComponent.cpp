@@ -11,7 +11,7 @@ using namespace Grok3d::Components;
 GRK_GameLogicComponent::BehaviourHandle GRK_GameLogicComponent::s_nextHandle = 1;
 
 GRK_GameLogicComponent::GRK_GameLogicComponent() noexcept :
-  m_behaviours(std::vector<std::unique_ptr<GRK_GameBehaviourBase>>()) {
+    m_behaviours(std::vector<std::unique_ptr<GRK_GameBehaviourBase>>()) {
 }
 
 GRK_GameLogicComponent::GRK_GameLogicComponent(GRK_GameLogicComponent &&glc) noexcept {
@@ -41,7 +41,7 @@ auto GRK_GameLogicComponent::Update(double dt) -> void {
 }
 
 auto GRK_GameLogicComponent::RegisterBehaviour(
-  std::unique_ptr<GRK_GameBehaviourBase> behaviour) -> GRK_GameLogicComponent::BehaviourHandle {
+    std::unique_ptr<GRK_GameBehaviourBase> behaviour) -> GRK_GameLogicComponent::BehaviourHandle {
   behaviour->m_behaviourHandle = s_nextHandle;
   m_behaviours.push_back(std::move(behaviour));
   m_behaviourIndexMap.put(s_nextHandle, (m_behaviours.size() - 1));
@@ -79,7 +79,7 @@ auto GRK_GameLogicComponent::UnregisterBehaviour(const BehaviourHandle handle) -
 }
 
 GRK_GameBehaviourBase::GRK_GameBehaviourBase(GRK_EntityHandle owningEntity) noexcept :
-  m_owningEntity(owningEntity) {
+    m_owningEntity(owningEntity) {
 }
 
 auto GRK_GameBehaviourBase::UnregisterThisBehaviour() -> GRK_Result {

@@ -23,7 +23,7 @@ auto GRK_GameLogicSystem::UpdateInternal(const double dt) -> GRK_Result {
 
 auto GRK_GameLogicSystem::GetComponentsBitMask() const -> GRK_ComponentBitMask {
   static GRK_ComponentBitMask mask =
-    IndexToMask(GRK_EntityComponentManager::GetComponentTypeAccessIndex<GRK_GameLogicComponent>());
+      IndexToMask(GRK_EntityComponentManager::GetComponentTypeAccessIndex<GRK_GameLogicComponent>());
 
   return mask;
 }
