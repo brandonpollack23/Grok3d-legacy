@@ -8,6 +8,9 @@
 
 #include <chrono>
 
+// TODO remove this if it isn't already gone...
+#include <iostream>
+
 using namespace std::chrono_literals;
 
 using namespace Grok3d;
@@ -25,6 +28,7 @@ GRK_Engine::GRK_Engine(std::function<GRK_Result(GRK_EntityComponentManager &)> i
 
 auto GRK_Engine::Initialize() -> GRK_Result {
   if (m_initFunction) {
+    std::cout << "Initializing..." << std::endl;
     return m_initFunction(m_entityComponentManager);
   } else {
     return GRK_Result::EngineFailureNoInitialState;
