@@ -1,3 +1,5 @@
+licenses = ["notice"]
+
 EXTERNAL_DEPENDENCIES = [
     "@notstd//:notstd",
     "@glm//:glm",
